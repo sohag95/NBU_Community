@@ -1,0 +1,23 @@
+<%- include('includes/header') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col" ></div>
+  <div class="col-lg-8 text-center" style="margin-bottom: 2rem;margin: 0;padding: 0;" >
+    <%- include('includes/flash') %>
+    <div class="logIn-form-container mt-4 mb-4 text-center">   
+      <h2 class="bolder">Student's Login</h2>
+      <form action="/loggingIn" method="POST" class="">
+        <input name="regNumber" class="form-control form-control-lg space" type="text" placeholder="Registration Number :" autocomplete="off">
+        <p class="center">Or</p>
+        <input name="phone" class="form-control form-control-lg space" type="number" placeholder="Phone Number : " autocomplete="off">
+        <hr>
+        <input name="password" class="form-control form-control-lg space" type="password" placeholder="Password :" required>
+        <button class="btn btn-info btn-block btn-lg">Log in</button>
+      </form>
+      <hr>
+      <a href="/contact-us"><button class="btn btn-primary  btn-lg">Apply for an account</button></a> 
+    </div>
+  </div>
+  <div class="col" ></div>
+</div>
+<%- include('includes/footer') %>

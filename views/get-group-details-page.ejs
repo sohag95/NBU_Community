@@ -1,0 +1,199 @@
+
+
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7">
+
+    <h5 class="bolder text-primary pt-1 text-center"><strong>Group details</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <img class="single-batch-image"  src="/images/sponsor-banner.png" alt="">
+          <div class="text-success text-center"><strong>GROUP NAME : <%=groupDetails.groupName%></strong></div>
+        </div>
+        <hr>
+            <div class="container">
+              <h5><strong>Present departments :</strong></h5>
+              <ul class="list-group">
+                <%groupDetails.presentDepartments.forEach((department)=>{%>
+                  <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                    <div>
+                      <span class="d-block"><strong>Departmet Name : </strong><%=department.departmentName%></span>
+                      <span class="d-block"><strong>Course Duration : </strong><%=department.courseDuration%> Years</span>  
+                    </div>
+                    <div>
+                      <a href="/department/<%=department.departmentCode%>/details"  class="btn btn-primary btn-sm">Department Details</a>
+                    </div>
+                  </li>
+                <%})%>
+              </ul>
+            </div>
+        <hr>
+        <h4 class="text-center text-success"><strong>Leader Board</strong> </h4>
+        <hr>
+        <div class="ml-2 mr-2 mb-1">
+          <h5><strong>Present Leader :</strong></h5>
+          <%if(groupDetails.presentLeader){%>
+            <div class="student-room-container" style="display: flex;width: 100%;">
+              <div class="mr-2" >
+                <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
+              </div>
+              <div class="row"  style="width: 100%;">
+                <div class="col-sm-6"  style="width: 100%;display: flex;">
+                  <div style="width: 100%;">
+                    <strong class="d-block">Name : <%=groupDetails.presentLeader.userName%></strong>
+                    <strong class="d-block">Phone Number : <%=groupDetails.presentLeader.phone%></strong>
+                  </div>
+                </div>
+                <div class="col-sm-6 " style="margin: auto;">
+                  <div class="float-btn" style="display: flex;">
+                    <a href="/student/<%=groupDetails.presentLeader.regNumber%>/profile">
+                      <%if(checkData.isPresentLeader){%>
+                        <div class="btn btn-warning btn-sm mr-1">Your profile</div>
+                      <%}else{%>
+                        <div class="btn btn-primary btn-sm mr-1">View profile</div>
+                      <%}%>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <%}else{%>
+            <div class="btn btn-lg btn-block btn-info">There is no present leader available!!</div>
+          <%}%>
+        </div>
+      
+        <hr>
+        <div class="ml-2 mr-2 mb-1">
+          <h5><strong>Previous Leader :</strong></h5>
+          <%if(groupDetails.previousLeader){%>
+            <div class="student-room-container" style="display: flex;width: 100%;">
+              <div class="mr-2" >
+                <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
+              </div>
+              <div class="row"  style="width: 100%;">
+                <div class="col-sm-6"  style="width: 100%;display: flex;">
+                  <div style="width: 100%;">
+                    <strong class="d-block">Name : <%=groupDetails.previousLeader.userName%></strong>
+                    <strong class="d-block">Phone :  <%=groupDetails.previousLeader.phone%></strong>
+                  </div>
+                </div>
+                <div class="col-sm-6 " style="margin: auto;">
+                  <div class="float-btn" style="display: flex;">
+                    <a href="/student/<%=groupDetails.previousLeader.regNumber%>/profile">
+                      <%if(checkData.isPreviousLeader){%>
+                        <div class="btn btn-warning btn-sm mr-1">Your profile</div>
+                      <%}else{%>
+                        <div class="btn btn-primary btn-sm mr-1">View profile</div>
+                      <%}%>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <%}else{%>
+              <div class="btn btn-lg btn-block btn-info">There is no previous leader available!!</div>
+            <%}%>
+        </div>
+
+        <hr>
+        <div class="ml-2 mr-2 mb-1">
+          <h5><strong>All Leaders :</strong></h5>
+          <%if(!groupDetails.allLeaders.length){%>
+            <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>
+          <%}else{%>
+            <%groupDetails.allLeaders.forEach((leader)=>{%>
+              <div class="student-room-container" style="display: flex;width: 100%;">
+                <div class="mr-2" >
+                  <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
+                </div>
+                <div class="row"  style="width: 100%;">
+                  <div class="col-sm-6"  style="width: 100%;display: flex;">
+                    <div style="width: 100%;">
+                      <strong class="d-block">Name : <%=leader.userName%></strong>
+                      <%if(checkData.isBatchMember){%>
+                        <strong class="d-block">Phone : <%=leader.phone%></strong>
+                      <%}%>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 " style="margin: auto;">
+                    <div class="float-btn" style="display: flex;">
+                      <a href="/student/<%=leader.regNumber%>/profile">
+                        <%if(user.regNumber==leader.regNumber){%>
+                          <div class="btn btn-warning btn-sm mr-1">Your profile</div>
+                        <%}else{%>
+                          <div class="btn btn-primary btn-sm mr-1">View profile</div>
+                        <%}%>
+                      </a>
+                    </div>
+                  </div>
+                </div>              
+              </div>
+            <%})%>
+          <%}%>
+        </div>
+        <hr>
+        <div class="ml-2 mr-2 mb-1">
+          <h5><strong>All Group Members :</strong></h5>
+          <%if(!groupDetails.allMembers.length){%>
+            <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>
+          <%}else{%>
+            <%groupDetails.allMembers.forEach((member)=>{%>
+              <div class="student-room-container" style="display: flex;width: 100%;">
+                <div class="mr-2" >
+                  <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
+                </div>
+                <div class="row"  style="width: 100%;">
+                  <div class="col-sm-6"  style="width: 100%;display: flex;">
+                    <div style="width: 100%;">
+                      <strong class="d-block">Name : <%=member.userName%></strong>
+                      <strong class="d-block">Department : <%=member.departmentName%></strong>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 " style="margin: auto;">
+                    <div class="float-btn" style="display: flex;">
+                      <a href="/student/<%=member.regNumber%>/profile">
+                        <%if(user.regNumber==member.regNumber){%>
+                          <div class="btn btn-warning btn-sm mr-1">Your profile</div>
+                        <%}else{%>
+                          <div class="btn btn-primary btn-sm mr-1">View profile</div>
+                        <%}%>
+                      </a>
+                    </div>
+                  </div>
+                </div>              
+              </div>
+            <%})%>
+          <%}%>
+        </div>
+        <hr>
+        </div>
+      </div>
+
+    </div>
+  <div class="col-lg"></div>
+</div>
+
+
+
+<%- include('includes/footer') %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

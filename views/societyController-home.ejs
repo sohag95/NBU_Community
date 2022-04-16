@@ -1,0 +1,74 @@
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+
+<div class="container" >
+  <h4 class="text-center mt-4"><strong>This is Society Controller's home page!!</strong></h4>
+  <h4 class="text-center mt-4"><strong>Society Controller's name is : </strong><i><%=user.userName%></i></h4>
+</div>
+
+<div class="container" style="background-color: #fff;">
+  <h4 class="text-info bolder">All Departments :</h4>  
+  <%if(!allDepartments.length){%>
+    <div class="btn btn-block btn-danger">No department added till now.</div>
+  <%}%>
+  <%allDepartments.forEach((department)=>{%>
+    <div class="student-room-container mt-4">
+      <div class="row">
+        <div class="col-sm-6">
+          <p><strong>Department Name : <%=department.departmentName%></strong></p>
+          <p><strong>Department Code : <%=department.departmentCode%></strong></p>
+        </div>
+        <div class="col-sm-6">
+          <%if(!department.presentLeader){%>
+            <p><strong>Present Leader : "Not Set"</strong></p>
+            <p><strong>Requests for verification : 
+              <%if(department.newBatchMemberRequests){%>
+                <%=department.newBatchMemberRequests.length%>
+              <%}%>
+            </strong></p>  
+          <%}else{%>
+            <p><strong>Present Leader : <%=department.presentLeader.userName%></strong></p>
+            <p><strong>Phone Number : <%=department.presentLeader.phone%></strong></p>
+          <%}%>
+        </div>
+        <%if(!department.presentLeader){%>
+          <div class="col-12">
+            <h6 class="bolder"><strong>All Requests :</strong></h6>
+            <%if(!department.newBatchMemberRequests.length){%>
+              <div class="btn btn-block btn-danger btn-lg">No request received!!</div>
+            <%}else{%>
+              <%department.newBatchMemberRequests.forEach((student)=>{%>
+                <div class="student-room-container bg-warning" style="display: flex;width: 100%;">
+                  <div class="mr-2" >
+                    <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
+                  </div>
+                  <div class="row"  style="width: 100%;">
+                    <div class="col-sm-6"  style="width: 100%;display: flex;">
+                      <div style="width: 100%;">
+                        <strong class="d-block">Name : <%=student.userName%></strong>
+                        <strong class="d-block">Phone : <%=student.phone%></strong>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 " style="margin: auto;">
+                      <div class="float-btn" style="display: flex;">
+                        <a href="/verification/case1/<%=student.regNumber%>/page">
+                          <div class="btn btn-primary btn-sm mr-1">Verify Account</div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <%})%>
+              
+            <%}%>
+            
+
+          </div>
+        <%}else{%>
+          <div class="btn btn-success btn-block btn-lg">Leader has been set.</div>
+        <%}%>
+      </div>
+    </div>
+  <%})%>
+</div>
+<%- include('includes/footer') %>

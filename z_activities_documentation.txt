@@ -1,0 +1,19 @@
+Creating NBU community web application.
+WORKING FLOW:
+First Part:
+1.adding admin details on database
+2.adding society controller on database
+3.sign up for both users
+4.admins functionality adding.like:creating group,creating department,creating session batch
+5.students account creating
+6.account verification by session,department leader or society controller
+7.student sign-in and storing session data
+
+8.create voting pole to make leader for session,department,group etc
+9.voting calculation technique
+10.leader declaration
+
+11.create activity pole
+12.post status flow
+13.like,comment on post
+14.post showing places and organizations

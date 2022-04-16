@@ -1,0 +1,68 @@
+<%- include('includes/header') %><%- include('includes/flash') %>
+<%- include('includes/designs/profile-related-header') %>
+    <!-- Profile related structures will be added here -->
+    <!-- **************************************************** -->
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="">
+          <div class="item-container mb-2">
+            <strong><p>Identity</p></strong>
+            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+            
+            <p><i class="fas fa-home"></i> <strong> Name - </strong> <span class="text-capitalize"><%=profileInfo.userName%></span></p>
+            <p><i class="fas fa-graduation-cap"></i><strong> Department - </strong><%=profileInfo.departmentName%></p>
+            <p><i class="fas fa-map-marker-alt"></i><strong> Session Year - </strong> <%=profileInfo.sessionYear%></p>
+            <%if(profileInfo.gender=="male"){ %> 
+              <p><i class="fas fa-male"></i><strong> Gender - </strong> Male</p> 
+            <%}else if(profileInfo.gender=="female"){%>
+              <p><i class="fas fa-female"></i><strong> Gender - </strong> Female</p>
+            <%}else{%>
+              <p><i class="fas fa-female"></i><strong> Gender - </strong> Custom</p>
+            <%}%>
+            <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%= profileInfo.createdDate.getMonth() + 1 %>/<%= profileInfo.createdDate.getDate() %>/<%= profileInfo.createdDate.getFullYear() %></p>
+            
+            <%if(profileInfo.isVisitorsProfile){ %> 
+            <a href="/profile/<%= profileInfo.username %>/edit">
+              <div class="btn btn-secondary btn-block"><i class="fas fa-pen"></i> Update your profile</div>
+            </a>
+            <%}%>
+            <hr>
+            
+          </div>
+          <div class="item-container mb-2">
+            <strong><p>Qualification as a teacher</p></strong>
+            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+            <p><i class="fas fa-crown"></i> <strong> Highest qualification - </strong> <span class="text-capitalize">Hello there</span></p>
+            <p><i class="fas fa-book"></i></i><strong> Stream - </strong> Hello there</p>
+            <p><i class="fas fa-heart"></i><strong> Favourite subject - </strong> <span class="text-capitalize">Hello there</span></p>
+            <p><i class="fas fa-marker"></i><strong> Secondary percentage - </strong> <span class="text-capitalize">Hello there</span></p>
+            <p><i class="fas fa-marker"></i><strong> Higher Secondary percentage - </strong> <span class="text-capitalize">Hello there</span></p>
+          </div>
+          
+          <div class="item-container mb-2">
+            <a href="">
+              <div class="btn btn-success btn-block">Some link here <i class="fas fa-arrow-right"></i></div>
+            </a>
+          </div>
+          
+
+        </div>
+      </div>
+      <div class="col-md-8" >
+        
+        
+        <h5 class="bolder text-center">All Posts</h5>
+        <div class=" mb-2">
+          <div class="item-container" >
+            this is post container
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- **************************************************** -->
+<%- include('includes/designs/profile-related-footer') %>
+
+<%- include('includes/footer') %>

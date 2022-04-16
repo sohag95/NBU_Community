@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>NBU Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css	" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+    <script defer src="https://use.fontawesome.com/releases/v5.5.0/js/all.js" integrity="sha384-GqVMZRt5Gn7tB9D9q7ONtcp4gtHIUEW/yG7h98J7IpE3kpi+srfFyyB/04OV6pG0" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i" rel="stylesheet" />
+    <link rel="stylesheet" href="/main.css" />
+    
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navShadow">
+      <a class="navbar-brand" href="/">
+        <strong class="text-primary">NBU Community</strong>
+      </a>
+      <div style="display: flex;align-items: center;">
+        <!-- <div class=" visibleItemsOnCollapse" >
+          <div>
+            <div class="header-search-icon searchButton" > <i class="fas fa-search"></i></div>
+          </div>
+        </div> -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="text-center notVisibleOnCollapse">
+        <div class="d-flex justify-content-between">
+          <div class="p-1">
+            <div class="form-control header-search-icon" style="border-radius: 4rem; width: 15rem;text-align: left;">
+              <i class="fas fa-search"></i> Search student
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="visibleItemsOnCollapse">
+        <hr>
+          <div>
+            <!-- <div class="mt-2 mb-2 ">
+              <div class="form-control header-search-icon" style="border-radius: 4rem; ">
+                <i class="fas fa-search"></i> Search here
+              </div>
+            </div> -->
+
+            
+          
+            
+              <a href="/tournaments">
+                <div class="side-item">
+                  <i class="fas fa-trophy fa-lg"></i>
+                  <strong>Services</strong>
+                </div>
+              </a>
+              <a href="/matches">
+                <div class="side-item">
+                  <i class="fas fa-info-circle fa-lg"></i></i>
+                  <strong>Activities</strong>
+                </div>
+              </a>
+              <a href="/top-players">
+                <div class="side-item">
+                  <i class="fas fa-running fa-lg"></i></i>
+                  <strong>Top Activities</strong>
+                </div>
+              </a>
+              <hr>
+              <a href="#">
+                <div class="side-item">
+                  <i class="far fa-address-card fa-lg"></i>
+                  <strong>About Us</strong>
+                </div>
+              </a>
+              <a href="#">
+                <div class="side-item">
+                  <i class="fas fa-address-book fa-lg"></i>
+                  <strong>Contact Us</strong>
+                </div>
+              </a>
+              <a href="#">
+                <div class="side-item">
+                  <i class="fas fa-question-circle fa-lg"></i>
+                  <strong>Help</strong>
+                </div>
+              </a>
+
+            <hr>
+            <%if(user){%>
+              <%if(user.accountType=="student"){%>
+                <div class="side-item">
+                  <a href="/student-home">
+                    <button class="btn  btn-primary"> Student Home </button>
+                  </a>   
+                </div>
+              <%}else if(user.accountType=="admin"){%>
+                <div class="side-item">
+                  <a href="/admin-home">
+                    <button class="btn  btn-primary"> Admin Home </button>
+                  </a>   
+                </div>
+              <%}else if(user.accountType=="societyController"){%>
+                <div class="side-item">
+                  <a href="/societyController-home">
+                    <button class="btn  btn-primary"> Society Controller Home </button>
+                  </a>
+                </div>
+              <%}%>
+              <div class="side-item">
+                  <form action="/loggingOut" method="POST" class="d-inline"> 
+                    <button class="btn  btn-primary"><i class="fas fa-sign-out-alt fa-lg"></i> Sign Out </button>
+                  </form>
+              </div>
+            <%}else{%>
+              <a href="/log-in">
+                <button type="button" class="btn btn-primary" ><i class="fas fa-sign-in-alt"></i> Log In </button>
+              </a>
+              <a href="/sign-up-form">
+                <button type="button" class="btn btn-primary" ><i class="fas fa-sign-in-alt"></i> Sign Up </button>
+              </a>
+            <%}%>
+            <hr>
+        </div>  
+      
+      </div>
+      </div>
+      <div class="float-right notVisibleOnCollapse">
+        <a class="mr-2" href="#"><strong><i class="fas fa-trophy"></i> Activities</strong></a>
+        <a class="mr-2" href="#"><strong><i class="fas fa-info-circle"></i></i> Services</strong></a>
+        
+        <%if(user){%>
+          <%if(user.accountType=="student"){%>
+            <a href="/student-home">
+              <button class="btn btn-primary"> Student Home </button>
+          </a>
+          <%}else if(user.accountType=="admin"){%>
+            <a href="/admin-home">
+                <button class="btn  btn-primary"> Admin Home </button>
+            </a>   
+          <%}else if(user.accountType=="societyController"){%>
+            <a href="/societyController-home">
+                <button class="btn  btn-primary"> Society Controller Home </button>
+            </a>
+          <%}%>
+          <form action="/loggingOut" method="POST" class="d-inline"> 
+                <button class="btn  btn-primary"><i class="fas fa-sign-out-alt fa-lg"></i> Sign Out </button>
+          </form>
+        <%}else{%>
+          <a href="/log-in">
+            <button type="button" class="btn btn-primary" ><i class="fas fa-sign-in-alt"></i> Log In </button>
+          </a>
+          <a href="/sign-up-form">
+            <button type="button" class="btn btn-primary" ><i class="fas fa-sign-in-alt"></i> Sign Up </button>
+          </a>
+        <%}%>
+          
+       </div>
+    </nav>
+
+    <!-- header after log-in -->
+    <%if(user){%>
+    <%if(user.accountType=="student"){%>
+      <div class="sticky-top">
+        <div class="homeNavbar">
+          <div class="col-lg  " >
+          </div>  
+         <div class="col-lg-6" style="padding-left: 0px;padding-right: 0px;">
+            <div class=" d-flex justify-content-between ">
+              <div class="text-center">
+                <a  href="/student-home">
+                  <span ><i class="fas fa-home fa-lg"></i></span>
+                 <span class="d-block menu-text" >Home</span>
+                </a>
+              </div>
+              <div class="text-center">
+                <a href="/batch/<%=user.regNumber.slice(0,9)%>/details">
+                  <span><i class="fas fa-chart-line fa-lg"></i></span>
+                  <span class="d-block menu-text" >Batch</span>
+                </a>
+              </div>
+              <div class="text-center">
+                <a href="/department/<%=user.regNumber.slice(4,9)%>/details">
+                  <span><i class="fas fa-plus-square fa-lg"></i></span>
+                  <span class="d-block menu-text" >Department</span>
+                  </a>
+              </div>
+              <div class="text-center">
+                <a href="/group/<%=user.otherData.groupId%>/details">
+                  <span><i class="fas fa-running fa-lg"></i></span>
+                  <span class="d-block menu-text" >Group</span>
+                </a>
+              </div>
+              <div class="text-center">
+                <a href="/student/<%=user.regNumber%>/profile">
+                  <span><i class="fas fa-user-circle fa-lg"></i></span>
+                  <span class="d-block menu-text" >Profile</span>
+                </a>
+              </div>
+            </div>
+          </div> 
+          <div class="col-lg " >
+          </div> 
+        </div>
+      </div>
+     <%}%> 
+   <%}%>
+    <!-- structure here -->
+  
+
+

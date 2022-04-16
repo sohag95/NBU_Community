@@ -1,0 +1,70 @@
+
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+
+
+  
+  <!-- ######################################### -->
+
+  
+<div style="display: flex;flex-wrap: wrap;">
+  <%- include('includes/designs/student-home-screen-left-part') %>
+  <div class="col-lg-6 pt-2 "  >
+    <%if(user.otherData.emailNotSet){%>
+      <div class="student-room-container mt-4">
+        <h4 class="text-info">Give Your Email Id to get notified through email.</h4>
+        <form action="/setEmailId" method="post">
+          <input name="email" class="form-control form-control-lg space" type="email" placeholder="Email Id :" autocomplete="off">
+          <input type="hidden" name="from" value="setNow">
+          <button class="btn btn-info btn-block btn-sm">Set Email</button>
+        </form>
+        <hr>
+        <form action="/setEmailId" method="post">
+          <input type="hidden" name="email" value="Not_Given">
+          <input type="hidden" name="from" value="setLater">
+          <button class="btn btn-secondary btn-block btn-sm">I will set later</button>
+        </form>
+      </div>
+      <hr>
+    <%}%>
+    
+      <%if(!user.otherData.isVerified){%>
+        <div class="ml-2 mr-2 mb-1">
+          <h4 ><strong class="text-success bolder">Hayy, <%=user.userName%> Your Registration number is : <%=user.regNumber%></strong> </h4>
+          <h4 ><strong class="text-info bolder">Your verification type is : <%=user.otherData.verifiedBy.verificationType%></strong> </h4>
+          <hr>
+          <h4 class="text-warning bolder"><%=user.otherData.verifiedBy.message%> Please contact following leaders to verify your account sooner .</h4>
+          <%user.otherData.verifiedBy.verifiers.forEach((leader)=>{%>
+            <div class="student-room-container" style="display: flex;width: 100%;">
+              <div class="mr-2" >
+                <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
+              </div>
+              <div class="row"  style="width: 100%;">
+                <div class="col-sm-6"  style="width: 100%;display: flex;">
+                  <div style="width: 100%;">
+                    <strong class="d-block">Verifier : <%=leader.type%></strong>
+                    <strong class="d-block">Name : <%=leader.userName%></strong>
+                    <strong class="d-block">Phone : <%=leader.phone%></strong>
+                  </div>
+                </div>
+                <div class="col-sm-6 " style="margin: auto;">
+                  <div class="float-btn" style="display: flex;">
+                    <a href="">
+                      <div class="btn btn-primary btn-sm mr-1">View profile</div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <%})%>
+          
+        </div>
+      <%}%>
+    <div class="item-container" style="height: 50vh;">
+      Some item will be here.
+    </div>
+  </div>
+  <%- include('includes/designs/student-home-screen-right-part') %>
+</div>
+
+<%- include('includes/footer') %>

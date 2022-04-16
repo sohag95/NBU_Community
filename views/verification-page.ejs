@@ -1,0 +1,38 @@
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+<div class="container" style="height: 50vh;">
+  <div class="student-room-container mt-4">
+    <h4 class="text-info bolder text-center">Student's Account Details</h4>
+    <div class="row">
+      <div class="col-sm-6">
+        <p><strong>Registration Number : <%=studentData.regNumber%></strong></p>
+        <p><strong>Student Name : <%=studentData.userName%></strong></p>
+        <p><strong>Phone Number : <%=studentData.phone%></strong></p>
+        <p><strong>Gender : <%=studentData.gender%></strong></p>
+      </div>
+      <div class="col-sm-6">
+        <p><strong>Department Name : <%=studentData.departmentName%></strong></p>
+        <p><strong>Session Year : <%=studentData.sessionYear%></strong></p>
+        <p><strong>Email Id : <%=studentData.email%></strong></p>
+        <p><strong>Created : <%=studentData.createdDate%></strong></p>
+      </div>
+      <%if(studentData.isVerified){%>
+        <div class="btn btn-success btn-lg btn-block">Account Verified!!</div>
+      <%}else{%>
+        <p><strong>Verification Type : <%=studentData.verificationType%></strong></p>
+        <hr>
+        <div class="d-block">
+          <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/accept" method="post" >
+            <button class="btn btn-info btn-lg btn-block">Verified</button>
+          </form>
+        </div>
+        <hr>
+        <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/reject" method="post" class="d-block">
+          <button class="btn btn-danger btn-lg btn-block">Reject</button>
+        </form>
+        <hr>
+      <%}%>
+    </div>
+  </div>
+</div>
+<%- include('includes/footer') %>
