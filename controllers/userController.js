@@ -80,6 +80,36 @@ exports.loggingIn = function (req, res) {
             res.redirect('/log-in')
           })
         })
+      }else if(userType=="POSTC"){
+        let postController = new OfficialUser(req.body)
+        postController
+        .postControllerLogIn()
+        .then(function(result) {
+          req.session.user = {regNumber: postController.data.regNumber, userName: postController.data.userName,accountType:"postController"}
+          req.session.save(function() {
+            res.redirect('/postController-home')
+          })
+        }).catch(function(e) {
+          req.flash('errors', e)
+          req.session.save(function() {
+            res.redirect('/log-in')
+          })
+        })
+      }else if(userType=="EDITR"){
+        let videoEditor = new OfficialUser(req.body)
+        videoEditor
+        .videoEditorLogIn()
+        .then(function(result) {
+          req.session.user = {regNumber: videoEditor.data.regNumber, userName: videoEditor.data.userName,accountType:"videoEditor"}
+          req.session.save(function() {
+            res.redirect('/videoEditor-home')
+          })
+        }).catch(function(e) {
+          req.flash('errors', e)
+          req.session.save(function() {
+            res.redirect('/log-in')
+          })
+        })
       }else { 
           req.flash("errors", "Invalid Registration Number/Password!!")
           req.session.save(() => res.redirect("/log-in"))

@@ -39,6 +39,8 @@ Department.prototype.prepareDepartmentDataField=function(){
     allPresentMembers:[],
     activeBatches:activeBatches,
     XBatches:[],
+    presentActivity:null,
+    previosActivity:null,
     allActivities:[],
     departmentNotifications:[],
     coverPhoto:null,

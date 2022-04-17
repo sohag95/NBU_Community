@@ -10,14 +10,15 @@ const studentController=require('./controllers/studentController')
 const multipleOperationController=require('./controllers/multipleOperationController')
 const societyControllerController=require('./controllers/societyControllerController')
 const verificationController=require('./controllers/verificationController')
+const postControllerController=require('./controllers/postControllerController')
+const videoEditorController=require('./controllers/videoEditorController')
+const activityController=require('./controllers/activityController')
 
 //####################################
 router.get('/test',userController.test)
 //####################################
-//####################################
 //user log-in 
 router.post("/loggingIn",  userController.loggingIn)
-//####################################
 
 // user related routes
 router.get('/',userController.guestHomePage)
@@ -31,6 +32,12 @@ router.post("/verification/:case/:regNumber/reject",verificationController.check
 
 //NBU Community / Society controller related router
 router.get('/societyController-home',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.societyControllerHome)
+
+//Post controller related router
+router.get('/postController-home',officialUserController.postControllerMustBeLoggedIn,postControllerController.postControllerHome)
+
+//Video Editor related router
+router.get('/videoEditor-home',officialUserController.videoEditorMustBeLoggedIn,videoEditorController.videoEditorHome)
 
 //Student related router
 router.post("/createNewAccount",multipleOperationController.checkAccountPosition,studentController.createNewAccount)
@@ -55,8 +62,13 @@ router.get("/department/:departmentCode/details",userController.ifUserLoggedIn,d
 //group related routers
 router.get("/group/:groupId/details",userController.ifUserLoggedIn,groupController.isGroupExists,groupController.getGroupDetailsPage)
 
+//Activity relater routers
+//from=batch/department/group,id=batchId,departmentCode,groupId
+router.get("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getActivityCreationPage)
+router.post("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getExtraData,activityController.createNewActivity)
+
 //Logging out router
 router.post("/loggingOut", userController.loggingOut)
-
+//###################################
 
 module.exports=router

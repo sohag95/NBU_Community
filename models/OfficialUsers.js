@@ -63,6 +63,53 @@ OfficialUsers.prototype.NBUCommunityControllerLogIn=function(){
   })
 }
 
+OfficialUsers.prototype.postControllerLogIn=function(){
+  return new Promise((resolve, reject) => {
+    try {
+      this.cleanUp()
+      officialUsersCollection
+        .findOne({ dataType: "postControllerAuthData" })
+        .then(attemptedUser => {
+          if (attemptedUser && (this.data.regNumber===attemptedUser.regNumber && this.data.password===attemptedUser.password)) {
+            this.data = attemptedUser
+            resolve("Congrats!")
+          } else {
+            reject("Invalid registration number / password.")
+          }
+        })
+        .catch(function () {
+          reject("Please try again later.")
+        })
+    } catch {
+      reject()
+    }
+  })
+}
+
+
+OfficialUsers.prototype.videoEditorLogIn=function(){
+  return new Promise((resolve, reject) => {
+    try {
+      this.cleanUp()
+      officialUsersCollection
+        .findOne({ dataType: "videoEditorAuthData" })
+        .then(attemptedUser => {
+          if (attemptedUser && (this.data.regNumber===attemptedUser.regNumber && this.data.password===attemptedUser.password)) {
+            this.data = attemptedUser
+            resolve("Congrats!")
+          } else {
+            reject("Invalid registration number / password.")
+          }
+        })
+        .catch(function () {
+          reject("Please try again later.")
+        })
+    } catch {
+      reject()
+    }
+  })
+}
+
 OfficialUsers.getAllDepartments=function(){
   return new Promise((resolve, reject) => {
     try {

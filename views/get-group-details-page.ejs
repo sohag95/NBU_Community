@@ -35,6 +35,27 @@
         <h4 class="text-center text-success"><strong>Leader Board</strong> </h4>
         <hr>
         <div class="ml-2 mr-2 mb-1">
+          <h5><strong>Activities :</strong></h5>
+          <div class="container">
+            <%if(!groupDetails.presentActivity){%>
+              <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
+              <a href="/activity/batch/<%=groupDetails.groupId%>/create" class="btn btn-block btn-primary btn-lg">
+                Create New Group Activity
+              </a>
+              <%}else{%>
+                <div class="btn btn-lg btn-info btn-block">
+                  No leader and no activity done till now.
+                </div>
+              <%}%>
+            <%}else{%>
+              <div class="card">
+                Present activity details will be here
+              </div>
+            <%}%>
+          </div>
+        </div>
+        <hr>
+        <div class="ml-2 mr-2 mb-1">
           <h5><strong>Present Leader :</strong></h5>
           <%if(groupDetails.presentLeader){%>
             <div class="student-room-container" style="display: flex;width: 100%;">

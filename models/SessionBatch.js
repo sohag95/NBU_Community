@@ -19,9 +19,11 @@ SessionBatch.prototype.cleanUpData=function(){
     allMembers:[],
     allLeaders:[],
     newMemberRequests:[],
+    presentActivity:null,
+    previosActivity:null,
     completedActivities:[],
     batchState:"1stYear",//values will be : 1stYear/2ndYear/3rdYear/seniours/xBatch
-    createdDate:""
+    createdDate:new Date()
   }
 }
 

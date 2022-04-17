@@ -14,6 +14,8 @@ Group.prototype.prepareGroupDataField=function(){
     previousLeader:null,
     allMembers:[],
     allLeaders:[],
+    presentActivity:null,
+    previosActivity:null,
     allActivities:[],
     groupNotifications:[],
     coverPhoto:null

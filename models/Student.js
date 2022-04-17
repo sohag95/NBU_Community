@@ -246,7 +246,8 @@ Student.prototype.studentLogIn = function () {
   return new Promise((resolve, reject) => {
     if (typeof this.data.phone != "string") {
       reject("Try with valide data!")
-    }if (typeof this.data.password != "string") {
+    }
+    if (typeof this.data.password != "string") {
       reject("Try with valide data!")
     }
     console.log("Auth data :",this.data)

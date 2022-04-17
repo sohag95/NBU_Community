@@ -33,4 +33,36 @@ exports.societyControllerMustBeLoggedIn = function (req, res, next) {
 }
 
 
+exports.postControllerMustBeLoggedIn = function (req, res, next) {
+  if(req.session.user){
+    if (req.session.user.accountType == "postController") {
+      next()
+    } else {
+      req.flash("errors", "You are not allowed to perform that action!!")
+      req.session.save(function () {
+        res.redirect("/")
+      })
+    }
+  }else{
+    req.flash("errors", "You should log-in first to perform that action.")
+    req.session.save(() => res.redirect("/log-in"))
+  }
+}
+
+exports.videoEditorMustBeLoggedIn = function (req, res, next) {
+  if(req.session.user){
+    if (req.session.user.accountType == "videoEditor") {
+      next()
+    } else {
+      req.flash("errors", "You are not allowed to perform that action!!")
+      req.session.save(function () {
+        res.redirect("/")
+      })
+    }
+  }else{
+    req.flash("errors", "You should log-in first to perform that action.")
+    req.session.save(() => res.redirect("/log-in"))
+  }
+}
+
 

@@ -1,0 +1,60 @@
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7">
+    <h5 class="bolder text-primary pt-1 text-center"><strong>New Activity Creation Form</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <img class="single-batch-image"  src="/images/sponsor-banner.png" alt="">
+        </div>
+        <hr>
+        <form action="/activity/<%=activityData.from%>/<%=activityData.id%>/create" method="POST" id="activity-Form" class="container">
+          <div class="text-success"><strong>Create Activity : </strong></div>
+        
+          <div class="form-group">
+            <label for="topic-selected-by" class="text-muted"><small>Select topic selector :-</small></label>
+            <div id="topic-selected-by" class="text-center" style="display: flex;">
+              <div class="col-6 form-control form-control-lg ">
+              By Leader <input name="topicSelectedBy" value="leader" type="radio" required autocomplete="off" />
+              </div>
+              <div class="col-6 form-control form-control-lg ">
+              By Voting <input name="topicSelectedBy" value="voting"  type="radio"  autocomplete="off" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="topic" class="text-muted mb-1"><small>Select Topic :-</small></label>
+            <select  id="topic" class="form-control " name="topic" form="activity-Form">
+              <option value="">----------Select Topic----------</option>
+              <%activityData.topics.forEach((topic)=>{%>
+                <option value="<%=topic%>"><%=topic%></option>
+              <%})%>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="title" class="text-muted mb-1"><small>Give a title :-</small></label>
+            <input  name="title" id="title" class="form-control form-control-lg " type="text" placeholder="Title of the activity." autocomplete="off">
+          </div>
+      
+          <div class="form-group">
+            <label for="activity-body" class="text-muted mb-1"><small>Short details of activity :-</small></label>
+            <textarea  name="shortDetails" id="activity-body" class="body-content tall-textarea form-control" type="text"></textarea>
+          </div>
+
+          <button class="btn btn-primary btn-color text-center">Create New Activity</button>
+        </form>
+      </div>
+        
+    </div>
+  </div>
+  <div class="col-lg"></div>
+</div>
+<hr>
+
+
+<%- include('includes/footer') %>

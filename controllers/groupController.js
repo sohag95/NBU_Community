@@ -57,12 +57,11 @@ exports.getGroupDetailsPage = function (req, res) {
     
     }
 
-
-
     console.log("group details :",groupDetails)
     console.log("checkData:",checkData)
     res.render('get-group-details-page',{
-      groupDetails:groupDetails
+      groupDetails:groupDetails,
+      checkData:checkData
     })
   }catch{
     res.render('404')
