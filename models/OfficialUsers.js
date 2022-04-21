@@ -229,4 +229,62 @@ OfficialUsers.increaseRegSerialNumber=function(){
   })
 }
 
+
+OfficialUsers.getAllActivityTopics=function(){
+  return new Promise((resolve, reject) => {
+    try {
+      officialUsersCollection
+        .findOne({ dataType: "activityTopicsBySource" })
+        .then((allTopics) => {
+          resolve(allTopics)
+        })
+        .catch(()=> {
+          reject("Please try again later.")
+        })
+    } catch {
+      reject()
+    }
+  })
+}
+
+OfficialUsers.getPostControllerDetails=function(){
+  return new Promise((resolve, reject) => {
+    try {
+      officialUsersCollection
+        .findOne({ dataType: "postControllerAuthData" })
+        .then((postController) => {
+          let postControllerDetails={
+            regNumber:postController.regNumber,
+            userName:postController.userName,
+            phone:postController.phone
+          }
+          resolve(postControllerDetails)
+        })
+        .catch(()=> {
+          reject("Please try again later.")
+        })
+    } catch {
+      reject()
+    }
+  })
+}
+
+OfficialUsers.addAcivityOnPostControllerAccount=function(data){
+  return new Promise(async(resolve, reject) => {
+    try {
+      await officialUsersCollection.updateOne(
+        { dataType: "postControllerAuthData" },
+        {
+          $push: {
+            hendlingActivities: data
+          }
+        }
+      )
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
 module.exports=OfficialUsers

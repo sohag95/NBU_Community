@@ -103,5 +103,60 @@ Group.addOnGroupMember= function(groupId,memberData){
   })
 }
 
+Group.updatePresentActivityField= function(groupId,activityData){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await groupsCollection.updateOne(
+          { groupId: groupId },
+          {
+            $set: {
+              "presentActivity": activityData
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 
+Group.updatePresentActivityFieldAfterResultDeclaration= function(groupId,wonTopic){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await groupsCollection.updateOne(
+          { groupId: groupId },
+          {
+            $set: {
+              "presentActivity.isVoteCompleted": true,
+              "presentActivity.topic":wonTopic
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Group.updatePresentActivityFieldAfterEditDetails= function(groupId,data){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await groupsCollection.updateOne(
+          { groupId: groupId },
+          {
+            $set: {
+              "presentActivity.topic":data.topic,
+              "presentActivity.title":data.title,
+              "presentActivity.activityDate":data.activityDate
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 module.exports=Group

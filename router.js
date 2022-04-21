@@ -13,6 +13,8 @@ const verificationController=require('./controllers/verificationController')
 const postControllerController=require('./controllers/postControllerController')
 const videoEditorController=require('./controllers/videoEditorController')
 const activityController=require('./controllers/activityController')
+const votingController=require('./controllers/votingController')
+const checkingController=require('./controllers/checkingController')
 
 //####################################
 router.get('/test',userController.test)
@@ -65,7 +67,13 @@ router.get("/group/:groupId/details",userController.ifUserLoggedIn,groupControll
 //Activity relater routers
 //from=batch/department/group,id=batchId,departmentCode,groupId
 router.get("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getActivityCreationPage)
-router.post("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getExtraData,activityController.createNewActivity)
+router.post("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getExtraDataToCreateActivity,activityController.createNewActivity)
+router.get("/activity/:id/details",userController.ifUserLoggedIn,activityController.ifActivityPresent,activityController.getActivityDetailsPage)
+router.post("/activity/:id/edit",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkActivityLeaderOrNot,activityController.editActivityDetails)
+
+//voting related routers
+router.post("/vote/:activityId/:id/topic",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoter,votingController.giveTopicVote)
+router.post("/vote/:activityId/:id/declare-topic-result",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoteResultDeclarableOrNot,votingController.declareTopicResult)
 
 //Logging out router
 router.post("/loggingOut", userController.loggingOut)

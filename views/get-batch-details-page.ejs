@@ -43,8 +43,15 @@
               </a>
               <%}%>
             <%}else{%>
-              <div class="card">
-                present activity details will be here
+              <div class="student-room-container" >
+                <div style="width: 100%;">
+                  <strong  class="d-block text-info">Running activity -</strong>
+                  <strong class="d-block">Topic : <%=batchDetails.presentActivity.topic%></strong>
+                  <strong class="d-block">Title : <%=batchDetails.presentActivity.title%></strong>
+                </div>    
+                <a href="/activity/<%=batchDetails.presentActivity.activityId%>/details">
+                  <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
+                </a>    
               </div>
             <%}%>
           </div>

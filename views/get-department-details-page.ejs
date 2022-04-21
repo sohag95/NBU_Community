@@ -71,6 +71,30 @@
           <div class="container">
             <%if(!departmentDetails.presentActivity){%>
               <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
+              <a href="/activity/department/<%=departmentDetails.batchId%>/create" class="btn btn-block btn-primary btn-lg">
+                Create New Batch Activity
+              </a>
+              <%}%>
+            <%}else{%>
+              <div class="student-room-container" >
+                <div style="width: 100%;">
+                  <strong  class="d-block text-info">Running activity -</strong>
+                  <strong class="d-block">Topic : <%=departmentDetails.presentActivity.topic%></strong>
+                  <strong class="d-block">Title : <%=departmentDetails.presentActivity.title%></strong>
+                </div>    
+                <a href="/activity/<%=departmentDetails.presentActivity.activityId%>/details">
+                  <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
+                </a>    
+              </div>
+            <%}%>
+          </div>
+        </div>
+        <hr>
+        <div class="ml-2 mr-2 mb-1">
+          <h5><strong>Activities :</strong></h5>
+          <div class="container">
+            <%if(!departmentDetails.presentActivity){%>
+              <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
               <a href="/activity/department/<%=departmentDetails.departmentCode%>/create" class="btn btn-block btn-primary btn-lg">
                 Create New Departmental Activity
               </a>

@@ -267,13 +267,15 @@ Student.prototype.studentLogIn = function () {
             }
           }else{
             this.data.otherData={
-              isVerified:true
+              isVerified:true,
+              groupId:attemptedUser.groupId,
+              isXstudent:attemptedUser.isXstudent
             }
           }
           if(!attemptedUser.email){
             this.data.otherData.emailNotSet=true
           }
-          this.data.otherData.groupId=attemptedUser.groupId
+      
           console.log("Other data :",this.data.otherData)
           resolve("Congrats!")
         } else {

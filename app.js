@@ -34,11 +34,13 @@ app.use(function (req, res, next) {
     //like: for students
     // otherData={
     //   isVarified:true/false,
-    //   varifiedBy:{
+    //   varifiedBy:{//if not varified
     //     message:"Something",
     //     varifiers:[{data},{data}]
     //   },
     //   emailNotSet:false
+    //   groupId:groupId,
+    //   isXstudent:true/false
     // }
     //like: for admin
     // otherData={
@@ -48,6 +50,7 @@ app.use(function (req, res, next) {
     req.regNumber = undefined
     req.userName = undefined
     req.accountType=undefined
+    req.otherData=undefined
   }
   
   res.locals.user = req.session.user

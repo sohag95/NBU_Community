@@ -58,6 +58,7 @@ exports.getSessionBatchDetailsPage = function (req, res) {
       isBatchLeader:false,
       isPresentLeader:false,
       isPreviousLeader:false,
+      isXstudent:req.session.user.otherData.isXstudent
     }
     
     if(checkData.isUserLoggedIn){

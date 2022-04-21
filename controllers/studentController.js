@@ -46,7 +46,7 @@ exports.createNewAccount = function (req, res) {
       })
     })
     .catch(regErrors => {
-        req.flash("errors", regErrors)
+      req.flash("errors", regErrors)
       req.session.save(function () {
         res.redirect("/sign-up-form")
       })

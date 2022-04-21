@@ -215,4 +215,62 @@ Department.makeDepartmentPresentLeader=function(departmentCode,studentData){
 }
 
 
+Department.updatePresentActivityField= function(departmentCode,activityData){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await departmentsCollection.updateOne(
+          { departmentCode: departmentCode },
+          {
+            $set: {
+              "presentActivity": activityData
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Department.updatePresentActivityFieldAfterResultDeclaration= function(departmentCode,wonTopic){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await departmentsCollection.updateOne(
+          { departmentCode: departmentCode },
+          {
+            $set: {
+              "presentActivity.isVoteCompleted": true,
+              "presentActivity.topic":wonTopic
+            }
+          }
+        )
+        console.log("updatePresentActivityFieldAfterResultDeclaration ok")
+      resolve()
+    }catch{
+      console.log("Error updatePresentActivityFieldAfterResultDeclaration")
+      reject()
+    }
+  })
+}
+
+Department.updatePresentActivityFieldAfterEditDetails= function(departmentCode,data){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await departmentsCollection.updateOne(
+          { departmentCode: departmentCode },
+          {
+            $set: {
+              "presentActivity.topic":data.topic,
+              "presentActivity.title":data.title,
+              "presentActivity.activityDate":data.activityDate
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 module.exports=Department

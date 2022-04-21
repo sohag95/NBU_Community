@@ -167,6 +167,62 @@ SessionBatch.addOnBatchMember= function(batchId,studentData){
   })
 }
 
+SessionBatch.updatePresentActivityField= function(batchId,activityData){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              "presentActivity": activityData
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 
+SessionBatch.updatePresentActivityFieldAfterResultDeclaration= function(batchId,wonTopic){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              "presentActivity.isVoteCompleted": true,
+              "presentActivity.topic":wonTopic
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+
+SessionBatch.updatePresentActivityFieldAfterEditDetails= function(batchId,data){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              "presentActivity.topic":data.topic,
+              "presentActivity.title":data.title,
+              "presentActivity.activityDate":data.activityDate
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 
 module.exports=SessionBatch

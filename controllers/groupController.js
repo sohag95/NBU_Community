@@ -22,6 +22,7 @@ exports.getGroupDetailsPage = function (req, res) {
       isGroupLeader:false,
       isPresentLeader:false,
       isPreviousLeader:false,
+      isXstudent:req.session.user.otherData.isXstudent
     }
 
     if(checkData.isUserLoggedIn){

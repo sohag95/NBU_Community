@@ -65,4 +65,69 @@ OtherOperations.getDepartmentCodesFromGroupId=function(groupId){
   return newData
  }
 
+
+ OtherOperations.isSourceMember=function(source,sourceId,regNumber){
+ let sourceMember=false
+ if(source=="batch"){
+  if(sourceId==regNumber.slice(0,9)){
+    sourceMember=true
+  }
+ }else if(source=="department"){
+  if(sourceId==regNumber.slice(4,9)){
+    sourceMember=true
+  }
+ }else if(source=="group"){
+   //i have to check this portion later wheather it works or not
+  let departmentCodes=OtherOperations.getDepartmentCodesFromGroupId(sourceId)
+  if(departmentCodes.includes(regNumber.slice(4,9))){
+    sourceMember=true
+  }
+ }
+  return sourceMember
+ }
+
+ 
+OtherOperations.getTopicResultData=function(votingDetails){
+  // let topicOptions=["Study","Discussion","Fun"]
+  // let voters=[
+  //   {votingIndex:1},
+  //   {votingIndex:2},
+  //   {votingIndex:1},
+  //   {votingIndex:1},
+  //   {votingIndex:0},
+  //   {votingIndex:0},
+  //   {votingIndex:1},
+  //   {votingIndex:2},
+  //   {votingIndex:1},
+  //   {votingIndex:2},
+  //   {votingIndex:1},
+  // ]
+  // let result=[
+  //   {
+  //     topicIndex:0,
+  //     votes:1
+  //   }
+  // ]
+  
+  let topicOptions=votingDetails.topicOptions
+  let voters=votingDetails.voters
+  let result=[]
+  topicOptions.forEach((topic,index)=>{
+    let field={
+      topicIndex:index,
+      votes:0
+    }
+    result.push(field)
+  })
+
+  voters.forEach((voter)=>{
+    let index=voter.votingIndex
+    result[index].votes=result[index].votes+1
+  })
+  //sorting the result array in decending order by votes
+  result.sort((a, b) => b.votes - a.votes);
+  //first Index contains the winning result
+  return result
+}
+
  module.exports=OtherOperations

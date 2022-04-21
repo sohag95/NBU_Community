@@ -1,0 +1,93 @@
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7" >
+
+    <h5 class="bolder text-primary pt-1 text-center"><strong>Activity Details</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
+          <div class="text-success text-center"><strong>Department Name : <%=activityDetails.sourceName%> </strong></div>
+        </div>
+        <hr>
+        
+        <%if(votingDetails){%>
+          <div class=" student-room-container" >
+            <div style="width: 100%;">
+              <h6  class="bolder text-info">Vote for upcomming activity topic -</h6>
+              <strong class="d-block">Created date : <%= votingDetails.votingDates.createdDate.getMonth() + 1 %>/<%= votingDetails.votingDates.createdDate.getDate() %>/<%= votingDetails.votingDates.createdDate.getFullYear() %></strong>
+              <strong class="d-block">Last date of vote : <%= votingDetails.votingDates.votingLastDate.getMonth() + 1 %>/<%= votingDetails.votingDates.votingLastDate.getDate() %>/<%= votingDetails.votingDates.votingLastDate.getFullYear() %></strong>
+            </div>  
+            <hr>
+            <h6 class="text-warning">Received votes : <strong><%=votingDetails.voters.length%></strong></h6>
+            <hr>
+            <h5 class="bolder text-warning text-center">Please Give Your Vote</h5>
+            <h6 class="bolder">Available Topics</h6>  
+            <form action="/vote/<%=activityDetails._id%>/<%=votingDetails._id%>/topic" method="post" id="voting-form">
+              <div class="form-group">
+                <label for="topicIndex" class="text-muted mb-1"><small>Select Topic :-</small></label>
+                <select  id="topicIndex" class="form-control " name="topicIndex" form="voting-form">
+                  <option value="">----------Select Topic----------</option>
+                  <%votingDetails.topicOptions.forEach((topic,index)=>{%>
+                    <option value="<%=index%>"><%=topic%></option>
+                  <%})%>
+                </select>
+              </div>
+              <button class="btn btn-lg btn-warning btn-block">Submit selected topic</button>
+            </form>
+          </div>
+        
+        <hr>
+          <%if(checkData.isActivityLeader && !votingDetails.resultDeclared){%>
+            <form action="/vote/<%=activityDetails._id%>/<%=votingDetails._id%>/declare-topic-result" method="post">
+              <button class="btn btn-lg btn-block btn-success ">
+                <strong class="bolder">Declare the result</strong>
+              </button>
+            </form>
+          <%}%>
+        <hr>
+        <%}%>
+        <%if(checkData.isActivityLeader){%>
+          <%if(activityDetails.isTopicByVote && activityDetails.isVoteCompleted && !activityDetails.title){%>
+            <div class=" student-room-container" >
+              <div style="width: 100%;">
+                <h4  class="bolder text-info">Topic has been selected by vote :</h4>
+                <strong class="d-block">Topic : <%= activityDetails.topic%></strong>
+                <strong class="d-block">Vote result date : <%= activityDetails.activityDates.votingResultDate.getMonth() + 1 %>/<%= activityDetails.activityDates.votingResultDate.getDate() %>/<%= activityDetails.activityDates.votingResultDate.getFullYear() %></strong>
+              </div> 
+              <h4 class="text-warning"><strong>Set other data :</strong></h4>
+              <form action="/activity/<%=activityDetails._id%>/edit" method="post">
+
+                <div class="form-group">
+                  <label for="title" class="text-muted mb-1"><small>Give a title :-</small></label>
+                  <input  name="title" id="title" class="form-control form-control-lg " type="text" placeholder="Title of the activity." autocomplete="off">
+                </div>
+            
+                <div class="form-group">
+                  <label for="activity-body" class="text-muted mb-1"><small>Short details of activity :-</small></label>
+                  <textarea  name="shortDetails" id="activity-body" class="body-content tall-textarea form-control" type="text"></textarea>
+                </div>
+      
+                <div class="form-group">
+                  <label for="activityDate" class="text-muted mb-1"><small>Activity Date :-</small></label>
+                  <input  name="activityDate" id="activityDate" class="form-control form-control-lg " type="date" placeholder="Activity date." autocomplete="off">
+                </div>
+
+                <input  name="topic" type="hidden" value="<%=activityDetails.topic%>">
+              
+                <button class="btn btn-primary btn-color text-center">Submit Activity Data</button>
+        
+              </form>
+            </div>
+          <%}%>
+        <%}%>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg"></div>
+</div>
+
+<%- include('includes/footer') %>

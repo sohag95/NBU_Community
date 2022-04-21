@@ -22,6 +22,7 @@ exports.getDepartmentDetailsPage = function (req, res) {
       isDepartmentLeader:false,
       isPresentLeader:false,
       isPreviousLeader:false,
+      isXstudent:req.session.user.otherData.isXstudent
     }
 
     if(checkData.isUserLoggedIn){
