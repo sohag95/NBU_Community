@@ -52,10 +52,10 @@
             
           
             
-              <a href="/tournaments">
+              <a href="/test">
                 <div class="side-item">
                   <i class="fas fa-trophy fa-lg"></i>
-                  <strong>Services</strong>
+                  <strong>Test Page</strong>
                 </div>
               </a>
               <a href="/matches">
@@ -110,6 +110,18 @@
                     <button class="btn  btn-primary"> Society Controller Home </button>
                   </a>
                 </div>
+              <%}else if(user.accountType=="postController"){%>
+                <div class="side-item">
+                  <a href="/postController-home">
+                    <button class="btn  btn-primary"> Post Controller Home </button>
+                  </a>
+                </div>
+              <%}else if(user.accountType=="videoEditor"){%>
+                <div class="side-item">
+                  <a href="/videoEditor-home">
+                    <button class="btn  btn-primary">Video Editor Home </button>
+                  </a>
+                </div>
               <%}%>
               <div class="side-item">
                   <form action="/loggingOut" method="POST" class="d-inline"> 
@@ -130,7 +142,7 @@
       </div>
       </div>
       <div class="float-right notVisibleOnCollapse">
-        <a class="mr-2" href="#"><strong><i class="fas fa-trophy"></i> Activities</strong></a>
+        <a class="mr-2" href="/test"><strong><i class="fas fa-trophy"></i> Test Page</strong></a>
         <a class="mr-2" href="#"><strong><i class="fas fa-info-circle"></i></i> Services</strong></a>
         
         <%if(user){%>
@@ -145,6 +157,14 @@
           <%}else if(user.accountType=="societyController"){%>
             <a href="/societyController-home">
                 <button class="btn  btn-primary"> Society Controller Home </button>
+            </a>
+          <%}else if(user.accountType=="postController"){%>
+            <a href="/postController-home">
+                <button class="btn  btn-primary"> Post Controller Home </button>
+            </a>
+          <%}else if(user.accountType=="videoEditor"){%>
+            <a href="/videoEditor-home">
+                <button class="btn  btn-primary"> Video Editor Home </button>
             </a>
           <%}%>
           <form action="/loggingOut" method="POST" class="d-inline"> 

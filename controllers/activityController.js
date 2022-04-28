@@ -204,9 +204,7 @@ exports.getActivityDetailsPage=function(req,res){
     if(activityMember){
       checkData.isActivityMember=true
     }
-    
   }
-
   // let today=new Date()
   // let lastDate=votingDetails.votingDates.votingLastDate
   // console.log("today:",today)
@@ -216,8 +214,8 @@ exports.getActivityDetailsPage=function(req,res){
   // }else{
   //   console.log("You can't vote.")
   // }
-  // console.log("ActivityDetails:",activityDetails)
-   console.log("checkData:",checkData)
+  console.log("ActivityDetails:",activityDetails)
+  console.log("checkData:",checkData)
   // console.log("Voting Details:",votingDetails)
   res.render("activity-details-page",{
     checkData:checkData,
@@ -259,4 +257,102 @@ exports.editActivityDetails=async function(req,res){
     req.flash("errors", "There is some problem.")
     res.redirect(`/activity/${req.params.id}/details`)
   }
+}
+
+
+exports.activitySubmitted=function(req,res){
+  let submittedBy={
+    regNumber:req.regNumber,
+    userName:req.userName
+  }
+ Activity.submitActivityByLeader(req.params.id,submittedBy).then(()=>{
+  req.activityDetails=undefined
+  req.flash("success", "Activity state successfully updated!!")
+  res.redirect(`/activity/${req.params.id}/details`)
+ }).catch((e)=>{
+  req.flash("errors", e)
+  res.redirect(`/activity/${req.params.id}/details`)
+ })
+}
+
+exports.activityReceivedByPostController=function(req,res){
+  let note=req.body.postControllerNote
+  if(!note){
+    note="Did not put any note here."
+  }
+ Activity.receiveActivityByPostController(req.params.id,note).then(()=>{
+  req.activityDetails=undefined
+  req.flash("success", "Activity successfully received!!")
+  res.redirect(`/activity/${req.params.id}/details`)
+ }).catch((e)=>{
+  req.flash("errors", e)
+  res.redirect(`/activity/${req.params.id}/details`)
+ })
+}
+
+exports.assignVideoEditor=function(req,res){
+ Activity.assignVideoEditor(req.body,req.activityDetails._id).then(()=>{
+  req.activityDetails=undefined
+  req.flash("success", "Video editor assigned successfully!!")
+  res.redirect(`/activity/${req.params.id}/details`)
+ }).catch((e)=>{
+  req.flash("errors", e)
+  res.redirect(`/activity/${req.params.id}/details`)
+ })
+}
+
+exports.acceptVideoEditingByEditor=function(req,res){
+  let note=req.body.videoEditorNote
+  if(!note){
+    note="Did not put any note here."
+  }
+ Activity.acceptVideoEditingByEditor(req.params.id,note).then(()=>{
+  req.activityDetails=undefined
+  req.flash("success", "Video editing work successfully received!!")
+  res.redirect(`/activity/${req.params.id}/details`)
+ }).catch((e)=>{
+  req.flash("errors", e)
+  res.redirect(`/activity/${req.params.id}/details`)
+ })
+}
+
+exports.videoEditingCompletedByEditor=function(req,res){ 
+ Activity.videoEditingCompletedByEditor(req.activityDetails._id).then(()=>{
+  req.activityDetails=undefined
+  req.flash("success", "Video editing work successfully received!!")
+  res.redirect(`/activity/${req.params.id}/details`)
+ }).catch((e)=>{
+  req.flash("errors", e)
+  res.redirect(`/activity/${req.params.id}/details`)
+ })
+}
+
+//this function will be changed completely.Cover photo will be uploaded on AWS bucket later
+exports.uploadVideoCoverPhoto=function(req,res){
+  if(req.body.videoCoverPhoto){
+    let link="/images/sponsor-mid-banner.png"
+    Activity.uploadVideoCoverPhoto(req.activityDetails._id,link).then(()=>{
+      req.activityDetails=undefined
+      req.flash("success", "Video cover photo successfully updated!!")
+      res.redirect(`/activity/${req.params.id}/details`)
+    }).catch(()=>{
+      req.flash("errors", e)
+      res.redirect(`/activity/${req.params.id}/details`)
+    })
+  }else{
+    req.flash("errors", "You should give a photo link.")
+    res.redirect(`/activity/${req.params.id}/details`)
+  }
+}
+
+exports.publishActivity=function(req,res){
+  let activity=new Activity(req.body)
+  activity.publishActivity(req.activityDetails._id).then(()=>{
+    req.activityDetails=undefined
+    req.flash("success", "Video editing work successfully received!!")
+    res.redirect(`/activity/${req.params.id}/details`)
+  }).catch(()=>{
+    req.flash("errors", e)
+    res.redirect(`/activity/${req.params.id}/details`)
+  })
 }

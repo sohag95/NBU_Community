@@ -1,4 +1,5 @@
 const officialUsersCollection = require("../db").db().collection("officialDataTable")
+const { ObjectId } = require("mongodb")
 
 let OfficialUsers=function(data){
  this.data=data
@@ -269,14 +270,15 @@ OfficialUsers.getPostControllerDetails=function(){
   })
 }
 
-OfficialUsers.addAcivityOnPostControllerAccount=function(data){
+
+OfficialUsers.addSubmittedAcivityIdOnPostControllerAccount=function(id){
   return new Promise(async(resolve, reject) => {
     try {
       await officialUsersCollection.updateOne(
         { dataType: "postControllerAuthData" },
         {
           $push: {
-            hendlingActivities: data
+            submittedActivities: id
           }
         }
       )
@@ -287,4 +289,117 @@ OfficialUsers.addAcivityOnPostControllerAccount=function(data){
   })
 }
 
+OfficialUsers.getAllSubmittedActivityIdsFromPostController=function(){
+  return new Promise(async(resolve, reject) => {
+    try {
+      let data=await officialUsersCollection.findOne({ dataType: "postControllerAuthData" })
+      let activityIds=data.submittedActivities
+      resolve(activityIds)
+    } catch {
+      reject()
+    }
+  })
+}
+
+
+OfficialUsers.getVideoEditorData=function(){
+  return new Promise((resolve, reject) => {
+    try {
+      officialUsersCollection
+        .findOne({ dataType: "videoEditorAuthData" })
+        .then((videoEditor) => {
+          let videoEditorData={
+            regNumber:videoEditor.regNumber,
+            userName:videoEditor.userName,
+            phone:videoEditor.phone
+          }
+          resolve(videoEditorData)
+        })
+        .catch(()=> {
+          reject("Please try again later.")
+        })
+    } catch {
+      reject()
+    }
+  })
+}
+
+
+OfficialUsers.assignActivityIdToEditorAccount=function(id){
+  return new Promise(async(resolve, reject) => {
+    try {
+      await officialUsersCollection.updateOne(
+        { dataType: "videoEditorAuthData" },
+        {
+          $push: {
+            assignedActivities: id
+          }
+        }
+      )
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
+OfficialUsers.getAllAssignedActivityIdsOfEditor=function(){
+  return new Promise(async(resolve, reject) => {
+    try {
+      let data=await officialUsersCollection.findOne({ dataType: "videoEditorAuthData" })
+      let assignedIds=data.assignedActivities
+      resolve(assignedIds)
+    } catch {
+      reject()
+    }
+  })
+}
+
+//this function will be called after publishing the activity by post controller
+OfficialUsers.removeAssignedActivityIdFromEditor=function(id){
+  return new Promise(async(resolve, reject) => {
+    try {
+      await officialUsersCollection.updateMany(
+        { dataType: "videoEditorAuthData" },
+        {
+          $push: {
+            completedActivities: id
+          },
+          $pull:{
+            assignedActivities:id
+          }
+        }
+      )
+      console.log("Successfully ran!!")
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
+OfficialUsers.removeSubmittedActivityIdFromPostController=function(id){
+  return new Promise(async(resolve, reject) => {
+    try {
+      await officialUsersCollection.updateMany(
+        { dataType: "postControllerAuthData" },
+        {
+          $push: {
+            completedActivities: id
+          },
+          $pull:{
+            submittedActivities:id
+          }
+        }
+      )
+      console.log("Successfully ran!!")
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
 module.exports=OfficialUsers
+
+    

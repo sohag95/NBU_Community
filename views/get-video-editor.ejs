@@ -1,0 +1,47 @@
+
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7" >
+
+    <h5 class="bolder text-primary pt-1 text-center"><strong>Available Video Editors</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
+        </div>
+        <hr>
+        
+        <div class="container">
+           <div class="student-room-container">
+            <h5 class="bolder text-warning"><strong>Activity Data :</strong></h5>
+              <strong class="d-block">Source : <i><%=activityDetails.sourceName%></i> </strong>
+              <strong class="d-block">Source Id : <i><%=activityDetails.activitySourceId%></i> </strong>
+              <strong class="d-block">Submission Date : </strong>
+              <h6 class="bolder text-info"><strong>Status : </strong><%=activityDetails.status%></h6>
+              
+            </div> 
+          <hr>
+          <div class="student-room-container">
+            <h6 class="bolder text-warning"><strong>Editor Data :</strong></h6>
+            <strong class="d-block">Name : <i><%=editorData.userName%></i> </strong>
+            <strong class="d-block">Phone Number : <i><%=editorData.phone%></i> </strong>
+            <form action="/assign/<%=activityDetails._id%>/video-editor" method="post">
+              <input type="hidden" name="regNumber" value="<%=editorData.regNumber%>">
+              <input type="hidden" name="userName" value="<%=editorData.userName%>">
+              <input type="hidden" name="phone" value="<%=editorData.phone%>">
+              <button class="btn btn-lg btn-block btn-success ">
+                <strong class="bolder">Assign To <i><%=editorData.userName%></i></strong>
+              </button>
+            </form>
+          </div> 
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg"></div>
+</div>
+<%- include('includes/footer') %>

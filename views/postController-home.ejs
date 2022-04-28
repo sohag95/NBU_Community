@@ -1,9 +1,37 @@
 <%- include('includes/header') %>
 <%- include('includes/flash') %>
 
-<div class="container" style="height: 50vh;" >
-  <h4 class="text-center mt-4"><strong>This is Post Controller's home page!!</strong></h4>
-  <h4 class="text-center mt-4"><strong>Post Controller's name is : </strong><i><%=user.userName%></i></h4>
-</div>
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7" >
 
+    <h5 class="bolder text-primary pt-1 text-center"><strong>Post Controller</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
+          <div class="text-success text-center"><strong><%=user.userName%></strong></div>
+        </div>
+        <hr>
+        <h5 class="bolder">Submitted Activities :</h5>
+        <div class="container">
+          <%submittedActivities.forEach((activity)=>{%>
+            <div class="student-room-container">
+              <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
+              <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
+              <strong class="d-block">Submission Date : </strong>
+              <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
+              <p><strong>Note : </strong><%=activity.postControllerNote%></p>
+              <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
+                Go to activity details...
+              </a>
+            </div> 
+          <%})%>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg"></div>
+</div>
 <%- include('includes/footer') %>

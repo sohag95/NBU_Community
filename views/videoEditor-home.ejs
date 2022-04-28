@@ -1,9 +1,76 @@
 <%- include('includes/header') %>
 <%- include('includes/flash') %>
 
-<div class="container" style="height: 50vh;" >
-  <h4 class="text-center mt-4"><strong>This is Video Editor's home page!!</strong></h4>
-  <h4 class="text-center mt-4"><strong>Video Editor's name is : </strong><i><%=user.userName%></i></h4>
-</div>
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7" >
 
+    <h5 class="bolder text-primary pt-1 text-center"><strong>Video Editor</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
+          <div class="text-success text-center"><strong><%=user.userName%></strong></div>
+        </div>
+        <hr>
+        <h5 class="bolder">Assigned Activities :</h5>
+        <div class="container">
+          <%if(!assignedActivities.length){%>
+            <div class="btn btn-lg btn-block btn-info ">There is no remaining assigned activities!!</div>
+          <%}else{%>
+            <%assignedActivities.forEach((activity)=>{%>
+              <div class="student-room-container">
+                <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
+                <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
+                <strong class="d-block">Submission Date : </strong>
+                <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
+                <p><strong>Note : </strong><%=activity.videoEditorNote%></p>
+                <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
+                  Go to activity details...
+                </a>
+                <%if(activity.status=="editorAssigned"){%>
+                  <hr>
+                  <div>
+                    <h5 class="text-warning">Me,<strong><%=user.userName%></strong> as video editor received all the videos regarding the activity given by post controller.</h5>
+                    <form action="/accept/<%=activity._id%>/video-editing" method="post">
+                      <div class="form-group">
+                        <label for="post-controller-body" class="text-muted mb-1"><small>Write short note regarding this activity :-</small></label>
+                        <textarea  name="videoEditorNote" id="post-controller-body" class="body-content tall-textarea form-control" type="text" placeholder="Write short note here."></textarea>
+                      </div>
+                      <button class="btn btn-lg btn-block btn-success ">
+                        <strong class="bolder">Click if documents are received</strong>
+                      </button>
+                    </form>
+                  </div>
+                <%}%>
+                <%if(activity.status=="editingAccepted"){%>
+                  <hr>
+                  <div>
+                    <h5 class="text-warning"><strong>When you will complete your editing,give the final video to post controller and click the belowed button to update the activity state as "edited".</strong></h5>
+                    <form action="/video-editing/<%=activity._id%>/completed" method="post">
+                      <button class="btn btn-lg btn-block btn-success ">
+                        <strong class="bolder">Click if editing completed</strong>
+                      </button>
+                    </form>
+                  </div>
+                <%}%>
+                <%if(activity.status=="edited"){%>
+                  <hr>
+                  <div class="container">
+                    <h5 class="text-warning text-center"><strong>Thank you so much for your complition of video editing.Please hand over final video to post controller.</strong></h5>
+                    <button class="btn btn-lg btn-block btn-success ">
+                        <strong class="bolder">Wait for publishing.You will get the credit.</strong>
+                    </button>
+                  </div>
+                <%}%>
+              </div> 
+            <%})%>
+          <%}%>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg"></div>
+</div>
 <%- include('includes/footer') %>

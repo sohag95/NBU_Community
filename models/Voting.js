@@ -172,7 +172,7 @@ Voting.declareTopicResult=function(votingDetails,resultData,declaredBy,activityI
           $set:{
             "isVoteCompleted":true,
             "topic":data.wonTopic,
-            "status":"votted",
+            "status":"voted",
             "activityDates.votingResultDate":new Date()
           }
         })

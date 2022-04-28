@@ -91,24 +91,32 @@ Activity.prototype.getActivityData=async function(){
       isTopicByVote:false,//false means topic selected by leader
       isVoteCompleted:false,
       votingId:null,
-      videoLink:null,
+      videoLinks:{
+        youTube:null,
+        facebook:null,
+        instagram:null,
+        linkedIn:null
+      },
+      videoCoverPhoto:null,
       topic:null,
       title:null,
       shortDetails:null,
-      status:"created",//created,votted,activityDone,submitted,received,edited,published
+      status:"created",//created,voted,activitySubmitted,received,(editorAssigned,editingAccepted),edited,published
       leaders:this.neededData.leaders,
       postControllerDetails:postControllerDetails,
       videoEditorDetails:null,
       allActivityPerticipents:[],
       activityDates:{
         createdDate:new Date(),
+        votingLastDate:null,
         votingResultDate:null,
         activityDate:null,
         submissionDate:null,
         receivedDate:null,
-        editingDate:null,
+        editorAssignedDate:null,
+        editingAcceptedDate:null,
+        editedDate:null,
         publishedDate:null,
-        votingLastDate:null
       },
       activityHandler:{
         type:"creator",//creator,editor
@@ -174,17 +182,10 @@ Activity.prototype.createNewActivity=function(){
               activityDate:this.activityData.activityDates.activityDate,
               createdDate:this.activityData.activityDates.createdDate
             }
-            let dataToPostController={
-              activityId:createdActivity.insertedId,
-              activityType:this.neededData.from,
-              sourceName:this.neededData.sourceName,
-              createdDate:this.activityData.activityDates.createdDate
-            }
-            console.log("Created activity :",createdActivity)
+            //console.log("Created activity :",createdActivity)
             //update activity creating source's present activity field
             await this.updatePresentActivityFieldBySource(activityData)
-            //push activityId to postController's profile
-            await OfficialUsers.addAcivityOnPostControllerAccount(dataToPostController)
+           
             resolve(createdActivity.insertedId)
           }else{
             reject("Activity not created!")
@@ -277,12 +278,12 @@ Activity.getActivityDetailsById=function(id){
   })
 }
 
-
+//i have to work on this function later
 Activity.updateActivityDataAfterVoteResult=function(id,wonTopic){
   return new Promise(async (resolve, reject) => { 
     try{
       console.log("I am here buddy")
-      // let status="votted"
+      // let status="voted"
       // await activityCollection.updateMany({_id: new ObjectId(id)},{
       //   $set:{
       //     "isVoteCompleted":true,
@@ -300,4 +301,215 @@ Activity.updateActivityDataAfterVoteResult=function(id,wonTopic){
   })
 }
 
+
+Activity.getAllActivityDetailsOfArrayIds=function(activityIds){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      //update state and date
+      let allActivities=await activityCollection.find({_id:{ $in:activityIds }}).toArray()
+      resolve(allActivities)
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+Activity.submitActivityByLeader=function(id,submittedBy){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      //update state and date
+      await activityCollection.updateOne({_id: new ObjectId(id)},{
+        $set:{
+          "status":"activitySubmitted",
+          "activityDates.submissionDate":new Date(),
+          "submittedBy":submittedBy
+        }
+      })
+      //sent activity id to postController to control states of activity
+      await OfficialUsers.addSubmittedAcivityIdOnPostControllerAccount(new ObjectId(id))
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+
+Activity.receiveActivityByPostController=function(id,note){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      //update state and date
+      await activityCollection.updateOne({_id: new ObjectId(id)},{
+        $set:{
+          "status":"received",
+          "activityDates.receivedDate":new Date(),
+          "postControllerNote":note
+        }
+      })
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+
+Activity.assignVideoEditor=function(data,id){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      //update state and date
+      let editorData={
+        regNumber:data.regNumber,
+        userName:data.userName,
+        phone:data.phone
+      }
+      console.log("Editor data :",editorData)
+      await activityCollection.updateOne({_id: new ObjectId(id)},{
+        $set:{
+          "status":"editorAssigned",
+          "videoEditorDetails":editorData,
+          "activityDates.editorAssignedDate":new Date(),
+        }
+      })
+      await OfficialUsers.assignActivityIdToEditorAccount(id)
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+
+Activity.acceptVideoEditingByEditor=function(id,note){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      //update state and date
+      await activityCollection.updateOne({_id: new ObjectId(id)},{
+        $set:{
+          "status":"editingAccepted",
+          "activityDates.editingAcceptedDate":new Date(),
+          "videoEditorNote":note
+        }
+      })
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+Activity.videoEditingCompletedByEditor=function(id){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      //update state and date
+      //id is already in IdObject formate so no change
+      await activityCollection.updateOne({_id:id},{
+        $set:{
+          "status":"edited",
+          "activityDates.editedDate":new Date(),
+        }
+      })
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+//this function will be changed completely.photo should uploaded on AWS bucket
+Activity.uploadVideoCoverPhoto=function(id,link){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      await activityCollection.updateOne({_id:id},{
+        $set:{
+          "videoCoverPhoto":link,
+        }
+      })
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+Activity.prototype.cleanUpLinkData=function(){
+  let videoLinks={
+    youTube:null,
+    facebook:null,
+    instagram:null,
+    linkedIn:null
+  }
+  if(this.data.youTubeLink){
+    videoLinks.youTube=this.data.youTubeLink
+  }
+  if(this.data.facebookLink){
+    videoLinks.facebook=this.data.facebook
+  }
+  if(this.data.instagramLink){
+    videoLinks.instagram=this.data.instagram
+  }
+  if(this.data.linkedInLink){
+    videoLinks.linkedIn=this.data.linkedIn
+  }
+  return videoLinks
+}
+
+Activity.prototype.updatePublishedState=function(id,videoLinks){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      await activityCollection.updateOne({_id:id},{
+        $set:{
+          "status":"published",
+          "activityDates.publishedDate":new Date(),
+          "videoLinks":videoLinks
+        }
+      })
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+//************************/
+Activity.prototype.updateSourceFieldValueAfterActivityPublished=function(){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      //tomorrow i have to work on this function
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+Activity.prototype.publishActivity=function(id){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      //set given linked
+      let videoLinks=this.cleanUpLinkData()
+      await this.updatePublishedState(id,videoLinks)
+      //update activity source field values
+      await this.updateSourceFieldValueAfterActivityPublished()
+      //update state with changing data on activity
+      await OfficialUsers.removeAssignedActivityIdFromEditor(id)
+      await OfficialUsers.removeSubmittedActivityIdFromPostController(id)
+      //remove assigned activity id from editor account and add activity id as submitted activity
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
 module.exports=Activity
+
+
+//rejected this kind of storage
+//this was during post/activity creation
+// let dataToPostController={
+//   activityId:createdActivity.insertedId,
+//   activityType:this.neededData.from,
+//   sourceName:this.neededData.sourceName,
+//   createdDate:this.activityData.activityDates.createdDate
+// }
+         

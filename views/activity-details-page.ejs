@@ -9,81 +9,365 @@
     <div class="single-batch-container">
       <div class="single-batch-data pb-4">
         <div style="position: relative;">
-          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
+          <%if(activityDetails.videoCoverPhoto){%>
+            <img class="single-batch-image"  src="<%=activityDetails.videoCoverPhoto%>" alt="">
+          <%}else{%>
+            <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
+          <%}%>
           <div class="text-success text-center"><strong>Department Name : <%=activityDetails.sourceName%> </strong></div>
         </div>
         <hr>
-        
-        <%if(votingDetails){%>
-          <div class=" student-room-container" >
-            <div style="width: 100%;">
-              <h6  class="bolder text-info">Vote for upcomming activity topic -</h6>
-              <strong class="d-block">Created date : <%= votingDetails.votingDates.createdDate.getMonth() + 1 %>/<%= votingDetails.votingDates.createdDate.getDate() %>/<%= votingDetails.votingDates.createdDate.getFullYear() %></strong>
-              <strong class="d-block">Last date of vote : <%= votingDetails.votingDates.votingLastDate.getMonth() + 1 %>/<%= votingDetails.votingDates.votingLastDate.getDate() %>/<%= votingDetails.votingDates.votingLastDate.getFullYear() %></strong>
-            </div>  
-            <hr>
-            <h6 class="text-warning">Received votes : <strong><%=votingDetails.voters.length%></strong></h6>
-            <hr>
-            <h5 class="bolder text-warning text-center">Please Give Your Vote</h5>
-            <h6 class="bolder">Available Topics</h6>  
-            <form action="/vote/<%=activityDetails._id%>/<%=votingDetails._id%>/topic" method="post" id="voting-form">
-              <div class="form-group">
-                <label for="topicIndex" class="text-muted mb-1"><small>Select Topic :-</small></label>
-                <select  id="topicIndex" class="form-control " name="topicIndex" form="voting-form">
-                  <option value="">----------Select Topic----------</option>
-                  <%votingDetails.topicOptions.forEach((topic,index)=>{%>
-                    <option value="<%=index%>"><%=topic%></option>
-                  <%})%>
-                </select>
-              </div>
-              <button class="btn btn-lg btn-warning btn-block">Submit selected topic</button>
-            </form>
-          </div>
-        
-        <hr>
-          <%if(checkData.isActivityLeader && !votingDetails.resultDeclared){%>
-            <form action="/vote/<%=activityDetails._id%>/<%=votingDetails._id%>/declare-topic-result" method="post">
-              <button class="btn btn-lg btn-block btn-success ">
-                <strong class="bolder">Declare the result</strong>
-              </button>
-            </form>
-          <%}%>
-        <hr>
-        <%}%>
-        <%if(checkData.isActivityLeader){%>
-          <%if(activityDetails.isTopicByVote && activityDetails.isVoteCompleted && !activityDetails.title){%>
+        <%if(activityDetails.isTopicByVote){%>
+          <%if(!activityDetails.isVoteCompleted){%>
+            <!-- //voting details form -->
+            <div class=" student-room-container" >
+              <div style="width: 100%;">
+                <h6  class="bolder text-info">Vote for upcomming activity topic -</h6>
+                <strong class="d-block">Created date : <%= votingDetails.votingDates.createdDate.getMonth() + 1 %>/<%= votingDetails.votingDates.createdDate.getDate() %>/<%= votingDetails.votingDates.createdDate.getFullYear() %></strong>
+                <strong class="d-block">Last date of vote : <%= votingDetails.votingDates.votingLastDate.getMonth() + 1 %>/<%= votingDetails.votingDates.votingLastDate.getDate() %>/<%= votingDetails.votingDates.votingLastDate.getFullYear() %></strong>
+              </div>  
+              <hr>
+              <h6 class="text-warning">Received votes : <strong><%=votingDetails.voters.length%></strong></h6>
+              <hr>
+              <%let alreadyVoted=false%>
+              <%let votingIndex=null%>
+              <%votingDetails.voters.forEach((voter)=>{%>
+                <%if(voter.regNumber==user.regNumber){%>
+                  <%alreadyVoted=true%>
+                  <%votingIndex=voter.votingIndex%>
+                <%}%>
+              <%})%>
+              <%if(!alreadyVoted){%>
+                <h5 class="bolder text-warning text-center">Please Give Your Vote</h5>
+                <h6 class="bolder">Available Topics</h6>  
+                <form action="/vote/<%=activityDetails._id%>/<%=votingDetails._id%>/topic" method="post" id="voting-form">
+                  <div class="form-group">
+                    <label for="topicIndex" class="text-muted mb-1"><small>Select Topic :-</small></label>
+                    <select  id="topicIndex" class="form-control " name="topicIndex" form="voting-form">
+                      <option value="">----------Select Topic----------</option>
+                      <%votingDetails.topicOptions.forEach((topic,index)=>{%>
+                        <option value="<%=index%>"><%=topic%></option>
+                      <%})%>
+                    </select>
+                  </div>
+                  <button class="btn btn-lg btn-warning btn-block">Submit selected topic</button>
+                </form>
+              <%}else{%>
+                <h5 class="bolder text-warning text-center">Thank You For Your Vote</h5>
+                <div class="btn btn-lg btn-block btn-info">
+                  <strong>You voted for : </strong>
+                  <%=votingDetails.topicOptions[votingIndex]%>
+                </div>
+              <%}%>
+            </div>
+           
+          <%}else{%>
+            <!-- //result data -->
             <div class=" student-room-container" >
               <div style="width: 100%;">
                 <h4  class="bolder text-info">Topic has been selected by vote :</h4>
                 <strong class="d-block">Topic : <%= activityDetails.topic%></strong>
-                <strong class="d-block">Vote result date : <%= activityDetails.activityDates.votingResultDate.getMonth() + 1 %>/<%= activityDetails.activityDates.votingResultDate.getDate() %>/<%= activityDetails.activityDates.votingResultDate.getFullYear() %></strong>
+                <strong class="d-block">Vote Result Date : <%= activityDetails.activityDates.votingResultDate.getMonth() + 1 %>/<%= activityDetails.activityDates.votingResultDate.getDate() %>/<%= activityDetails.activityDates.votingResultDate.getFullYear() %></strong>
               </div> 
-              <h4 class="text-warning"><strong>Set other data :</strong></h4>
-              <form action="/activity/<%=activityDetails._id%>/edit" method="post">
-
-                <div class="form-group">
-                  <label for="title" class="text-muted mb-1"><small>Give a title :-</small></label>
-                  <input  name="title" id="title" class="form-control form-control-lg " type="text" placeholder="Title of the activity." autocomplete="off">
-                </div>
-            
-                <div class="form-group">
-                  <label for="activity-body" class="text-muted mb-1"><small>Short details of activity :-</small></label>
-                  <textarea  name="shortDetails" id="activity-body" class="body-content tall-textarea form-control" type="text"></textarea>
-                </div>
-      
-                <div class="form-group">
-                  <label for="activityDate" class="text-muted mb-1"><small>Activity Date :-</small></label>
-                  <input  name="activityDate" id="activityDate" class="form-control form-control-lg " type="date" placeholder="Activity date." autocomplete="off">
-                </div>
-
-                <input  name="topic" type="hidden" value="<%=activityDetails.topic%>">
-              
-                <button class="btn btn-primary btn-color text-center">Submit Activity Data</button>
-        
-              </form>
+              <%if(activityDetails.title){%>
+              <div style="width: 100%;">
+                <h4  class="bolder text-info">Other Activity data :</h4>
+                <strong class="d-block">Title : <%= activityDetails.title%></strong>
+                <strong class="d-block">Short Details : <%= activityDetails.shortDetails%></strong>
+                <strong class="d-block">Activity Date : <%= activityDetails.activityDates.activityDate.getMonth() + 1 %>/<%= activityDetails.activityDates.activityDate.getDate() %>/<%= activityDetails.activityDates.activityDate.getFullYear() %></strong>
+              </div> 
+              <%}%>
             </div>
+            <%if(checkData.isActivityLeader){%>
+              <%if(activityDetails.isTopicByVote && activityDetails.isVoteCompleted && !activityDetails.title){%>
+                <div class=" student-room-container" >
+                  <div style="width: 100%;">
+                    <h4  class="bolder text-info">Topic has been selected by vote :</h4>
+                    <strong class="d-block">Topic : <%= activityDetails.topic%></strong>
+                    <strong class="d-block">Vote result date : <%= activityDetails.activityDates.votingResultDate.getMonth() + 1 %>/<%= activityDetails.activityDates.votingResultDate.getDate() %>/<%= activityDetails.activityDates.votingResultDate.getFullYear() %></strong>
+                  </div> 
+                  <h4 class="text-warning"><strong>Set other data :</strong></h4>
+                  <form action="/activity/<%=activityDetails._id%>/edit" method="post">
+                    <div class="form-group">
+                      <label for="title" class="text-muted mb-1"><small>Give a title :-</small></label>
+                      <input  name="title" id="title" class="form-control form-control-lg " type="text" placeholder="Title of the activity." autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                      <label for="activity-body" class="text-muted mb-1"><small>Short details of activity :-</small></label>
+                      <textarea  name="shortDetails" id="activity-body" class="body-content tall-textarea form-control" type="text"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="activityDate" class="text-muted mb-1"><small>Activity Date :-</small></label>
+                      <input  name="activityDate" id="activityDate" class="form-control form-control-lg " type="date" placeholder="Activity date." autocomplete="off">
+                    </div>
+                    <input  name="topic" type="hidden" value="<%=activityDetails.topic%>">
+                    <button class="btn btn-primary btn-color text-center">Submit Activity Data</button>
+                  </form>
+                </div>
+              <%}%>
+            <%}%>
           <%}%>
+        <%}else{%>
+          <!-- //activity details -->
+          <div class=" student-room-container" >
+            <div style="width: 100%;">
+              <h4  class="bolder text-info">Activity data :</h4>
+              <strong class="d-block">Topic : <%= activityDetails.topic%></strong>
+              <strong class="d-block">Title : <%= activityDetails.title%></strong>
+              <strong class="d-block">Short Details : <%= activityDetails.shortDetails%></strong>
+              </div>
+          </div>
+          <hr>
         <%}%>
+        <!-- Activity status section -->
+        <div>
+          <%if(activityDetails.status=="created"){%>
+            <hr>
+            <strong class="btn btn-success">Created</strong>
+            <%if(activityDetails.isTopicByVote){%>
+              <%if(!activityDetails.isVoteCompleted){%>
+                <strong class="btn btn-info">Voting....</strong>
+              <%}%>
+              <strong class="btn btn-secondary disabled">Voted</strong>
+            <%}else{%>
+              <strong class="btn btn-info">Activity going on....</strong>
+            <%}%>
+            <strong class="btn btn-secondary disabled">Activity Submitted</strong>
+            <strong class="btn btn-secondary disabled">Activity Received</strong>
+            <strong class="btn btn-secondary disabled">Video Edited</strong>
+            <strong class="btn btn-secondary disabled">Published</strong>
+            <hr>
+            <%if(activityDetails.isTopicByVote){%>
+              <%if(checkData.isActivityLeader){%>
+              <form action="/vote/<%=activityDetails._id%>/<%=votingDetails._id%>/declare-topic-result" method="post">
+                <button class="btn btn-lg btn-block btn-success ">
+                  <strong class="bolder">Declare the result</strong>
+                </button>
+              </form>
+              <%}%>
+            <%}else{%>
+              <div>
+                <h5 class="text-warning">whenever your activity will be completed,please collect all video records and sent it to post controller for editing videos.</h5>
+                <form action="/activity/<%=activityDetails._id%>/submit" method="post">
+                  <button class="btn btn-lg btn-block btn-success ">
+                    <strong class="bolder">Click if activity completed</strong>
+                  </button>
+                </form>
+              </div>
+              <hr>
+            <%}%>
+            <hr>
+          <%}%>
+          
+          <%if(activityDetails.status=="votted"){%>
+            <hr>
+            <strong class="btn btn-success">Created</strong>
+            <%if(activityDetails.isTopicByVote){%>
+              <strong class="btn btn-success">Voted</strong>
+            <%}%>
+            <strong class="btn btn-info">Activity going on....</strong>
+            <strong class="btn btn-secondary disabled">Activity Submitted</strong>
+            <strong class="btn btn-secondary disabled">Activity Received</strong>
+            <strong class="btn btn-secondary disabled">Video Edited</strong>
+            <strong class="btn btn-secondary disabled">Published</strong>
+            <hr>
+            <%if(activityDetails.isTopicByVote && checkData.isActivityLeader && activityDetails.title){%>
+              <div>
+                <h5 class="text-warning">whenever your activity will be completed,please collect all video records and sent it to post controller for editing videos.</h5>
+                <form action="/activity/<%=activityDetails._id%>/submit" method="post">
+                  <button class="btn btn-lg btn-block btn-success ">
+                    <strong class="bolder">Click if activity completed</strong>
+                  </button>
+                </form>
+              </div>
+              <hr>
+            <%}%>
+          <%}%>
+
+          <%if(activityDetails.status=="activitySubmitted"){%>
+            <hr>
+            <strong class="btn btn-success">Created</strong>
+            <%if(activityDetails.isTopicByVote){%>
+              <strong class="btn btn-success">Voted</strong>
+            <%}%>
+            <strong class="btn btn-success">Activity Submitted</strong>
+            <strong class="btn btn-info">Waiting for received...</strong>
+            <strong class="btn btn-secondary disabled">Activity Received</strong>
+            <strong class="btn btn-secondary disabled">Video Edited</strong>
+            <strong class="btn btn-secondary disabled">Published</strong>
+            <hr>
+            <%if(checkData.isPostController){%>
+              <div>
+                <h5 class="text-warning">Me,<strong><%=user.userName%></strong> as a post controller received all the documents regarding the activity.</h5>
+                <form action="/activity/<%=activityDetails._id%>/received" method="post">
+                  <div class="form-group">
+                    <label for="post-controller-body" class="text-muted mb-1"><small>Write short note regarding this activity :-</small></label>
+                    <textarea  name="postControllerNote" id="post-controller-body" class="body-content tall-textarea form-control" type="text" placeholder="Write short note here."></textarea>
+                  </div>
+                  <button class="btn btn-lg btn-block btn-success ">
+                    <strong class="bolder">Click if documents are received</strong>
+                  </button>
+                </form>
+              </div>
+              <hr>
+            <%}%>
+          <%}%>
+
+          <%if(activityDetails.status=="received" || activityDetails.status=="editorAssigned" || activityDetails.status=="editingAccepted"){%>
+            <hr>
+            <strong class="btn btn-success">Created</strong>
+            <%if(activityDetails.isTopicByVote){%>
+              <strong class="btn btn-success">Voted</strong>
+            <%}%>
+            <strong class="btn btn-success">Activity Submitted</strong>
+            <strong class="btn btn-success">Activity Received</strong>
+            <strong class="btn btn-info">Video Editing...</strong>
+            <strong class="btn btn-secondary disabled">Video Edited</strong>
+            <strong class="btn btn-secondary disabled">Published</strong>
+            <hr>
+            <%if(checkData.isPostController){%>
+              <%if(activityDetails.status=="received"){%>
+              <div>
+                <h5 class="text-warning">Sent videos to a video editor.</h5>
+                <a class="btn btn-lg btn-block btn-success " href="/activity/<%=activityDetails._id%>/video-editor">
+                  Get activity video editor
+                </a>
+              </div>
+              <%}else if(activityDetails.status=="editorAssigned"){%>
+                <div class="container">
+                  <h5 class="text-info">Video editor has been assigned :</h5>
+                  <p><strong>Name : </strong><%=activityDetails.videoEditorDetails.userName%></p>
+                  <p><strong>Phone : </strong><%=activityDetails.videoEditorDetails.phone%></p>
+                  <p><strong>Registration Number : <%=activityDetails.videoEditorDetails.regNumber%></strong></p>
+                  <div class="btn btn-lg btn-block btn-danger ">
+                    <strong class="bolder">Editor did not received yet</strong>
+                  </div>
+                </div>
+                
+                <hr>
+              <%}%>
+              <hr>
+            <%}%>
+              <%if(activityDetails.status=="editingAccepted"){%>
+                <div>
+                  <h5 class="text-info">Video editor :</h5>
+                  <p><strong>Name : </strong><%=activityDetails.videoEditorDetails.userName%></p>
+                  <p><strong>Phone : </strong><%=activityDetails.videoEditorDetails.phone%></p>
+                  <p><strong>Date : </strong></p>
+                </div>
+                
+              <%}%>
+              <%if(activityDetails.videoEditorDetails){%> 
+                <%if(activityDetails.videoEditorDetails.regNumber==user.regNumber && activityDetails.status=="editorAssigned"){%>
+                  <hr>
+                  <div>
+                    <h5 class="text-warning">Me,<strong><%=user.userName%></strong> as video editor received all the videos regarding the activity given by post controller.</h5>
+                    <form action="/accept/<%=activityDetails._id%>/video-editing" method="post">
+                      <div class="form-group">
+                        <label for="post-controller-body" class="text-muted mb-1"><small>Write short note regarding this activity :-</small></label>
+                        <textarea  name="videoEditorNote" id="post-controller-body" class="body-content tall-textarea form-control" type="text" placeholder="Write short note here."></textarea>
+                      </div>
+                      <button class="btn btn-lg btn-block btn-success ">
+                        <strong class="bolder">Click if documents are received</strong>
+                      </button>
+                    </form>
+                  </div>
+                <%}%>
+                <%if(activityDetails.videoEditorDetails.regNumber==user.regNumber && activityDetails.status=="editingAccepted"){%>
+                  <hr>
+                  <div>
+                    <h5 class="text-warning"><strong>When you will complete your editing,give the final video to post controller and click the belowed button to update the activity state as "edited".</strong></h5>
+                    <form action="/video-editing/<%=activityDetails._id%>/completed" method="post">
+                      <button class="btn btn-lg btn-block btn-success ">
+                        <strong class="bolder">Click if editing completed</strong>
+                      </button>
+                    </form>
+                  </div>
+                <%}%>
+              <%}%> 
+          <%}%>
+
+          <%if(activityDetails.status=="edited"){%>
+            <hr>
+            <strong class="btn btn-success">Created</strong>
+            <%if(activityDetails.isTopicByVote){%>
+              <strong class="btn btn-success">Voted</strong>
+            <%}%>
+            <strong class="btn btn-success">Activity Submitted</strong>
+            <strong class="btn btn-success">Activity Received</strong>
+            <strong class="btn btn-success">Video Edited</strong>
+            <strong class="btn btn-info">Waiting to publish..</strong>
+            <strong class="btn btn-secondary disabled">Published</strong>
+            <hr>
+            <%if(checkData.isPostController){%>
+              <%if(activityDetails.videoCoverPhoto){%>
+                <div class="container">
+                  <h5 class="text-warning">Video has been edited by video editor.So collect the video and upload it on youTube ,facebook ,instagram,linkedIn and get the video link from there after that copy-paste the link on respected fields for submission.</h5>
+                  <form action="/activity/<%=activityDetails._id%>/publish" method="post">
+                    <div class="form-group">
+                      <label for="youtubeLink" class="text-muted mb-1"><small>Youtube Video Link :-</small></label>
+                      <input  name="youTubeLink" id="youtubeLink" class="form-control form-control-lg " type="text" placeholder="Give youtube video link." autocomplete="off" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="facebookLink" class="text-muted mb-1"><small>Facebook Video Link :-</small></label>
+                      <input  name="facebookLink" id="facebookLink" class="form-control form-control-lg " type="text" placeholder="Give facebook video link." autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                      <label for="instagramLink" class="text-muted mb-1"><small>Instagram Video Link :-</small></label>
+                      <input  name="instagramLink" id="instagramLink" class="form-control form-control-lg " type="text" placeholder="Give instagram video link." autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                      <label for="linkedinLink" class="text-muted mb-1"><small>LinkedIn Video Link :-</small></label>
+                      <input  name="linkedInLink" id="linkedinLink" class="form-control form-control-lg " type="text" placeholder="Give linkedIn video link." autocomplete="off">
+                    </div>
+                    <button class="btn btn-lg btn-block btn-success ">
+                      <strong class="bolder">Publish Activity</strong>
+                    </button>
+                  </form>
+                </div>
+              <%}else{%>
+                <div class="container">
+                  <h5 class="bolder">Upload video cover photo :</h5>
+                  <form action="/activity/<%=activityDetails._id%>/upload-cover-photo" method="post">
+                    <div class="form-group">
+                      <label for="videoCoverPhoto" class="text-muted mb-1"><small>Video cover photo upload :-</small></label>
+                      <input  name="videoCoverPhoto" id="videoCoverPhoto" class="form-control form-control-lg " type="text" placeholder="Give video cover photo link." autocomplete="off">
+                    </div>
+                    <button class="btn btn-lg btn-block btn-success ">
+                      <strong class="bolder">Upload Photo</strong>
+                    </button>
+                  </form>
+                </div>
+              <%}%>
+            
+            <%}%>
+            <%if(activityDetails.videoEditorDetails.regNumber==user.regNumber ){%>
+              <hr>
+              <div class="container">
+                <h5 class="text-warning text-center"><strong>Thank you so much for your complition of video editing.Please hand over final video to post controller.</strong></h5>
+                <button class="btn btn-lg btn-block btn-success ">
+                    <strong class="bolder ">Wait for publishing.You will get the credit.</strong>
+                </button>
+              </div>
+            <%}%>
+          <%}%>
+
+          <%if(activityDetails.status=="published"){%>
+            <hr>
+            <strong class="btn btn-success">Created</strong>
+            <%if(activityDetails.isTopicByVote){%>
+              <strong class="btn btn-success">Voted</strong>
+            <%}%>
+            <strong class="btn btn-success">Activity Submitted</strong>
+            <strong class="btn btn-success">Activity Received</strong>
+            <strong class="btn btn-success">Video Edited</strong>
+            <strong class="btn btn-success">Published</strong>
+            <%if(checkData.isPostController){%>
+              <div>Here post controller may get access if he wants to upload video links again later except youTube.</div>
+            <%}%>
+            <hr>
+          <%}%>
+        </div>
       </div>
     </div>
   </div>

@@ -85,7 +85,8 @@ exports.loggingIn = function (req, res) {
         postController
         .postControllerLogIn()
         .then(function(result) {
-          req.session.user = {regNumber: postController.data.regNumber, userName: postController.data.userName,accountType:"postController"}
+          let otherData={}
+          req.session.user = {regNumber: postController.data.regNumber, userName: postController.data.userName,otherData:otherData,accountType:"postController"}
           req.session.save(function() {
             res.redirect('/postController-home')
           })
@@ -100,7 +101,8 @@ exports.loggingIn = function (req, res) {
         videoEditor
         .videoEditorLogIn()
         .then(function(result) {
-          req.session.user = {regNumber: videoEditor.data.regNumber, userName: videoEditor.data.userName,accountType:"videoEditor"}
+          let otherData={}
+          req.session.user = {regNumber: videoEditor.data.regNumber, userName: videoEditor.data.userName,otherData:otherData,accountType:"videoEditor"}
           req.session.save(function() {
             res.redirect('/videoEditor-home')
           })
