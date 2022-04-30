@@ -1,0 +1,26 @@
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7" >
+
+    <h5 class="bolder text-primary pt-1 text-center"><strong>Activity Details</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <%if(activityDetails.videoCoverPhoto){%>
+            <img class="single-batch-image"  src="<%=activityDetails.videoCoverPhoto%>" alt="">
+          <%}else{%>
+            <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
+          <%}%>
+        </div>
+        <hr>
+        <div class="container">
+          <div class="btn btn-lg btn-info btn-block">Activity video will be shown here</div>
+          <hr>
+          <div class="btn btn-lg btn-info btn-block">Activity details will be shown here</div>  
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg"></div>
+</div>

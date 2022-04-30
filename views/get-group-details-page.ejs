@@ -43,13 +43,43 @@
                 Create New Group Activity
               </a>
               <%}else{%>
-                <div class="btn btn-lg btn-info btn-block">
-                  No leader and no activity done till now.
-                </div>
+                <div class="btn btn-info btn-sm btn-block mr-1">There is no present activity!</div>
               <%}%>
             <%}else{%>
-              <div class="card">
-                Present activity details will be here
+              <div class="student-room-container" >
+                <%if(groupDetails.presentActivity.isTopicByVote && !groupDetails.presentActivity.isVoteCompleted){%>
+                  <div style="width: 100%;">
+                    <strong  class="d-block text-info text-center">Topic for next activity is going to be selected by voting.Please give your vote.</strong>
+                  </div>
+                <%}else{%>
+                  <div style="width: 100%;">
+                    <strong  class="d-block text-info">Running activity -</strong>
+                    <strong class="d-block">Topic : <%=groupDetails.presentActivity.topic%></strong>
+                    <strong class="d-block">Title : <%=groupDetails.presentActivity.title%></strong>
+                  </div>  
+                <%}%>  
+                <a href="/activity/<%=groupDetails.presentActivity.activityId%>/details">
+                  <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
+                </a>    
+              </div>
+            <%}%>
+          </div>
+          <hr>
+          <div class="container">
+            <%if(!groupDetails.previousActivity){%>
+              <div class="btn btn-info btn-lg btn-block mr-1">There is no previous activity!</div>
+            <%}else{%>
+              <div class="student-room-container" >
+                  <div style="width: 100%;">
+                    <strong  class="d-block text-info">Previous activity -</strong>
+                    <strong class="d-block">Topic : <%=groupDetails.previousActivity.topic%></strong>
+                    <strong class="d-block">Title : <%=groupDetails.previousActivity.title%></strong>
+                    <strong class="d-block">Activity Date : <i>12/12/12</i></strong>
+                    <strong class="d-block">Published Date : <i>12/12/12</i></strong>
+                  </div>  
+                  <a href="/activity/<%=groupDetails.previousActivity._id%>/details">
+                    <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
+                  </a>    
               </div>
             <%}%>
           </div>

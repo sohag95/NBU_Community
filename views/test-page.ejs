@@ -1,7 +1,16 @@
 <%- include('includes/header') %>
-<div class="container container--narrow" style="height: 50vh;">
-  <h3>this is for activity perticipents selection page.</h3>
-  
+<div class="container container--narrow" >
+  <h4 class="text-center "><strong>All Available Members :</strong> </h4>
+  <ul id="allAvailableMembers" class="list-group pb-2">
+  </ul>
+  <form id="addParticipantsOnActivityForm" class="card" action="/activity-add-participants" method="POST">
+    <h4 class="text-center "><strong>All Participants :</strong> </h4>
+    <ul id="addedParticipants" class="list-group ">
+    </ul>
+    <input hidden type="text" id="selectedParticipants" name="selectedParticipants">
+    <button id="submitParticipantsButton" class="btn btn-primary">Submit Participants</button>
+  </form>
+  <script src="/activityParticipantsSelection.js"></script>
 </div>
 
 <%- include('includes/footer') %>

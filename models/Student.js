@@ -344,6 +344,7 @@ Student.getStudentDataByRegNumber = function (regNumber) {
   })
 }
 
+
 Student.getStudentOtherDataByRegNumber = function (regNumber) {
   return new Promise((resolve, reject) => {
     try{
@@ -375,4 +376,5 @@ Student.updateVerificationMessage = function (regNumber,verifiedBy) {
     }
   })
 }
- module.exports=Student
+
+module.exports=Student

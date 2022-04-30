@@ -22,7 +22,7 @@ router.get('/test',userController.test)
 //user log-in 
 router.post("/loggingIn",  userController.loggingIn)
 
-// user related routes
+//user related routes
 router.get('/',userController.guestHomePage)
 router.get('/log-in',userController.getLogInForm)
 router.get('/sign-up-form',userController.getSignUpForm)
@@ -73,6 +73,7 @@ router.post("/activity/:from/:id/create",studentController.studentMustBeLoggedIn
 router.get("/activity/:id/details",userController.ifUserLoggedIn,activityController.ifActivityPresent,activityController.getActivityDetailsPage)
 router.post("/activity/:id/edit",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkActivityLeaderOrNot,activityController.editActivityDetails)
 router.post("/activity/:id/submit",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkActivityLeaderOrNot,activityController.activitySubmitted)
+router.get("/activity/:id/add-participants-page",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkActivityLeaderOrNot,activityController.getAllParticipantPage)
 //postController related routers
 router.post("/activity/:id/received",officialUserController.postControllerMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkRightPostControllerOrNot,activityController.activityReceivedByPostController)
 router.get("/activity/:id/video-editor",officialUserController.postControllerMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkRightPostControllerOrNot,videoEditorController.getAvailableVideoEditors)
@@ -85,6 +86,8 @@ router.post("/video-editing/:id/completed",officialUserController.videoEditorMus
 //activity topic voting related routers
 router.post("/vote/:activityId/:id/topic",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoter,votingController.giveTopicVote)
 router.post("/vote/:activityId/:id/declare-topic-result",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoteResultDeclarableOrNot,votingController.declareTopicResult)
+router.get("/vote/:id/details",userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.votingDetailsPage)
+
 //########################
 
 //Logging out router

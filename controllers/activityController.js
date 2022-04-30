@@ -259,19 +259,41 @@ exports.editActivityDetails=async function(req,res){
   }
 }
 
+exports.getAllParticipantPage=function(req,res){
+  let activityData={
+    _id:req.activityDetails._id,
+    from:req.activityDetails.activityType,
+    sourceId:req.activityDetails.activitySourceId,
+    topic:req.activityDetails.topic,
+    sourceName:req.activityDetails.sourceName
+  }
+  Activity.getAllActivityMember(activityData).then((allMembers)=>{
+    console.log("All members:",allMembers)
+    req.activityDetails=undefined
+    res.render("all-participants-page",{
+      activityData:activityData,
+      allMembers:allMembers
+    })
+  }).catch(()=>{
+    req.flash("errors", "There is some problem.")
+    res.render("404")
+  })
+}
 
 exports.activitySubmitted=function(req,res){
   let submittedBy={
     regNumber:req.regNumber,
     userName:req.userName
   }
- Activity.submitActivityByLeader(req.params.id,submittedBy).then(()=>{
-  req.activityDetails=undefined
-  req.flash("success", "Activity state successfully updated!!")
-  res.redirect(`/activity/${req.params.id}/details`)
- }).catch((e)=>{
-  req.flash("errors", e)
-  res.redirect(`/activity/${req.params.id}/details`)
+  let activityParticipants=JSON.parse(req.body.selectedParticipants)
+  console.log("Participants :",activityParticipants)
+  Activity.submitActivityByLeader(req.params.id,activityParticipants,submittedBy).then(()=>{
+    req.activityDetails=undefined
+    req.flash("success", "Activity state successfully updated!!")
+    res.redirect(`/activity/${req.params.id}/details`)
+  }).catch((e)=>{
+    req.flash("errors", e)
+    res.redirect(`/activity/${req.params.id}/details`)
  })
 }
 
@@ -347,7 +369,18 @@ exports.uploadVideoCoverPhoto=function(req,res){
 
 exports.publishActivity=function(req,res){
   let activity=new Activity(req.body)
-  activity.publishActivity(req.activityDetails._id).then(()=>{
+  let activityData={
+    _id:req.activityDetails._id,
+    topic:req.activityDetails.topic,
+    title:req.activityDetails.title,
+    activityDate:req.activityDetails.activityDates.activityDate,
+    publishedDate:new Date()
+  }
+  let sourceData={
+    from:req.activityDetails.activityType,
+    sourceId:req.activityDetails.activitySourceId
+  }
+  activity.publishActivity(activityData,sourceData).then(()=>{
     req.activityDetails=undefined
     req.flash("success", "Video editing work successfully received!!")
     res.redirect(`/activity/${req.params.id}/details`)

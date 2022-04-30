@@ -71,9 +71,11 @@
           <div class="container">
             <%if(!departmentDetails.presentActivity){%>
               <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
-              <a href="/activity/department/<%=departmentDetails.departmentCode%>/create" class="btn btn-block btn-primary btn-lg">
-                Create New Department Activity
-              </a>
+                <a href="/activity/department/<%=departmentDetails.departmentCode%>/create" class="btn btn-block btn-primary btn-lg">
+                  Create New Department Activity
+                </a>
+              <%}else{%>
+                <div class="btn btn-info btn-sm btn-block mr-1">There is no present activity!</div>
               <%}%>
             <%}else{%>
               <div class="student-room-container" >
@@ -87,11 +89,29 @@
                     <strong class="d-block">Topic : <%=departmentDetails.presentActivity.topic%></strong>
                     <strong class="d-block">Title : <%=departmentDetails.presentActivity.title%></strong>
                   </div>  
-                <%}%>
-                  
+                <%}%>  
                 <a href="/activity/<%=departmentDetails.presentActivity.activityId%>/details">
                   <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
                 </a>    
+              </div>
+            <%}%>
+          </div>
+          <hr>
+          <div class="container">
+            <%if(!departmentDetails.previousActivity){%>
+              <div class="btn btn-info btn-lg btn-block mr-1">There is no previous activity!</div>
+            <%}else{%>
+              <div class="student-room-container" >
+                  <div style="width: 100%;">
+                    <strong  class="d-block text-info">Previous activity -</strong>
+                    <strong class="d-block">Topic : <%=departmentDetails.previousActivity.topic%></strong>
+                    <strong class="d-block">Title : <%=departmentDetails.previousActivity.title%></strong>
+                    <strong class="d-block">Activity Date : <i>12/12/12</i></strong>
+                    <strong class="d-block">Published Date : <i>12/12/12</i></strong>
+                  </div>  
+                  <a href="/activity/<%=departmentDetails.previousActivity._id%>/details">
+                    <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
+                  </a>    
               </div>
             <%}%>
           </div>

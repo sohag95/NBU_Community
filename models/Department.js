@@ -1,5 +1,6 @@
 
 const OtherOperations = require("./OtherOperations")
+const SessionBatch = require("./SessionBatch")
 const departmentsCollection = require("../db").db().collection("Departments")
 
 let Department=function(data,groupId){
@@ -41,7 +42,7 @@ Department.prototype.prepareDepartmentDataField=function(){
     XBatches:[],
     presentActivity:null,
     previosActivity:null,
-    allActivities:[],
+    completedActivities:[],
     departmentNotifications:[],
     coverPhoto:null,
     newBatchMemberRequests:[]
@@ -233,6 +234,37 @@ Department.updatePresentActivityField= function(departmentCode,activityData){
   })
 }
 
+Department.getAllAvailableActivityMemberOnDepartment= function(departmentCode){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let departmentDetails=await Department.getDepartmentDataByDepartmentCode(departmentCode)
+      let batchIds=[]
+        if(departmentDetails.activeBatches.firstYear){
+          batchIds.push(departmentDetails.activeBatches.firstYear)
+        }
+        if(departmentDetails.activeBatches.secondYear){
+          batchIds.push(departmentDetails.activeBatches.secondYear)
+        }
+        if(departmentDetails.activeBatches.seniours){
+          batchIds.push(departmentDetails.activeBatches.seniours)
+        }
+        if(departmentDetails.courceDuration=="3"){
+          if(departmentDetails.activeBatches.thirdYear){
+            batchIds.push(departmentDetails.activeBatches.thirdyear)
+          }
+        }
+      let allMembers=[]
+      batchIds.forEach(async(batchId)=>{
+        let members=await SessionBatch.getAllAvailableActivityMemberOnDepartment(batchId)
+        allMembers.concat(members)
+      })
+      resolve(allMembers)
+    }catch{
+      reject()
+    }
+  })
+}
+
 Department.updatePresentActivityFieldAfterResultDeclaration= function(departmentCode,wonTopic){
   return new Promise(async (resolve, reject) => {
     try{
@@ -264,6 +296,29 @@ Department.updatePresentActivityFieldAfterEditDetails= function(departmentCode,d
               "presentActivity.topic":data.topic,
               "presentActivity.title":data.title,
               "presentActivity.activityDate":data.activityDate
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Department.updatePreviousActivityFieldOnDepartment= function(departmentCode,activityData){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let id=activityData._id
+      await departmentsCollection.updateOne(
+        { departmentCode: departmentCode },
+        {
+          $set: {
+              "presentActivity":null,
+              "previousActivity":activityData
+            },
+            $push:{
+              "completedActivities":id
             }
           }
         )

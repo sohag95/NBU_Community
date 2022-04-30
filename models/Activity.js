@@ -105,7 +105,7 @@ Activity.prototype.getActivityData=async function(){
       leaders:this.neededData.leaders,
       postControllerDetails:postControllerDetails,
       videoEditorDetails:null,
-      allActivityPerticipents:[],
+      participants:[],
       activityDates:{
         createdDate:new Date(),
         votingLastDate:null,
@@ -314,13 +314,37 @@ Activity.getAllActivityDetailsOfArrayIds=function(activityIds){
   })
 }
 
-Activity.submitActivityByLeader=function(id,submittedBy){
+
+Activity.getAllActivityMember=function(activityData){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      console.log("Activity data:",activityData)
+      let allMembers=[]
+      if(activityData.from=="batch"){
+        allMembers=await SessionBatch.getAllAvailableActivityMemberFromBatch(activityData.sourceId)
+      }
+      if(activityData.from=="department"){
+        allMembers=await Department.getAllAvailableActivityMemberOnDepartment(activityData.sourceId)
+      }
+      if(activityData.from=="group"){
+        //i have to do it later
+      }
+      resolve(allMembers)
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+
+Activity.submitActivityByLeader=function(id,activityParticipants,submittedBy){
   return new Promise(async (resolve, reject) => { 
     try{
       //update state and date
       await activityCollection.updateOne({_id: new ObjectId(id)},{
         $set:{
           "status":"activitySubmitted",
+          "participants":activityParticipants,
           "activityDates.submissionDate":new Date(),
           "submittedBy":submittedBy
         }
@@ -471,10 +495,19 @@ Activity.prototype.updatePublishedState=function(id,videoLinks){
   })
 }
 //************************/
-Activity.prototype.updateSourceFieldValueAfterActivityPublished=function(){
+Activity.prototype.updateSourceFieldValueAfterActivityPublished=function(activityData,sourceData){
   return new Promise(async (resolve, reject) => { 
     try{
       //tomorrow i have to work on this function
+      if(sourceData.from=="batch"){
+        await SessionBatch.updatePreviousActivityFieldOnBatch(sourceData.sourceId,activityData)
+      }
+      if(sourceData.from=="department"){
+        await Department.updatePreviousActivityFieldOnDepartment(sourceData.sourceId,activityData)
+      }
+      if(sourceData.from=="group"){
+        await Group.updatePreviousActivityFieldOnGroup(sourceData.sourceId,activityData)
+      }
       resolve()
     }catch{
       reject("There is some problem.")
@@ -482,17 +515,17 @@ Activity.prototype.updateSourceFieldValueAfterActivityPublished=function(){
   })
 }
 
-Activity.prototype.publishActivity=function(id){
+Activity.prototype.publishActivity=function(activityData,sourceData){
   return new Promise(async (resolve, reject) => { 
     try{
       //set given linked
       let videoLinks=this.cleanUpLinkData()
-      await this.updatePublishedState(id,videoLinks)
+      await this.updatePublishedState(activityData._id,videoLinks)
       //update activity source field values
-      await this.updateSourceFieldValueAfterActivityPublished()
+      await this.updateSourceFieldValueAfterActivityPublished(activityData,sourceData)
       //update state with changing data on activity
-      await OfficialUsers.removeAssignedActivityIdFromEditor(id)
-      await OfficialUsers.removeSubmittedActivityIdFromPostController(id)
+      await OfficialUsers.removeAssignedActivityIdFromEditor(activityData._id)
+      await OfficialUsers.removeSubmittedActivityIdFromPostController(activityData._id)
       //remove assigned activity id from editor account and add activity id as submitted activity
       resolve()
     }catch{

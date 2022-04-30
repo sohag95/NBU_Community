@@ -1,6 +1,9 @@
 <%- include('includes/header') %>
 <%- include('includes/flash') %>
 
+<%if(activityDetails.status=="published"){%>
+  <%- include('includes/activity-details-after-published') %>
+<%}else{%>
 <div style="display: flex;flex-wrap: wrap;">
   <div class="col-lg"></div>
   <div class="col-lg-7" >
@@ -65,7 +68,7 @@
             <!-- //result data -->
             <div class=" student-room-container" >
               <div style="width: 100%;">
-                <h4  class="bolder text-info">Topic has been selected by vote :</h4>
+                <h4  class="bolder text-info">Topic has been selected by vote : (<a class="text-warning" href="/vote/<%=activityDetails.votingId%>/details">Voting Details</a>)</h4>
                 <strong class="d-block">Topic : <%= activityDetails.topic%></strong>
                 <strong class="d-block">Vote Result Date : <%= activityDetails.activityDates.votingResultDate.getMonth() + 1 %>/<%= activityDetails.activityDates.votingResultDate.getDate() %>/<%= activityDetails.activityDates.votingResultDate.getFullYear() %></strong>
               </div> 
@@ -146,20 +149,18 @@
               </form>
               <%}%>
             <%}else{%>
-              <div>
-                <h5 class="text-warning">whenever your activity will be completed,please collect all video records and sent it to post controller for editing videos.</h5>
-                <form action="/activity/<%=activityDetails._id%>/submit" method="post">
-                  <button class="btn btn-lg btn-block btn-success ">
-                    <strong class="bolder">Click if activity completed</strong>
-                  </button>
-                </form>
-              </div>
-              <hr>
+              <%if(checkData.isActivityLeader){%>
+                <div>
+                  <h5 class="text-warning">whenever your activity will be completed,please collect all video records and sent it to post controller for editing videos.</h5>
+                  <a class="btn btn-lg btn-block btn-info " href="/activity/<%=activityDetails._id%>/add-participants-page">Add all activity participants</a>
+                </div>
+                <hr>
+              <%}%>
             <%}%>
             <hr>
           <%}%>
           
-          <%if(activityDetails.status=="votted"){%>
+          <%if(activityDetails.status=="voted"){%>
             <hr>
             <strong class="btn btn-success">Created</strong>
             <%if(activityDetails.isTopicByVote){%>
@@ -174,11 +175,7 @@
             <%if(activityDetails.isTopicByVote && checkData.isActivityLeader && activityDetails.title){%>
               <div>
                 <h5 class="text-warning">whenever your activity will be completed,please collect all video records and sent it to post controller for editing videos.</h5>
-                <form action="/activity/<%=activityDetails._id%>/submit" method="post">
-                  <button class="btn btn-lg btn-block btn-success ">
-                    <strong class="bolder">Click if activity completed</strong>
-                  </button>
-                </form>
+                <a class="btn btn-lg btn-block btn-info " href="/activity/<%=activityDetails._id%>/add-participants-page">Add all activity participants</a>
               </div>
               <hr>
             <%}%>
@@ -373,5 +370,5 @@
   </div>
   <div class="col-lg"></div>
 </div>
-
+<%}%>
 <%- include('includes/footer') %>

@@ -1,0 +1,39 @@
+
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7" >
+
+    <h5 class="bolder text-primary pt-1 text-center"><strong>Voting Details Page</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
+          <div class="text-success text-center"><strong>Voting Type : <%=votingDetails.voteType%></strong></div>
+          <div class="text-success text-center"><strong>Vote From : <%=votingDetails.from%></strong></div>
+          <div class="text-success text-center"><strong>Department Name : <%=votingDetails.sourceName%></strong></div>
+          <div class="text-success text-center"><strong>Voting Date : 12/12/12</strong></div>
+        </div>
+        <hr>
+        <div class="container">
+          <h5><strong>Activity Leaders :</strong></h5>
+          <div class="btn btn-sm btn-info btn-block">Voting activity leader...</div>
+        </div>
+        <div class="container">
+          <h5><strong>All Voting Options :</strong></h5>
+          <div class="btn btn-sm btn-info btn-block">Voting options with results...</div>
+        </div>
+        <div class="container">
+          <h5><strong>Voters Details :</strong></h5>
+          <div class="btn btn-sm btn-info btn-block">Voters details according to viewer...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg"></div>
+</div>
+
+<%- include('includes/footer') %>

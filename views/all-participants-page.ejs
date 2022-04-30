@@ -1,0 +1,44 @@
+
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7">
+
+    <h5 class="bolder text-primary pt-1 text-center"><strong>Activity Member Selection</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <img class="single-batch-image"  src="/images/sponsor-banner.png" alt="">
+          <div class="text-success text-center"><strong>Activity Type : <%=activityData.from%></strong></div>
+          <div class="text-success text-center"><strong>Source Name : <%=activityData.sourceName%></strong></div>
+          <div class="text-success text-center"><strong>Topic : <i><%=activityData.topic%></i></strong></div>
+        
+        </div>
+        <hr>
+        <div>
+          <h4 class="text-center "><strong>All Available Members :</strong> </h4>
+          <ul id="allAvailableMembers" class="list-group pb-2">
+          </ul>
+          <form id="addParticipantsOnActivityForm" class="card" action="/activity/<%=activityData._id%>/submit" method="POST">
+            <h4 class="text-center "><strong>All Participants :</strong> </h4>
+            <ul id="addedParticipants" class="list-group ">
+            </ul>
+            <input hidden type="text" id="selectedParticipants" name="selectedParticipants">
+            <button id="submitParticipantsButton" class="btn btn-primary">Submit Participants</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg"></div>
+</div>
+<script>
+  let allMembers = <%-JSON.stringify(allMembers)%>
+</script>
+<script src="/activityParticipantsSelection.js"></script>
+
+<%- include('includes/footer') %>

@@ -41,17 +41,44 @@
               <a href="/activity/batch/<%=batchDetails.batchId%>/create" class="btn btn-block btn-primary btn-lg">
                 Create New Batch Activity
               </a>
+              <%}else{%>
+                <div class="btn btn-info btn-sm btn-block mr-1">There is no present activity!</div>
               <%}%>
             <%}else{%>
               <div class="student-room-container" >
-                <div style="width: 100%;">
-                  <strong  class="d-block text-info">Running activity -</strong>
-                  <strong class="d-block">Topic : <%=batchDetails.presentActivity.topic%></strong>
-                  <strong class="d-block">Title : <%=batchDetails.presentActivity.title%></strong>
-                </div>    
+                <%if(batchDetails.presentActivity.isTopicByVote && !batchDetails.presentActivity.isVoteCompleted){%>
+                  <div style="width: 100%;">
+                    <strong  class="d-block text-info text-center">Topic for next activity is going to be selected by voting.Please give your vote.</strong>
+                  </div>
+                <%}else{%>
+                  <div style="width: 100%;">
+                    <strong  class="d-block text-info">Running activity -</strong>
+                    <strong class="d-block">Topic : <%=batchDetails.presentActivity.topic%></strong>
+                    <strong class="d-block">Title : <%=batchDetails.presentActivity.title%></strong>
+                  </div>  
+                <%}%>  
                 <a href="/activity/<%=batchDetails.presentActivity.activityId%>/details">
                   <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
                 </a>    
+              </div>
+            <%}%>
+          </div>
+          <hr>
+          <div class="container">
+            <%if(!batchDetails.previousActivity){%>
+              <div class="btn btn-info btn-lg btn-block mr-1">There is no previous activity!</div>
+            <%}else{%>
+              <div class="student-room-container" >
+                  <div style="width: 100%;">
+                    <strong  class="d-block text-info">Previous activity -</strong>
+                    <strong class="d-block">Topic : <%=batchDetails.previousActivity.topic%></strong>
+                    <strong class="d-block">Title : <%=batchDetails.previousActivity.title%></strong>
+                    <strong class="d-block">Activity Date : <i>12/12/12</i></strong>
+                    <strong class="d-block">Published Date : <i>12/12/12</i></strong>
+                  </div>  
+                  <a href="/activity/<%=batchDetails.previousActivity._id%>/details">
+                    <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
+                  </a>    
               </div>
             <%}%>
           </div>

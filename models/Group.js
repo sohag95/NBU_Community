@@ -16,7 +16,7 @@ Group.prototype.prepareGroupDataField=function(){
     allLeaders:[],
     presentActivity:null,
     previosActivity:null,
-    allActivities:[],
+    completedActivities:[],
     groupNotifications:[],
     coverPhoto:null
   }
@@ -153,6 +153,29 @@ Group.updatePresentActivityFieldAfterEditDetails= function(groupId,data){
             }
           }
         )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Group.updatePreviousActivityFieldOnGroup= function(groupId,activityData){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let id=activityData._id
+      await groupsCollection.updateMany(
+        { groupId: groupId },
+        {
+          $set: {
+              "presentActivity":null,
+              "previousActivity":activityData
+            },
+          $push:{
+            "completedActivities":id
+          }
+        }
+      )
       resolve()
     }catch{
       reject()

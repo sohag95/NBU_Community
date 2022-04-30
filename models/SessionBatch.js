@@ -185,6 +185,23 @@ SessionBatch.updatePresentActivityField= function(batchId,activityData){
   })
 }
 
+SessionBatch.getAllAvailableActivityMemberFromBatch= function(batchId){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let batchDetails=await SessionBatch.findSessionBatchDetailsByBatchId(batchId)
+      let allMembers=batchDetails.allMembers.map((member)=>{
+        return {
+          regNumber:member.regNumber,
+          userName:member.userName
+        }
+      })
+      resolve(allMembers)
+    }catch{
+      reject()
+    }
+  })
+}
+
 SessionBatch.updatePresentActivityFieldAfterResultDeclaration= function(batchId,wonTopic){
   return new Promise(async (resolve, reject) => {
     try{
@@ -215,6 +232,29 @@ SessionBatch.updatePresentActivityFieldAfterEditDetails= function(batchId,data){
               "presentActivity.topic":data.topic,
               "presentActivity.title":data.title,
               "presentActivity.activityDate":data.activityDate
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+SessionBatch.updatePreviousActivityFieldOnBatch= function(batchId,activityData){
+  return new Promise(async (resolve, reject) => {
+    try{
+        let id=activityData._id
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              "presentActivity":null,
+              "previousActivity":activityData
+            },
+            $push:{
+              "completedActivities":id
             }
           }
         )

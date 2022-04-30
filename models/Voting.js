@@ -40,6 +40,7 @@ Voting.prototype.getTopicVotingData=async function(){
       from:this.data.from,
       sourceId:this.data.sourceId,
       sourceName:this.data.sourceName,
+      //activityId:null,I might storethis variable as well later
       topicOptions:topics,
       leaders:this.data.leaders,
       voters:[],

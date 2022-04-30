@@ -62,3 +62,56 @@ exports.declareTopicResult = function (req, res) {
     })
   })  
 }
+
+
+exports.votingDetailsPage = function (req, res) {
+  let votingDetails=req.votingDetails
+  req.votingDetails=undefined
+  let checkData={
+    isUserLoggedIn:req.isUserLoggedIn,
+    isVotingLeader:false,
+    isVoteMember:false,
+    isVoter:false,
+  }
+
+  if(checkData.isUserLoggedIn){
+    //checking ifvoting member
+    if(votingDetails.from=="batch"){
+      if(req.regNumber.slice(0,9)==votingDetails.sourceId){
+        checkData.isVoteMember=true
+      }
+    }else if(votingDetails.from=="department"){
+      if(req.regNumber.slice(4,9)==votingDetails.sourceId){
+        checkData.isVoteMember=true
+      }
+    }else{
+      //this is for group
+      let departmentCodes=OtherOperations.getDepartmentCodesFromGroupId(votingDetails.sourceId)
+      if(departmentCodes.includes(req.regNumber.slice(4,9))){
+        checkData.isVoteMember=true
+      }
+    }
+    //check if voting leader
+    if(votingDetails.leaders.mainLead.regNumber==req.regNumber){
+      checkData.isVotingLeader=true
+    }
+    if(votingDetails.leaders.assistantLead){
+      if(votingDetails.leaders.assistantLead.regNumber==req.regNumber){
+        checkData.isVotingLeader=true
+      }
+    }
+    //checking visitor voter or not
+    votingDetails.voters.forEach((voter)=>{
+      if(voter.regNumber==req.regNumber){
+        checkData.isVoter=true
+      }
+    })
+  }
+  console.log("check data:",checkData)
+  res.render("voting-details",{
+    votingDetails:votingDetails,
+    checkData:checkData
+  })
+}
+
+
