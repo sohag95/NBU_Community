@@ -122,8 +122,18 @@ Activity.prototype.getActivityData=async function(){
         type:"creator",//creator,editor
         handler:this.creatorData,
         lastDate:new Date()
-      }
+      },
+      likes:[],
+      comments:[]
     }
+    // likes=["regNumber","regNumber"]
+    // comments=[
+    //   {
+    //     regNumber:"2022COMSC0001",
+    //     userName:"Sohag Roy",
+    //     comment:"hello i am here"
+    //   }
+    // ]
     
     if(this.data.topicSelectedBy=="leader"){
       this.activityData.topic=this.data.topic
@@ -278,7 +288,7 @@ Activity.getActivityDetailsById=function(id){
   })
 }
 
-//i have to work on this function later
+//i have to work on this function later.Function called is not working
 Activity.updateActivityDataAfterVoteResult=function(id,wonTopic){
   return new Promise(async (resolve, reject) => { 
     try{
@@ -534,6 +544,61 @@ Activity.prototype.publishActivity=function(activityData,sourceData){
   })
 }
 
+
+Activity.likeActivity=function(id,regNumber){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      await activityCollection.updateOne({_id:id},{
+        $push:{
+          "likes":regNumber,
+        }
+      })
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+Activity.dislikeActivity=function(id,regNumber){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      await activityCollection.updateOne({_id:id},{
+        $pull:{
+          "likes":regNumber,
+        }
+      })
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+Activity.commentOnActivity=function(id,commentDetails){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      if (typeof commentDetails.comment != "string") {
+        reject("Comment is not on string type!")
+      }
+      if (commentDetails.comment.length>200) {
+        reject("Comment can't contain more then 200 character!")
+      }
+      if (commentDetails.comment=="") {
+        reject("You should write some text as comment.")
+      }
+
+      await activityCollection.updateOne({_id:id},{
+        $push:{
+          "comments":commentDetails
+        }
+      })
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
 module.exports=Activity
 
 

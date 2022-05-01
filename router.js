@@ -87,6 +87,10 @@ router.post("/video-editing/:id/completed",officialUserController.videoEditorMus
 router.post("/vote/:activityId/:id/topic",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoter,votingController.giveTopicVote)
 router.post("/vote/:activityId/:id/declare-topic-result",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoteResultDeclarableOrNot,votingController.declareTopicResult)
 router.get("/vote/:id/details",userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.votingDetailsPage)
+//like,dislike,comment routers
+router.post("/activity/:id/like",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.ifActivityAlreadyLiked,activityController.likeActivity)
+router.post("/activity/:id/dislike",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.ifActivityAlreadyLiked,activityController.dislikeActivity)
+router.post("/activity/:id/comment",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,activityController.commentOnActivity)
 
 //########################
 

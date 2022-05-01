@@ -82,6 +82,17 @@
               </div>
             <%}%>
           </div>
+          <%if(batchDetails.completedActivities){%>
+            <hr>
+            <div class="container">
+              <h6 class="text-info"><strong>Completed Activities :</strong></h6>
+              <%batchDetails.completedActivities.forEach((activityId,index)=>{%>
+                <a href="/activity/<%=activityId%>/details">
+                  <div class="btn btn-outline-success btn-block btn-sm"><strong>Activity Number : <%=index+1%></strong> </div>
+                </a>
+              <%})%>
+            </div>
+          <%}%>
         </div>
         <hr>
         <div class="ml-2 mr-2 mb-1">

@@ -134,3 +134,13 @@ exports.checkRightVideoEditorOrNot=function(req,res,next){
     })
   }
 }
+
+exports.ifActivityAlreadyLiked=function(req,res,next){
+  req.activityLiked=false
+  req.activityDetails.likes.forEach((like)=>{
+    if(like==req.regNumber){
+      req.activityLiked=true
+    }
+  })
+  next()
+}

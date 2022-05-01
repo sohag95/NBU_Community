@@ -389,3 +389,53 @@ exports.publishActivity=function(req,res){
     res.redirect(`/activity/${req.params.id}/details`)
   })
 }
+
+exports.likeActivity=function(req,res){
+  if(!req.activityLiked){
+    Activity.likeActivity(req.activityDetails._id,req.regNumber).then(()=>{
+      req.activityDetails=undefined
+      req.flash("success", "Activity liked!!")
+      res.redirect(`/activity/${req.params.id}/details`)
+    }).catch(()=>{
+      req.flash("errors", e)
+      res.redirect(`/activity/${req.params.id}/details`)
+    })
+  }else{
+    req.flash("errors", "You have already liked the activity.")
+    res.redirect(`/activity/${req.params.id}/details`)
+  }
+}
+
+exports.dislikeActivity=function(req,res){
+  if(req.activityLiked){
+    Activity.dislikeActivity(req.activityDetails._id,req.regNumber).then(()=>{
+      req.activityDetails=undefined
+      req.flash("success", "Activity disliked!!")
+      res.redirect(`/activity/${req.params.id}/details`)
+    }).catch(()=>{
+      req.flash("errors", e)
+      res.redirect(`/activity/${req.params.id}/details`)
+    })
+  }else{
+    req.flash("errors", "You have not liked the activity yet.")
+    res.redirect(`/activity/${req.params.id}/details`)
+  }
+}
+
+
+exports.commentOnActivity=function(req,res){
+    let commentDetails={
+      regNumber:req.regNumber,
+      userName:req.userName,
+      comment:req.body.comment,
+      createdDate:new Date()
+    }
+    Activity.commentOnActivity(req.activityDetails._id,commentDetails).then(()=>{
+      req.activityDetails=undefined
+      req.flash("success", "Comment added successfully!!")
+      res.redirect(`/activity/${req.params.id}/details`)
+    }).catch(()=>{
+      req.flash("errors", e)
+      res.redirect(`/activity/${req.params.id}/details`)
+    })
+}
