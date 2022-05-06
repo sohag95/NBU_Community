@@ -66,7 +66,7 @@ OtherOperations.getDepartmentCodesFromGroupId=function(groupId){
  }
 
 
- OtherOperations.isSourceMember=function(source,sourceId,regNumber){
+ OtherOperations.isSourceMemberOrVoter=function(source,sourceId,regNumber){
  let sourceMember=false
  if(source=="batch"){
   if(sourceId==regNumber.slice(0,9)){
@@ -86,8 +86,9 @@ OtherOperations.getDepartmentCodesFromGroupId=function(groupId){
   return sourceMember
  }
 
- 
-OtherOperations.getTopicResultData=function(votingDetails){
+//Voting result array creation for both leader and topic
+OtherOperations.getVotingResultData=function(votingDetails,from){
+  //from :"toicResut"/"leaderResult"
   // let topicOptions=["Study","Discussion","Fun"]
   // let voters=[
   //   {votingIndex:1},
@@ -109,16 +110,30 @@ OtherOperations.getTopicResultData=function(votingDetails){
   //   }
   // ]
   
-  let topicOptions=votingDetails.topicOptions
+ 
   let voters=votingDetails.voters
   let result=[]
-  topicOptions.forEach((topic,index)=>{
-    let field={
-      topicIndex:index,
-      votes:0
-    }
-    result.push(field)
-  })
+  if(from=="topicResult"){
+    let topicOptions=votingDetails.topicOptions
+    topicOptions.forEach((topic,index)=>{
+      let field={
+        topicIndex:index,
+        votes:0
+      }
+      result.push(field)
+    })
+  }
+
+   if(from=="leaderResult"){
+    let nominationTakers=votingDetails.nominationTakers
+    nominationTakers.forEach((topic,index)=>{
+      let field={
+        topicIndex:index,
+        votes:0
+      }
+      result.push(field)
+    })
+  }
 
   voters.forEach((voter)=>{
     let index=voter.votingIndex

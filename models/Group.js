@@ -182,4 +182,24 @@ Group.updatePreviousActivityFieldOnGroup= function(groupId,activityData){
     }
   })
 }
+
+Group.updateLeaderVotingPoleData= function(groupId,poleId,votingDates){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await groupsCollection.updateOne(
+          { groupId: groupId },
+          {
+            $set: {
+              "isVoteGoingOn":true,
+              "leaderVotingData.votingPoleId":poleId,
+              "leaderVotingData.votingDates":votingDates
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 module.exports=Group

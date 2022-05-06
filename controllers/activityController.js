@@ -4,7 +4,7 @@ const Group = require("../models/Group")
 const OfficialUsers = require("../models/OfficialUsers")
 const OtherOperations = require("../models/OtherOperations")
 const SessionBatch = require("../models/SessionBatch")
-const Voting = require("../models/Voting")
+const TopicVoting = require("../models/TopicVoting")
 
 exports.ifStudentPresentLeader=async function(req,res,next){
   try{
@@ -155,7 +155,7 @@ exports.ifActivityPresent=async function(req,res,next){
       req.activityDetails=activityDetails
       req.votingDetails=null
       if(req.activityDetails.isTopicByVote && !req.activityDetails.isVoteCompleted){
-        req.votingDetails=await Voting.getVotingDetailsById(req.activityDetails.votingId)
+        req.votingDetails=await TopicVoting.getVotingDetailsById(req.activityDetails.votingId)
       }
       next()
     }else{
@@ -200,7 +200,7 @@ exports.getActivityDetailsPage=function(req,res){
       checkData.isPostController=true
     }
     //activity member or not checking
-    let activityMember=OtherOperations.isSourceMember(activityDetails.activityType,activityDetails.activitySourceId,req.regNumber)
+    let activityMember=OtherOperations.isSourceMemberOrVoter(activityDetails.activityType,activityDetails.activitySourceId,req.regNumber)
     if(activityMember){
       checkData.isActivityMember=true
     }
@@ -378,7 +378,9 @@ exports.publishActivity=function(req,res){
   }
   let sourceData={
     from:req.activityDetails.activityType,
-    sourceId:req.activityDetails.activitySourceId
+    sourceId:req.activityDetails.activitySourceId,
+    sourceName:req.activityDetails.sourceName,
+    leaders:req.activityDetails.leaders
   }
   activity.publishActivity(activityData,sourceData).then(()=>{
     req.activityDetails=undefined

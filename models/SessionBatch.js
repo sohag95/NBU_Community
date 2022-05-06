@@ -14,6 +14,11 @@ SessionBatch.prototype.cleanUpData=function(){
     batchSessionYear:this.data.newSession,
     departmentName:this.data.departmentName,
     groupId:this.data.groupId,
+    //voting data from bellow
+    lastVoteResultDate:null,//help leader to create voting pole
+    isVoteGoingOn:false,
+    leaderVotingData:{},//voting state operation handling variables
+    //-----------------------
     presentLeader:null,
     previousLeader:null,
     allMembers:[],
@@ -265,4 +270,24 @@ SessionBatch.updatePreviousActivityFieldOnBatch= function(batchId,activityData){
   })
 }
 
+
+SessionBatch.updateLeaderVotingPoleData= function(batchId,poleId,votingDates){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              "isVoteGoingOn":true,
+              "leaderVotingData.votingPoleId":poleId,
+              "leaderVotingData.votingDates":votingDates
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 module.exports=SessionBatch

@@ -3,8 +3,25 @@ const Student = require('../models/Student')
 
 
 exports.test = function (req, res) {
+  var today = new Date();
+  var numberOfDaysToAdd = 3;
+  var result1 = today.setDate(today.getDate() + numberOfDaysToAdd);
+  let nominationLastDate=new Date(result1)
+  var result2 = today.setDate(today.getDate() + numberOfDaysToAdd);
+  let votingLastDate=new Date(result2)
+  let dates={
+    createdDate:new Date(),
+    nominationLastDate:nominationLastDate,
+    votingLastDate:votingLastDate
+  }
+  console.log("Dates :",dates)
   res.render('test-page')
 }
+
+
+
+
+
 
 exports.ifUserLoggedIn = function (req, res,next) {
   req.isUserLoggedIn=false

@@ -1,0 +1,134 @@
+
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7" >
+
+    <h5 class="bolder text-primary pt-1 text-center"><strong>Voting Details Page</strong></h5>
+    <div class="single-batch-container">
+      <div class="single-batch-data pb-4">
+        <div style="position: relative;">
+          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
+          <div class="text-success text-center"><strong>Voting Type : <%=votingDetails.voteType%></strong></div>
+          <div class="text-success text-center"><strong>Vote From : <%=votingDetails.from%></strong></div>
+          <div class="text-success text-center"><strong>Department Name : <%=votingDetails.sourceName%></strong></div>
+          <div class="text-success text-center"><strong>Voting Date : 12/12/12</strong></div>
+        </div>
+        <hr>
+        <%if(checkData.votingStatus=="nomination"){%>
+          <div class="container">
+            <h5 class="text-center text-info"><strong>Leader Nomination Is Going On</strong></h5>
+            <hr>
+            <%if(votingDetails.nominateableMembers.includes(user.regNumber)){%>
+              
+              <h5 class="bolder">All Enrolled Students :</h5>
+              <%let enrolled=false%>
+              <%if(!votingDetails.nominationTakers.length){%>
+                <div class="btn btn-outline-secondary btn-block btn-sm">No one enrolled till now.Be the first one.</div>
+              <%}else{%>
+                <%votingDetails.nominationTakers.forEach((std,index)=>{%>
+                  <%if(std.regNumber==user.regNumber){%>
+                    <%enrolled=true%>
+                  <%}%>
+                  <div class="btn btn-outline-secondary btn-block btn-sm"><strong><%=index+1%> : </strong><i><%=std.userName%></i></div>
+                <%})%>
+              <%}%>
+              <i class="d-block">Last Date of Nomination : <%=votingDetails.votingDates.nominationLastDate%></i>
+              <hr>
+              <%if(!enrolled){%>
+                <h6 class="bolder text-center text-warning">Hay,<%=user.userName%> you can become the next leader of the <%=votingDetails.from%> for next activity.So,please enroll your name on the portal and get selected by voting system.</h6>
+                <hr>
+                <form action="/leader-voting/<%=votingDetails._id%>/nomination" method="post">
+                  <button class="btn btn-sm btn-info btn-block">Include Your Name</button>
+                </form>
+              <%}else{%>
+                <div class="btn btn-sm btn-warning btn-block">You have enrolled Your Name.Wait for voting.</div>
+              <%}%>
+            <hr>
+          <%}%>
+          </div>
+        <%}else if(checkData.votingStatus=="voting"){%>
+          <div class="container">
+            <h5 class="text-center text-info"><strong>Voting Is Going On</strong></h5>
+            <strong class="text-info">Voting Last Date : <i><%=votingDetails.votingDates.votingLastDate%></i></strong>
+            <hr>
+            <h5 class="bolder">All Nominated Students :</h5>
+            <%if(votingDetails.nominationTakers.length){%>
+              <%votingDetails.nominationTakers.forEach((std,index)=>{%>
+                <div class="btn btn-outline-secondary btn-block btn-sm"><strong><%=index+1%> : </strong><i><%=std.userName%></i></div>
+              <%})%>
+              <hr>
+              <h5 class="bolder text-warning">Total votes placed : <strong><%=votingDetails.voters.length%></strong></h5>
+              <hr>
+              <%if(checkData.isVoter){%>
+                <%let isVotted=false%>
+                <%let votingIndex=null%>
+                <%votingDetails.voters.forEach((voter)=>{%>
+                  <%if(voter.regNumber==user.regNumber){%>
+                    <%isVotted=true%>
+                    <%votingIndex=voter.votingIndex%>
+                  <%}%>
+                <%})%>
+                <%if(!isVotted){%>
+                  <h6 class="bolder text-warning">Give your vote : <i>(You can't vote for yourself)</i></h6>
+                  <form action="/leader-voting/<%=votingDetails._id%>/give-vote" method="post" id="leader-voting-form">
+                    <div class="form-group">
+                      <label for="leader" class="text-muted mb-1"><small>Select New Leader :-</small></label>
+                      <select  id="leader" class="form-control " name="leaderIndex" form="leader-voting-form" required>
+                        <option value="">----------Select leader----------</option>
+                        <%votingDetails.nominationTakers.forEach((leader,index)=>{%>
+                          <%if(leader.regNumber!=user.regNumber){%>
+                            <option value="<%=index%>"><%=leader.userName%></option>
+                          <%}%>
+                        <%})%>
+                      </select>
+                    </div>
+                    <button class="btn btn-sm btn-block btn-warning">Submit Your Vote</button>
+                  </form>
+                  <hr>
+                <%}else{%>
+                  <div class="btn btn-block btn-success btn-sm">Thank you for your vote.You votted for <i class="text-warning"><%=votingDetails.nominationTakers[votingIndex].userName%></i>.</div>
+                  <p><strong class="d-block text-danger text-center">WAIT FOR THE RESULT!!</strong></p>
+                <%}%>
+              <%}%>
+            <%}else{%>
+              <div class="btn btn-block btn-info btn-sm">No one nominated for this vote.Present leader will unchanged.</div>
+            <%}%>
+            <hr>
+            <%if(votingDetails.leaders.mainLead.regNumber==user.regNumber || votingDetails.leaders.assistantLead.regNumber==user.regNumber){%>
+              <h5 class="bolder">Leader Section :</h5>
+              <div class="bolder text-warning">As a leader you can declare voting result if it is urgent.But you should ensure that all nominated students have votted.</div>
+              <h6>Declare result :</h6>
+              <form action="/leader-voting/<%=votingDetails._id%>/declare-result-by-leader">
+                <div class="form-group">
+                  <label for="reason" class="text-muted mb-1"><small>Give a reason :-</small></label>
+                  <input  name="reason" id="reason" class="form-control form-control-lg " type="text" placeholder="Give reason of result decluration." autocomplete="off">
+                </div>
+                <button class="btn btn-danger btn-block btn-sm">Declare result</button>
+              </form>
+            <%}%>
+            <hr>
+          </div>
+        <%}else if(checkData.votingStatus=="completed"){%>
+          <div class="container">
+            <h5><strong>Voting completed :</strong></h5>
+            <div class="btn btn-sm btn-info btn-block">After voting activities.</div>
+          </div>
+        <%}else{%>
+          <div class="btn">Not matched</div>
+        <%}%>
+        
+        <div class="container">
+          <h5><strong>Voters Details :</strong></h5>
+          <div class="btn btn-sm btn-info btn-block">Voters details according to viewer...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg"></div>
+</div>
+
+<%- include('includes/footer') %>

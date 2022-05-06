@@ -9,11 +9,27 @@ First Part:
 6.account verification by session,department leader or society controller
 7.student sign-in and storing session data
 
-8.create voting pole to make leader for session,department,group etc
-9.voting calculation technique
-10.leader declaration
+Second Part:
+1.create activity 
+2.Activity topic selection voting pole
+3.voting flow handling
+4.like,comment on post
+5.Activity status flow
+6.Activity showing places and organizations
 
-11.create activity pole
-12.post status flow
-13.like,comment on post
-14.post showing places and organizations
+Third Part:
+1.leader selection voting pole creation
+2.taking votes
+3.voting result decleration
+4.leader making
+
+Fourth Part:
+1.Group creation by students
+2.Getting membership on group
+3.Activity handling
+
+Fifth Part:
+1.Notification Sending
+
+Sixth Part:
+1.Photo uploading on AWS bucket

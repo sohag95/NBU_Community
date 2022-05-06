@@ -93,6 +93,12 @@ router.post("/activity/:id/dislike",studentController.studentMustBeLoggedIn,acti
 router.post("/activity/:id/comment",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,activityController.commentOnActivity)
 
 //########################
+//Leader selection voting routers
+router.post("/create/:from/:id/leader-voting-pole",studentController.studentMustBeLoggedIn,checkingController.ifSourcePresent,checkingController.ifCreatorLeader,votingController.createLeaderVotingPole)
+router.get("/leader-voting/:id/details",userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.getLeaderVotingStatusAndCheckData,votingController.getLeaderVotingPage)
+router.post("/leader-voting/:id/nomination",userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.getLeaderVotingStatusAndCheckData,checkingController.ifUserNominateable,votingController.addNameOnNomination)
+router.post("/leader-voting/:id/give-vote",studentController.studentMustBeLoggedIn,userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.getLeaderVotingStatusAndCheckData,checkingController.checkLeaderVotingData,votingController.giveLeaderVote)
+router.post("/leader-voting/:id/declare-result-by-leader",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.ifVotingResultDeclarable,votingController.declareLeaderResultByLeader)
 
 //Logging out router
 router.post("/loggingOut", userController.loggingOut)

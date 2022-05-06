@@ -328,4 +328,24 @@ Department.updatePreviousActivityFieldOnDepartment= function(departmentCode,acti
     }
   })
 }
+
+Department.updateLeaderVotingPoleData= function(departmentCode,poleId,votingDates){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await departmentsCollection.updateOne(
+          { departmentCode: departmentCode },
+          {
+            $set: {
+              "isVoteGoingOn":true,
+              "leaderVotingData.votingPoleId":poleId,
+              "leaderVotingData.votingDates":votingDates
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 module.exports=Department

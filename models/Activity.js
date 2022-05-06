@@ -1,9 +1,10 @@
 const { ObjectId } = require("mongodb")
 const Department = require("./Department")
 const Group = require("./Group")
+const LeaderVoting = require("./LeaderVoting")
 const OfficialUsers = require("./OfficialUsers")
 const SessionBatch = require("./SessionBatch")
-const Voting = require("./Voting")
+const TopicVoting = require("./TopicVoting")
 
 const activityCollection = require("../db").db().collection("Activities")
 
@@ -142,8 +143,8 @@ Activity.prototype.getActivityData=async function(){
       this.activityData.activityDates.activityDate=new Date(this.data.activityDate)
     }else if(this.data.topicSelectedBy=="voting"){
       console.log("i am in voting section")
-      let voting=new Voting(this.neededData,this.data.votingLastDate)
-      let votingId=await voting.createTopicVotingPole()
+      let topicVoting=new TopicVoting(this.neededData,this.data.votingLastDate)
+      let votingId=await topicVoting.createTopicVotingPole()
       this.activityData.isTopicByVote=true
       this.activityData.votingId=votingId
       this.activityData.activityDates.votingLastDate=new Date(this.data.votingLastDate)
@@ -537,6 +538,10 @@ Activity.prototype.publishActivity=function(activityData,sourceData){
       await OfficialUsers.removeAssignedActivityIdFromEditor(activityData._id)
       await OfficialUsers.removeSubmittedActivityIdFromPostController(activityData._id)
       //remove assigned activity id from editor account and add activity id as submitted activity
+      //create voting pole to select new leader as after each activity there should have new leader
+      let leaderVoting=new LeaderVoting(sourceData,"auto")
+      await leaderVoting.createLeaderVotingPole(null)
+      //---------------------------------------
       resolve()
     }catch{
       reject("There is some problem.")
@@ -599,6 +604,7 @@ Activity.commentOnActivity=function(id,commentDetails){
     }
   })
 }
+
 module.exports=Activity
 
 

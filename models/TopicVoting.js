@@ -7,7 +7,7 @@ const Activity = require("./Activity")
 const votingCollection = require("../db").db().collection("VotingPoles")
 const activityCollection = require("../db").db().collection("Activities")
 
-let Voting=function(data,lastDate){
+let TopicVoting=function(data,lastDate){
   this.data=data
   this.lastDate=lastDate
   this.errors=[]
@@ -21,7 +21,11 @@ let Voting=function(data,lastDate){
 //     assistantLead: null
 //   }
 // }
-Voting.prototype.getTopicVotingData=async function(){
+
+//##################################
+//Topic voting pole created during creation of activity by checking topicSelectedBy=voting
+//##################################
+TopicVoting.prototype.getTopicVotingData=async function(){
   try{
     console.log("getTopicVotingData function ran")
     let allTopics=await OfficialUsers.getAllActivityTopics()
@@ -60,7 +64,7 @@ Voting.prototype.getTopicVotingData=async function(){
   }
 }
 
-Voting.prototype.createTopicVotingPole=function(){
+TopicVoting.prototype.createTopicVotingPole=function(){
   return new Promise(async (resolve, reject) => { 
     try{
       console.log("createTopicVotingPole function ran")
@@ -81,7 +85,7 @@ Voting.prototype.createTopicVotingPole=function(){
   })
 }
 
-Voting.getVotingDetailsById=function(id){
+TopicVoting.getVotingDetailsById=function(id){
   return new Promise(async (resolve, reject) => { 
     try{
       let votingDetails=await votingCollection.findOne({_id: new ObjectId(id)})
@@ -96,7 +100,7 @@ Voting.getVotingDetailsById=function(id){
   })
 }
 
-Voting.giveTopicVote=function(id,votingData){
+TopicVoting.giveTopicVote=function(id,votingData){
   return new Promise(async (resolve, reject) => { 
     try{
       await votingCollection.updateOne({_id: new ObjectId(id)},{
@@ -111,7 +115,7 @@ Voting.giveTopicVote=function(id,votingData){
   })
 }
 
-Voting.updateResultOnVotingPole=function(id,resultData,declaredBy){
+TopicVoting.updateResultOnVotingPole=function(id,resultData,declaredBy){
   return new Promise(async (resolve, reject) => { 
     try{
       await votingCollection.updateMany({_id: new ObjectId(id)},{
@@ -130,7 +134,8 @@ Voting.updateResultOnVotingPole=function(id,resultData,declaredBy){
     }
   })
 }
-Voting.updateSourcePresentActivityField=function(data){
+
+TopicVoting.updateSourcePresentActivityField=function(data){
   return new Promise(async (resolve, reject) => { 
     try{
       console.log("Data:",data)
@@ -151,7 +156,8 @@ Voting.updateSourcePresentActivityField=function(data){
     }
   })
 }
-Voting.declareTopicResult=function(votingDetails,resultData,declaredBy,activityId){
+
+TopicVoting.declareTopicResult=function(votingDetails,resultData,declaredBy,activityId){
   return new Promise(async (resolve, reject) => { 
     try{
       let data={
@@ -163,10 +169,10 @@ Voting.declareTopicResult=function(votingDetails,resultData,declaredBy,activityI
       console.log("Won topic :",data.wonTopic)
       console.log("Activity id:",activityId)
       //update voting deatils in voting pole
-      await Voting.updateResultOnVotingPole(votingDetails._id,resultData,declaredBy,data.wonTopic)
+      await TopicVoting.updateResultOnVotingPole(votingDetails._id,resultData,declaredBy,data.wonTopic)
       //update activity fields
       //update present activity field value on source
-      await Voting.updateSourcePresentActivityField(data)
+      await TopicVoting.updateSourcePresentActivityField(data)
       //await Activity.updateActivityDataAfterVoteResult(activityId,data.wonTopic)
       //belowed functionshould be in Activity function page
       await activityCollection.updateMany({_id: new ObjectId(activityId)},{
@@ -183,4 +189,4 @@ Voting.declareTopicResult=function(votingDetails,resultData,declaredBy,activityI
     }
   })
 }
-module.exports=Voting
+module.exports=TopicVoting

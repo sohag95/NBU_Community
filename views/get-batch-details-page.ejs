@@ -29,8 +29,37 @@
                   </li>
               </ul>
             </div>
-          
-        <hr>
+          <%if(batchDetails.isVoteGoingOn){%>
+            <hr>
+            <div class="ml-2 mr-2 mb-1">
+              <h5><strong>New Leader Selection :</strong></h5>
+              <div class="container">
+                <div class="student-room-container" style="width: 100%;">
+                  <strong  class="d-block text-info">Created Date : <%=batchDetails.leaderVotingData.votingDates.createdDate%></strong> 
+                  <strong  class="d-block text-info">Nomination Last Date : <%=batchDetails.leaderVotingData.votingDates.nominationLastDate%></strong>
+                  <strong  class="d-block text-info">Voting Last Date : <%=batchDetails.leaderVotingData.votingDates.votingLastDate%></strong>
+                  <a href="/leader-voting/<%=batchDetails.leaderVotingData.votingPoleId%>/details" class="btn btn-sm btn-block btn-primary">Go to the voting page</a>
+                </div>
+              </div> 
+            </div>
+            <hr>
+          <%}else{%>
+            <%if(checkData.isBatchLeader){%>
+            <hr>
+            <div class="ml-2 mr-2 mb-1">
+              <h5><strong>New Leader Selection :</strong></h5>
+              <div class="container">
+                <div class="student-room-container" style="width: 100%;">
+                  <form action="/create/batch/<%=batchDetails.batchId%>/leader-voting-pole" method="post">
+                    <button class="btn  btn-info btn-sm btn-block">Create New Leader Selection Pole</button>
+                  </form>
+                </div>
+              </div> 
+            </div>
+            <hr>
+            <%}%>
+          <%}%>
+
         <h4 class="text-center text-success"><strong>Leader Board</strong> </h4>
         <hr>
         <div class="ml-2 mr-2 mb-1">
