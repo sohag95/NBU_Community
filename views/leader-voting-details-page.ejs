@@ -101,7 +101,7 @@
               <h5 class="bolder">Leader Section :</h5>
               <div class="bolder text-warning">As a leader you can declare voting result if it is urgent.But you should ensure that all nominated students have votted.</div>
               <h6>Declare result :</h6>
-              <form action="/leader-voting/<%=votingDetails._id%>/declare-result-by-leader">
+              <form action="/leader-voting/<%=votingDetails._id%>/declare-result-by-leader" method="post">
                 <div class="form-group">
                   <label for="reason" class="text-muted mb-1"><small>Give a reason :-</small></label>
                   <input  name="reason" id="reason" class="form-control form-control-lg " type="text" placeholder="Give reason of result decluration." autocomplete="off">

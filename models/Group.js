@@ -202,4 +202,23 @@ Group.updateLeaderVotingPoleData= function(groupId,poleId,votingDates){
     }
   })
 }
+
+Group.updateLeaderVotingDataAfterResultDeclaration= function(groupId,wonLeader){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await groupsCollection.updateOne(
+          { groupId: groupId },
+          {
+            $set: {
+              "leaderVotingData.wonLeader": wonLeader,
+              "leaderVotingData.votingDates.resultDate":new Date()
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 module.exports=Group

@@ -128,7 +128,7 @@ OtherOperations.getVotingResultData=function(votingDetails,from){
     let nominationTakers=votingDetails.nominationTakers
     nominationTakers.forEach((topic,index)=>{
       let field={
-        topicIndex:index,
+        leaderIndex:index,
         votes:0
       }
       result.push(field)
@@ -143,6 +143,31 @@ OtherOperations.getVotingResultData=function(votingDetails,from){
   result.sort((a, b) => b.votes - a.votes);
   //first Index contains the winning result
   return result
+}
+
+OtherOperations.checkIfAllNominationTakerVotedOrNot=function(votingDetails){
+  let nominatorVoter={
+    isAllVoted:true,
+    notVoted:[]
+  }
+  
+  let voted
+    votingDetails.nominationTakers.forEach((nominator)=>{
+      voted=false
+      votingDetails.voters.forEach((voter)=>{
+        if(nominator.regNumber==voter.regNumber){
+          voted=true
+        }
+      })
+      if(!voted){
+        nominatorVoter.isAllVoted=false
+        nominatorVoter.notVoted.push(nominator.userName)
+      }
+    })
+
+ 
+  return nominatorVoter
+
 }
 
  module.exports=OtherOperations

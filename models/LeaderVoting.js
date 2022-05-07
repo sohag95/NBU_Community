@@ -1,5 +1,6 @@
 const Department = require("./Department")
 const Group = require("./Group")
+const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
 
 const votingCollection = require("../db").db().collection("VotingPoles")
@@ -28,7 +29,7 @@ LeaderVoting.prototype.getPoleData=function(){
     nominationTakers:[],
     voters:[],
     result:[],
-    wonLeader:"",
+    wonLeader:{},
     votingDates:{
       createdDate:new Date(),
       nominationLastDate:null,
@@ -134,27 +135,111 @@ LeaderVoting.giveLeaderVote=function(id,votingData){
   })
 }
 
-
-
-LeaderVoting.declareLeaderResultByLeader=function(votingDetails,resultData,declaredBy){
+LeaderVoting.updateResultOnLeaderVotingPole=function(id,resultData,resultDeclarationData,wonLeader){
   return new Promise(async (resolve, reject) => { 
     try{
-      // let data={
-      //  source:votingDetails.from,
-      //  sourceId:votingDetails.sourceId,
-      //  wonTopic:votingDetails.topicOptions[resultData[0].topicIndex]
-      // }
-      // console.log("Data :",data)
-      // console.log("Won topic :",data.wonTopic)
-      // console.log("Activity id:",activityId)
-      // //update voting deatils in voting pole
-      // await TopicVoting.updateResultOnVotingPole(votingDetails._id,resultData,declaredBy,data.wonTopic)
-      // //update activity fields
-      // //update present activity field value on source
-      // await TopicVoting.updateSourcePresentActivityField(data)
-      // //await Activity.updateActivityDataAfterVoteResult(activityId,data.wonTopic)
-      // //belowed functionshould be in Activity function page
-     
+      await votingCollection.updateMany({_id: id},{
+        $set:{
+          "result":resultData,
+          "wonLeader":wonLeader,
+          "votingDates.resultDate":new Date(),
+          "isResultDeclared":true,
+          "resultDeclaration":resultDeclarationData,
+        }
+      })
+      console.log("Successfully ran this")
+      resolve()
+    }catch{
+      console.log("Error updateResultOnVotingPole")
+      reject()
+    }
+  })
+}
+
+
+LeaderVoting.updateSourceLeaderVotingDataField=function(data){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      console.log("Data:",data)
+     if(data.source=="batch"){
+      console.log("ran on batch")
+      await SessionBatch.updateLeaderVotingDataAfterResultDeclaration(data.sourceId,data.wonLeader)
+     }else if(data.source=="department"){
+       console.log("this should ran")
+      await Department.updateLeaderVotingDataAfterResultDeclaration(data.sourceId,data.wonLeader)
+     }else if(data.source=="group"){
+      console.log("ran on group")
+      await Group.updateLeaderVotingDataAfterResultDeclaration(data.sourceId,data.wonLeader)
+     }
+      resolve()
+    }catch{
+      console.log("Error on updateSourceLeaderVotingDataField")
+      reject()
+    }
+  })
+}
+
+LeaderVoting.declareLeaderResultByLeader=function(votingDetails,resultData,resultDeclarationData){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      let data={
+        source:votingDetails.from,
+        sourceId:votingDetails.sourceId,
+        wonLeader:{
+          regNumber:votingDetails.nominationTakers[resultData[0].leaderIndex].regNumber,
+          userName:votingDetails.nominationTakers[resultData[0].leaderIndex].userName
+        }
+      }
+      
+      console.log("Data :",data)
+      //update voting deatils in voting pole
+      await LeaderVoting.updateResultOnLeaderVotingPole(votingDetails._id,resultData,resultDeclarationData,data.wonLeader)
+      //update leaderVotingData field value on source
+      await LeaderVoting.updateSourceLeaderVotingDataField(data)
+      
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+
+LeaderVoting.deaclreLeaderVotingPoleResultAutomatically=function(votingDetails){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      let data
+      let resultData
+      if(votingDetails.nominationTakers.length){
+        resultData=OtherOperations.getVotingResultData(votingDetails,"leaderResult")
+        data={
+          source:votingDetails.from,
+          sourceId:votingDetails.sourceId,
+          wonLeader:{
+            regNumber:votingDetails.nominationTakers[resultData[0].leaderIndex].regNumber,
+            userName:votingDetails.nominationTakers[resultData[0].leaderIndex].userName
+          }
+        }
+      }else{//if no one has nominated then this section will run
+        data={
+          source:votingDetails.from,
+          sourceId:votingDetails.sourceId,
+          wonLeader:{
+            regNumber:votingDetails.leaders.mainLead.regNumber,
+            userName:votingDetails.leaders.mainLead.userName
+          }
+        }
+        resultData="No one has nominated for this voting pole.So present leader will remain as a leader until next vote."
+      }
+
+      let resultDeclarationData={
+        declarationType:"auto",
+      }
+      //update voting pole data
+      await LeaderVoting.updateResultOnLeaderVotingPole(votingDetails._id,resultData,resultDeclarationData,data.wonLeader)
+      //update leaderVotingData field value on source
+      await LeaderVoting.updateSourceLeaderVotingDataField(data)
+      
       resolve()
     }catch{
       reject()

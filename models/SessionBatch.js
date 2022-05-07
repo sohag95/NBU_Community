@@ -18,6 +18,11 @@ SessionBatch.prototype.cleanUpData=function(){
     lastVoteResultDate:null,//help leader to create voting pole
     isVoteGoingOn:false,
     leaderVotingData:{},//voting state operation handling variables
+    // leaderVotingData:{
+    //   votingDates:{},
+    //   votingpoleId:"",
+    //   wonLeader:""
+    // }
     //-----------------------
     presentLeader:null,
     previousLeader:null,
@@ -281,6 +286,25 @@ SessionBatch.updateLeaderVotingPoleData= function(batchId,poleId,votingDates){
               "isVoteGoingOn":true,
               "leaderVotingData.votingPoleId":poleId,
               "leaderVotingData.votingDates":votingDates
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+SessionBatch.updateLeaderVotingDataAfterResultDeclaration= function(batchId,wonLeader){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              "leaderVotingData.wonLeader": wonLeader,
+              "leaderVotingData.votingDates.resultDate":new Date()
             }
           }
         )

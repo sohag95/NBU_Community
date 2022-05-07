@@ -348,4 +348,23 @@ Department.updateLeaderVotingPoleData= function(departmentCode,poleId,votingDate
     }
   })
 }
+
+Department.updateLeaderVotingDataAfterResultDeclaration= function(departmentCode,wonLeader){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await departmentsCollection.updateOne(
+          { departmentCode: departmentCode },
+          {
+            $set: {
+              "leaderVotingData.wonLeader": wonLeader,
+              "leaderVotingData.votingDates.resultDate":new Date()
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 module.exports=Department

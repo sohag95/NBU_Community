@@ -304,5 +304,37 @@ exports.ifVotingResultDeclarable=function(req,res,next){
   //check if declared by leader
   //check if all nominated students voted or not
   //
-  
+  let hasError=false
+  let errMsg=""
+  if(!req.votingDetails.isResultDeclared){
+    if(req.votingDetails.leaders.mainLead.regNumber==req.regNumber || req.votingDetails.leaders.assistantLead.regNumber==req.regNumber){
+      if(!req.votingDetails.nominationTakers.length){
+        hasError=true
+        errMsg="As no nomination taken place,present leader will stay as leader.This voting pole result will be declared automatically."
+      }
+      let nominatorVoter=OtherOperations.checkIfAllNominationTakerVotedOrNot(req.votingDetails)
+      if(!nominatorVoter.isAllVoted){
+        hasError=true
+        let voters=""
+        nominatorVoter.notVoted.forEach((voter)=>{
+          voters=voters+voter+","
+        })
+        errMsg=voters+" didn't give there vote till now."
+      }
+    }else{
+      hasError=true
+      errMsg="Only voting leaders can declare the result."
+    }
+  }else{
+    hasError=true
+    errMsg="Result for this portal has been declared already."
+  }
+  if(!hasError){
+    next()
+  }else{
+    req.flash("errors", errMsg)
+    req.session.save( ()=> {
+      res.redirect(`/leader-voting/${req.params.id}/details`)
+    })
+  }
 }

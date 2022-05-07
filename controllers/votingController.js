@@ -173,8 +173,14 @@ exports.getLeaderVotingStatusAndCheckData =async function (req, res, next) {
     }
   }else if(req.votingDetails.votingDates.nominationLastDate<new Date() && new Date()<req.votingDetails.votingDates.votingLastDate){
     req.checkData.votingStatus="voting"
+    if(req.votingDetails.isResultDeclared){
+      req.checkData.votingStatus="completed"
+    }
   }else{
     req.checkData.votingStatus="completed"
+    if(!req.votingDetails.isResultDeclared){
+      await LeaderVoting.deaclreLeaderVotingPoleResultAutomatically(req.votingDetails)
+    }
   }
   console.log("Voting Details nominateableMembers:",req.votingDetails)
   next()
@@ -259,26 +265,29 @@ exports.giveLeaderVote = function (req, res) {
   
 }
 
-//i have to work on this
+
 exports.declareLeaderResultByLeader = function (req, res) {
-  let declaredBy={
-    regNumber:req.regNumber,
-    userName:req.userName
+  let resultDeclarationData={
+    declarationType:"byLeader",
+    declaredBy:{
+      regNumber:req.regNumber,
+      userName:req.userName
+    },
+    reason:req.body.reason
   }
   let resultData=OtherOperations.getVotingResultData(req.votingDetails,"leaderResult")
   console.log("Result data :",resultData)
-  //have to work................
-  let activityId=req.params.activityId
-  LeaderVoting.declareLeaderResultByLeader(req.votingDetails,resultData,declaredBy).then(()=>{
+  
+  LeaderVoting.declareLeaderResultByLeader(req.votingDetails,resultData,resultDeclarationData).then(()=>{
     req.votingDetails=undefined
     req.flash("success", "Result successfully declared.")
     req.session.save( () =>{
-      res.redirect(`/leader-voting/${req.params.activityId}/details`)
+      res.redirect(`/leader-voting/${req.params.id}/details`)
     })
   }).catch(()=>{
     req.flash("errors", "There is some problem.")
     req.session.save( () =>{
-      res.redirect(`/leader-voting/${req.params.activityId}/details`)
+      res.redirect(`/leader-voting/${req.params.id}/details`)
     })
   })  
 }
