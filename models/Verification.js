@@ -28,7 +28,9 @@ Verification.prototype.validateData=function(){
     regNumber:this.studentData.regNumber,
     userName:this.studentData.userName,
     phone:this.studentData.phone,
-    createdDate:new Date()
+    createdDate:new Date(),
+    gole:"Making thecommunity batter.",
+    votingPoleId:"auto"
   }
   console.log("User Data :",this.studentData)
   console.log("Verifier Data :",this.verifierData)
@@ -113,7 +115,7 @@ Verification.prototype.updateRemainAccountsVerificationMessage=function(){
             type:"Community controller",
             regNumber:"not given",
             userName:"Pranab Sinha",
-            phone:"7468987072"
+            phone:"7468987072"//get current community controller phone number
           }
         ]
       }

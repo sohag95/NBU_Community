@@ -38,6 +38,17 @@
                   <strong  class="d-block text-info">Created Date : <%=batchDetails.leaderVotingData.votingDates.createdDate%></strong> 
                   <strong  class="d-block text-info">Nomination Last Date : <%=batchDetails.leaderVotingData.votingDates.nominationLastDate%></strong>
                   <strong  class="d-block text-info">Voting Last Date : <%=batchDetails.leaderVotingData.votingDates.votingLastDate%></strong>
+                  <%if(batchDetails.leaderVotingData.votingDates.resultDate){%>
+                    <hr>
+                    <h6 class="text-warning"><strong>Result has published :</strong></h6>
+                    <strong  class="d-block text-info">Won Leader : <%=batchDetails.leaderVotingData.wonLeader.userName%></strong> 
+                    <strong  class="d-block text-info">Result Date : <%=batchDetails.leaderVotingData.votingDates.resultDate%></strong>
+                    <%if(batchDetails.leaderVotingData.wonLeader.regNumber==user.regNumber){%>
+                      <strong  class="d-block text-warning">Congrats!! You have won the election.Accept yourself as a leader.</strong>
+                    <%}else{%>
+                      <strong  class="d-block text-warning">New Leader will be added when he will accept his winning.</strong>
+                    <%}%>
+                  <%}%>
                   <a href="/leader-voting/<%=batchDetails.leaderVotingData.votingPoleId%>/details" class="btn btn-sm btn-block btn-primary">Go to the voting page</a>
                 </div>
               </div> 
@@ -48,6 +59,8 @@
             <hr>
             <div class="ml-2 mr-2 mb-1">
               <h5><strong>New Leader Selection :</strong></h5>
+              <h6 class="text-warning"><strong>Present leader activation date : </strong><%=batchDetails.presentLeader.createdDate%></h6>
+              <h6 class="text-danger">[This section will only work/shown after 15 days of present leader selection.]</h6>
               <div class="container">
                 <div class="student-room-container" style="width: 100%;">
                   <form action="/create/batch/<%=batchDetails.batchId%>/leader-voting-pole" method="post">
@@ -137,6 +150,9 @@
                 <div style="width: 100%;">
                   <strong class="d-block">Name : <%=batchDetails.presentLeader.userName%></strong>
                   <strong class="d-block">Phone Number : <%=batchDetails.presentLeader.phone%></strong>
+                  <a href="/leader-voting/<%=batchDetails.presentLeader.votingPoleId%>/details">
+                    <strong>Go to voting details...</strong>
+                  </a>
                 </div>
               </div>
               <div class="col-sm-6 " style="margin: auto;">
@@ -170,6 +186,9 @@
                 <div style="width: 100%;">
                   <strong class="d-block">Name : <%=batchDetails.previousLeader.userName%></strong>
                   <strong class="d-block">Phone :  <%=batchDetails.previousLeader.phone%></strong>
+                  <a href="/leader-voting/<%=batchDetails.previousLeader.votingPoleId%>/details">
+                    <strong>Go to voting details...</strong>
+                  </a>
                 </div>
               </div>
               <div class="col-sm-6 " style="margin: auto;">

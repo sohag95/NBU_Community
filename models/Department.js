@@ -183,30 +183,55 @@ Department.updateDepartmentRequestFieldEmpty=function(departmentCode){
   })
 }
 
-Department.makeDepartmentPresentLeader=function(departmentCode,studentData){
+Department.makeDepartmentPresentLeader=function(departmentCode,newLeaderData){
   return new Promise(async (resolve, reject) => {
     try{
       let newLeader=true
       let departmentDetails=await departmentsCollection.findOne({departmentCode:departmentCode})
+      let newPreviousLeader=departmentDetails.presentLeader
       if( departmentDetails.allLeaders.length){
         departmentDetails.allLeaders.forEach((leader)=>{
-          if(leader.regNumber==studentData.regNumber){
+          if(leader.regNumber==newLeaderData.regNumber){
             newLeader=false
           }
         })
       }
-      await departmentsCollection.updateOne({departmentCode:departmentCode},{
-        $set:{
-          presentLeader:studentData
+       //update new leader data
+      await departmentsCollection.updateOne(
+        {departmentCode:departmentCode},
+        {
+          $set: {
+            "presentLeader": newLeaderData,
+            "isVoteGoingOn":false,
+            "leaderVotingData":null,
+          }
         }
-      })
+      )
+       //in case of same present leader again,previous leader will remain same also
+       if(departmentDetails.presentLeader.regNumber!=newLeaderData.regNumber){
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              previousLeader: newPreviousLeader
+            }
+          }
+        )
+      }
       if(newLeader){
         console.log("pushing data on department leaders")
-        await departmentsCollection.updateOne({departmentCode:departmentCode},{
-          $push:{
-            allLeaders:studentData
+        let leaderData={
+          regNumber:newLeader.regNumber,
+          userName:newLeader.userName
+        }
+        await departmentsCollection.updateOne(
+          {departmentCode:departmentCode},
+          {
+            $push:{
+              "allLeaders":leaderData
+            }
           }
-        })
+        )
       }
       resolve()
     }catch{

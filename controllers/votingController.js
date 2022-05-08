@@ -4,6 +4,7 @@ const LeaderVoting = require("../models/LeaderVoting")
 const SessionBatch = require("../models/SessionBatch")
 const Department = require("../models/Department")
 const Group = require("../models/Group")
+const Student = require("../models/Student")
 
 exports.ifVotingPoleExists =async function (req, res,next) {
   try{
@@ -290,4 +291,39 @@ exports.declareLeaderResultByLeader = function (req, res) {
       res.redirect(`/leader-voting/${req.params.id}/details`)
     })
   })  
+}
+
+
+
+exports.acceptSelfAsLeader =async function (req, res) {
+  try{
+    let studentData=await Student.getStudentDataByRegNumber(req.regNumber)
+    let newLeaderData={
+      regNumber:req.regNumber,
+      userName:req.userName,
+      phone:studentData.phone,
+      createdDate:new Date(),
+      gole:req.body.gole,
+      votingPoleId:req.votingDetails._id
+    }
+    
+    let from=req.votingDetails.from
+    LeaderVoting.acceptSelfAsLeader(req.votingDetails,newLeaderData).then(()=>{
+      req.votingDetails=undefined
+      req.flash("success", `Congrets!! Now you are the new present leader of the ${from}.`)
+      req.session.save( () =>{
+        res.redirect(`/leader-voting/${req.params.id}/details`)
+      })
+    }).catch((errMsg)=>{
+      req.flash("errors", errMsg)
+      req.session.save( () =>{
+        res.redirect(`/leader-voting/${req.params.id}/details`)
+      })
+    }) 
+  }catch{
+    req.flash("errors", "There is some problem.")
+    req.session.save( () =>{
+      res.redirect(`/leader-voting/${req.params.id}/details`)
+    })
+  }
 }

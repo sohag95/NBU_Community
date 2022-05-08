@@ -164,7 +164,7 @@ exports.ifSourcePresent=async function(req,res,next){
         sourceName:sourceData.departmentName,
         leaders:{
           mainLead:sourceData.presentLeader,
-          assistantLead:sourceData.previousLead,
+          assistantLead:sourceData.previousLeader,
         }
       }
     }else{
@@ -172,6 +172,7 @@ exports.ifSourcePresent=async function(req,res,next){
     }
   }else if(req.params.from=="department"){
     let sourceData=await Department.findDepartmentByDepartmentCode(req.params.id)
+    
     if(sourceData){
       req.sourceData={
         from:req.params.from,
@@ -179,7 +180,7 @@ exports.ifSourcePresent=async function(req,res,next){
         sourceName:sourceData.departmentName,
         leaders:{
           mainLead:sourceData.presentLeader,
-          assistantLead:sourceData.previousLead,
+          assistantLead:sourceData.previousLeader,
         }
       }
     }else{
@@ -187,6 +188,7 @@ exports.ifSourcePresent=async function(req,res,next){
     }
   }else if(req.params.from=="group"){
     let  sourceData=await Group.findGroupByGroupId(req.params.id)
+    
     if(sourceData){
       req.sourceData={
         from:req.params.from,
@@ -194,7 +196,7 @@ exports.ifSourcePresent=async function(req,res,next){
         sourceName:sourceData.groupName,
         leaders:{
           mainLead:sourceData.presentLeader,
-          assistantLead:sourceData.previousLead,
+          assistantLead:sourceData.previousLeader,
         }
       }
     }else{
@@ -222,6 +224,24 @@ exports.ifCreatorLeader=function(req,res,next){
       res.redirect(`/${req.params.from}/${req.params.id}/details`)
     })
   }
+}
+
+
+exports.ifMoreThen15DaysOfLeaderSelection=function(req,res,next){
+  //check if new leader was selected before 15 days or not
+    let createdDate=req.sourceData.leaders.mainLead.createdDate
+    let activeDate = new Date(createdDate);
+    let numberOfDaysToAdd = 15;
+    let result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
+    let lastDate=new Date(result1)
+    if(lastDate<new Date()){
+      next()
+    }else{
+      req.flash("errors", "You should wait at least 15 days to create new voting pole.Or complete an activity new voting pole will be created automatically.")
+      req.session.save( ()=> {
+        res.redirect(`/${req.params.from}/${req.params.id}/details`)
+      })
+    }
 }
 
 exports.ifUserNominateable=function(req,res,next){
@@ -328,6 +348,31 @@ exports.ifVotingResultDeclarable=function(req,res,next){
   }else{
     hasError=true
     errMsg="Result for this portal has been declared already."
+  }
+  if(!hasError){
+    next()
+  }else{
+    req.flash("errors", errMsg)
+    req.session.save( ()=> {
+      res.redirect(`/leader-voting/${req.params.id}/details`)
+    })
+  }
+}
+
+
+exports.newLeaderAcceptableOrNot=function(req,res,next){
+  //check state of the voting pole
+  //check if student won leader or not
+  let hasError=false
+  let errMsg=""
+  if(req.votingDetails.wonLeader.regNumber==req.regNumber){
+    if(req.votingDetails.isWonLeaderAccept){
+      hasError=true
+      errMsg="You had accepted yourself as a leader."
+    }  
+  }else{
+    hasError=true
+    errMsg="Sorry!!You are not the winning leader."
   }
   if(!hasError){
     next()

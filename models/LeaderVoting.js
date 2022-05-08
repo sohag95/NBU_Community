@@ -35,6 +35,7 @@ LeaderVoting.prototype.getPoleData=function(){
       nominationLastDate:null,
       votingLastDate:null,
       //resultDate:null,this field will be on table during result declaration
+      //acceptanceDate:date
     },
     resultDeclaration:{
       declarationType:null,//auto,byLeader,
@@ -42,6 +43,7 @@ LeaderVoting.prototype.getPoleData=function(){
     },
     isResultDeclared:false,
     isWonLeaderAccept:false,
+    leaderSetGole:null,//during acceptance as a leader 
   }
   
   let gapDays
@@ -240,6 +242,48 @@ LeaderVoting.deaclreLeaderVotingPoleResultAutomatically=function(votingDetails){
       //update leaderVotingData field value on source
       await LeaderVoting.updateSourceLeaderVotingDataField(data)
       
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+LeaderVoting.updateVotingSourceDataDuringAcceptance=function(votingDetails,newLeaderData){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      if(votingDetails.from=="batch"){
+        await SessionBatch.makeSessionBatchPresentLeader(votingDetails.sourceId,newLeaderData)
+      }else if(votingDetails.from=="department"){
+        await Department.makeDepartmentPresentLeader(votingDetails.sourceId,newLeaderData)
+      }else{
+        //this function has not created yet
+        //await Group.makeGroupPresentLeader(votingDetails.sourceId,newLeaderData)
+      console.log("Group present leader has not set yet.")
+      }
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+
+LeaderVoting.acceptSelfAsLeader=function(votingDetails,newLeaderData){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      if(newLeaderData.gole=="" || typeof newLeaderData.gole!="string"){
+        reject("You should set your gole as a new leader.")
+      }
+
+      await votingCollection.updateMany({_id: votingDetails._id},{
+        $set:{
+          "isWonLeaderAccept":true,
+          "leaderSetGole":newLeaderData.gole,
+          "votingDates.acceptanceDate":new Date(),
+        }
+      })
+      await LeaderVoting.updateVotingSourceDataDuringAcceptance(votingDetails,newLeaderData)
       resolve()
     }catch{
       reject()

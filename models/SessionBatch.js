@@ -15,7 +15,6 @@ SessionBatch.prototype.cleanUpData=function(){
     departmentName:this.data.departmentName,
     groupId:this.data.groupId,
     //voting data from bellow
-    lastVoteResultDate:null,//help leader to create voting pole
     isVoteGoingOn:false,
     leaderVotingData:{},//voting state operation handling variables
     // leaderVotingData:{
@@ -25,6 +24,14 @@ SessionBatch.prototype.cleanUpData=function(){
     // }
     //-----------------------
     presentLeader:null,
+    // presentLeader:{
+    //   regNumber:"",
+    //   userName:"",
+    //   phone:"",
+    //   createdDate:"",This date is the activation date forthe present leader
+    //   gole:"",
+    //   votingPoleId:""
+    // }
     previousLeader:null,
     allMembers:[],
     allLeaders:[],
@@ -119,33 +126,55 @@ SessionBatch.sentNewStudentRequestOnBatch= function(batchId,studentData){
   })
 }
 
-SessionBatch.makeSessionBatchPresentLeader= function(batchId,studentData){
+SessionBatch.makeSessionBatchPresentLeader= function(batchId,newLeaderData){
   return new Promise(async (resolve, reject) => {
     try{
+      //1.leader is very first,during varification
+      //2.selected new leader
+      //3.as no one nominated present leader will remain same only change date
       let newLeader=true
       let batchDetails=await sessionBatchesCollection.findOne({batchId:batchId})
+      let newPreviousLeader=batchDetails.presentLeader
       if(batchDetails.allLeaders.length){
         batchDetails.allLeaders.forEach((leader)=>{
-          if(leader.regNumber==studentData.regNumber){
+          if(leader.regNumber==newLeaderData.regNumber){
             newLeader=false
           }
         })
       }
+      //update new leader data
       await sessionBatchesCollection.updateOne(
         { batchId: batchId },
         {
           $set: {
-            presentLeader: studentData
+            "presentLeader": newLeaderData,
+            "isVoteGoingOn":false,
+            "leaderVotingData":null,
           }
         }
       )
+      //in case of same present leader again,previous leader will remain same also
+      if(batchDetails.presentLeader.regNumber!=newLeaderData.regNumber){
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              previousLeader: newPreviousLeader
+            }
+          }
+        )
+      }
       if(newLeader){
-        console.log("pushing data on batches all leaders")
+        //"pushing data on batche's all leaders"
+        let leaderData={
+          regNumber:newLeader.regNumber,
+          userName:newLeader.userName
+        }
         await sessionBatchesCollection.updateOne(
           { batchId: batchId },
           {
             $push: {
-              allLeaders: studentData
+              "allLeaders": leaderData
             }
           }
         )

@@ -3,18 +3,19 @@ const Student = require('../models/Student')
 
 
 exports.test = function (req, res) {
-  var today = new Date();
-  var numberOfDaysToAdd = 3;
-  var result1 = today.setDate(today.getDate() + numberOfDaysToAdd);
-  let nominationLastDate=new Date(result1)
-  var result2 = today.setDate(today.getDate() + numberOfDaysToAdd);
-  let votingLastDate=new Date(result2)
-  let dates={
-    createdDate:new Date(),
-    nominationLastDate:nominationLastDate,
-    votingLastDate:votingLastDate
+  let day=new Date()
+  var activeDate = new Date(day);
+  var numberOfDaysToAdd = 15;
+  var result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
+  let lastDate=new Date(result1)
+  if(lastDate>new Date()){
+    console.log("Large")
+  }else{
+    console.log("Small")
   }
-  console.log("Dates :",dates)
+  console.log("today :",day)
+  console.log("new pole create date after :",lastDate)
+  
   res.render('test-page')
 }
 
