@@ -91,11 +91,24 @@ Group.findGroupByGroupId= function(groupId){
 Group.addOnGroupMember= function(groupId,memberData){
   return new Promise(async (resolve, reject) => {
     try{
-      await groupsCollection.updateOne({groupId:groupId},{
-        $push:{
-          allMembers:memberData
-        }
-      })
+      // let groupDetails=await groupsCollection.findOne({groupId:groupId})
+      // let isAlreadyMember=false
+      // groupDetails.allMembers.forEach((member)=>{
+      //   if(member.regNumber==memberData.regNumber){
+      //     isAlreadyMember=true
+      //   }
+      // })
+      // //if student is already a member then need not to add him/her again
+      
+      // if(!isAlreadyMember){
+      // }
+      //#########--Need not to check as only new selected leader can fetch this function---#############
+        await groupsCollection.updateOne({groupId:groupId},{
+          $push:{
+            allMembers:memberData
+          }
+        })
+      
       resolve()
     }catch{
       reject()

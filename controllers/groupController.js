@@ -68,3 +68,11 @@ exports.getGroupDetailsPage = function (req, res) {
     res.render('404')
   }
 }
+
+exports.getGroupPreviousDetailsPage = function (req, res) {
+  try{
+    res.render('group-previous-details-page')
+  }catch{
+    res.render('404')
+  }
+}

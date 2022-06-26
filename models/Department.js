@@ -1,4 +1,5 @@
 
+const Group = require("./Group")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
 const departmentsCollection = require("../db").db().collection("Departments")
@@ -155,11 +156,23 @@ Department.getDepartmentDataByDepartmentCode=function(departmentCode){
 Department.addOnDepartmentPresentMember= function(departmentCode,memberData){
   return new Promise(async (resolve, reject) => {
     try{
-      await departmentsCollection.updateOne({departmentCode:departmentCode},{
-        $push:{
-          allPresentMembers:memberData
-        }
-      })
+      // let departmentDetails=await departmentsCollection.findOne({departmentCode:departmentCode})
+      // //above call is not needed in case of creation of a new batch leader
+      // let isAlreadyMember=false
+      // departmentDetails.allPresentMembers.forEach((member)=>{
+      //   if(member.regNumber==memberData.regNumber){
+      //     isAlreadyMember=true
+      //   }
+      // })
+      // if(!isAlreadyMember){
+      //}
+      //#########--Need not to check as only new selected leader can fetch this function---#############
+        await departmentsCollection.updateOne({departmentCode:departmentCode},{
+          $push:{
+            allPresentMembers:memberData
+          }
+        })
+      
       resolve()
     }catch{
       reject()
@@ -232,6 +245,7 @@ Department.makeDepartmentPresentLeader=function(departmentCode,newLeaderData){
             }
           }
         )
+        await Group.addOnGroupMember(departmentDetails.groupId,leaderData)
       }
       resolve()
     }catch{

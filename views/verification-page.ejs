@@ -1,6 +1,77 @@
 <%- include('includes/header') %>
 <%- include('includes/flash') %>
-<div class="container" style="height: 50vh;">
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+  <div class="col-lg-9 pt-1" >
+    <div class="">
+      <div style="width: 100%;position: relative;">
+        <img class="cover-image" style="height: 250px;" src="/images/verification-banner.jpg" width="1000" height="200"/>
+      </div>
+    </div>
+    <hr>
+    <h5 class="bolder text-primary text-center">Student's Provided Data</h5>
+    <hr>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="item-container mb-2">
+          <strong><p>Personal Info</p></strong>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <p><i class="fas fa-home"></i> <strong> Name - </strong> <span class="text-capitalize">Sohag Roy</span></p>
+          <p><i class="fas fa-graduation-cap"></i><strong> Phone No - </strong>7468987072</p>
+          <p><i class="fas fa-graduation-cap"></i><strong> Gmail Id - </strong>roysohag95@gmail.com (Optional)</p>
+          <p><i class="fas fa-male"></i><strong> Gender - </strong> Male</p> 
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="item-container mb-2">
+          <strong><p>Departmental Info</p></strong>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <p><i class="fas fa-home"></i> <strong> Reg No - </strong> 2122COMSC0006</p>
+          <p><i class="fas fa-home"></i> <strong> Department - </strong> Computer Science</p>
+          <p><i class="fas fa-home"></i> <strong> Session - </strong> 2021-2022</p>
+          <p><i class="fas fa-clock"></i><strong> Joined on - </strong>10 June 2022</p>    
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div style="display: flex;flex-wrap: wrap;" class>
+      <div class="col path" style="padding: 1rem; color: #fff;">
+        <p><h5><strong>Verification Type : case3</strong></h5></p>
+        <p>
+          <h5>
+            <strong>
+              Me,Sohag Roy as a verifier declaring that all data provided by the user is correct.So I am concedering this account as verified.
+            </strong>
+          </h5>
+        </p>
+        <div class="btn btn-block btn-md btn-success">Verified</div>
+      </div>
+    </div>
+    <hr>
+    <div style="display: flex;flex-wrap: wrap;">
+      <div class="col path" style="padding: 1rem;color: #fff;">
+        <p>
+          <h5>
+            <strong>
+              Me,Sohag Roy as a verifier declaring that all data provided by the user is not correct.So I am rejecting this account.
+            </strong>
+          </h5>
+        </p>
+        <div class="btn btn-block btn-md btn-danger">Rejected</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+</div>
+
+
+<!-- new verification  design till upper section -->
+<hr>
+
+<div class="container" >
   <div class="student-room-container mt-4">
     <h4 class="text-info bolder text-center">Student's Account Details</h4>
     <div class="row">

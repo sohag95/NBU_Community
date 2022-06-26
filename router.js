@@ -15,12 +15,16 @@ const videoEditorController=require('./controllers/videoEditorController')
 const activityController=require('./controllers/activityController')
 const votingController=require('./controllers/votingController')
 const checkingController=require('./controllers/checkingController')
+const notificationController=require('./controllers/notificationController')
 
 //####################################
 router.get('/test',userController.test)
 //####################################
 //user log-in 
 router.post("/loggingIn",  userController.loggingIn)
+router.get("/notifications",  userController.userMustBeLoggedIn,notificationController.getAllNotifications)
+router.get("/recent-activities",  userController.recentActivities)
+router.get("/all-departments",  userController.allDepartments)
 
 //user related routes
 router.get('/',userController.guestHomePage)
@@ -34,7 +38,6 @@ router.post("/verification/:case/:regNumber/reject",verificationController.check
 
 //NBU Community / Society controller related router
 router.get('/societyController-home',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.societyControllerHome)
-
 
 //Student related router
 router.post("/createNewAccount",multipleOperationController.checkAccountPosition,studentController.createNewAccount)
@@ -55,12 +58,15 @@ router.get("/batch/:batchId/details",userController.ifUserLoggedIn,sessionBatchC
 
 //department related routers
 router.get("/department/:departmentCode/details",userController.ifUserLoggedIn,departmentController.isDepartmentExists,departmentController.getDepartmentDetailsPage)
+router.get("/department/:departmentCode/previous-details",userController.ifUserLoggedIn,departmentController.isDepartmentExists,departmentController.getDepartmentPreviousDetailsPage)
 
 //group related routers
 router.get("/group/:groupId/details",userController.ifUserLoggedIn,groupController.isGroupExists,groupController.getGroupDetailsPage)
+router.get("/group/:groupId/previous-details",userController.ifUserLoggedIn,groupController.isGroupExists,groupController.getGroupPreviousDetailsPage)
 
 //Post controller related router
 router.get('/postController-home',officialUserController.postControllerMustBeLoggedIn,postControllerController.postControllerHome)
+
 //Video Editor related router
 router.get('/videoEditor-home',officialUserController.videoEditorMustBeLoggedIn,videoEditorController.videoEditorHome)
 

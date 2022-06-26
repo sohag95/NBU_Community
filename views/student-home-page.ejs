@@ -33,7 +33,7 @@
           <h4 ><strong class="text-success bolder">Hayy, <%=user.userName%> Your Registration number is : <%=user.regNumber%></strong> </h4>
           <h4 ><strong class="text-info bolder">Your verification type is : <%=user.otherData.verifiedBy.verificationType%></strong> </h4>
           <hr>
-          <h4 class="text-warning bolder"><%=user.otherData.verifiedBy.message%> Please contact following leaders to verify your account sooner .</h4>
+          <h4 class="text-warning bolder"><%=user.otherData.verifiedBy.message%> Please contact following leaders to verify your account sooner . Or wait few days , verifier will call you for verifing your account.</h4>
           <%user.otherData.verifiedBy.verifiers.forEach((leader)=>{%>
             <div class="student-room-container" style="display: flex;width: 100%;">
               <div class="mr-2" >
@@ -60,8 +60,9 @@
           
         </div>
       <%}%>
-    <div class="item-container" style="height: 50vh;">
-      Some item will be here.
+    <div>
+      <%- include('includes/activity-banner-structure') %>
+      <%- include('includes/activity-banner-structure') %>
     </div>
   </div>
   <%- include('includes/designs/student-home-screen-right-part') %>

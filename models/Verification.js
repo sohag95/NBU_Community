@@ -2,6 +2,7 @@ const Department = require("./Department")
 const Student = require("./Student")
 const SessionBatch = require("./SessionBatch")
 const Group = require("./Group")
+const Notification = require("./Notification")
 
 const studentsCollection = require("../db").db().collection("Students")
 const departmentsCollection = require("../db").db().collection("Departments")
@@ -44,6 +45,13 @@ Verification.prototype.markAsVerfiedAccount=function(){
           "verifiedBy":this.verifierData
         }
       })
+      let notification={
+        message:"Your account has been verified successfully.",
+        gotoLink:null,
+        gotoText:null,
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToOneUser(this.studentData.regNumber,notification)
       resolve()
     }catch{
       reject()

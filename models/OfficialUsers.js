@@ -400,6 +400,23 @@ OfficialUsers.removeSubmittedActivityIdFromPostController=function(id){
   })
 }
 
+
+OfficialUsers.allDepartments=function(){
+  return new Promise((resolve, reject) => {
+    try {
+      officialUsersCollection
+        .findOne({ dataType: "allDepartments" })
+        .then((allData) => {
+          resolve(allData.departments)
+        })
+        .catch(()=> {
+          reject("Please try again later.")
+        })
+    } catch {
+      reject()
+    }
+  })
+}
 module.exports=OfficialUsers
 
     

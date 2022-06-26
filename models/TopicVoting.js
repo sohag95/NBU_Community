@@ -41,10 +41,10 @@ TopicVoting.prototype.getTopicVotingData=async function(){
     console.log("Topics :",topics)
     this.data={
       voteType:"topic_selection",
-      from:this.data.from,
+      from:this.data.from,//should be voteFrom
       sourceId:this.data.sourceId,
       sourceName:this.data.sourceName,
-      //activityId:null,I might storethis variable as well later
+      //activityId:null,I might store this variable as well later
       topicOptions:topics,
       leaders:this.data.leaders,
       voters:[],

@@ -1,3 +1,4 @@
+const Department = require("./Department")
 const IdCreation = require("./IdCreation")
 const OtherOperations = require("./OtherOperations")
 const sessionBatchesCollection = require("../db").db().collection("sessionBatches")
@@ -178,6 +179,8 @@ SessionBatch.makeSessionBatchPresentLeader= function(batchId,newLeaderData){
             }
           }
         )
+        //add new leader as a department member
+        await Department.addOnDepartmentPresentMember(batchId.slice(4,9),leaderData)
       }
       resolve()
     }catch{

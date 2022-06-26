@@ -58,10 +58,10 @@
                   <strong>Test Page</strong>
                 </div>
               </a>
-              <a href="/matches">
+              <a href="/all-departments">
                 <div class="side-item">
                   <i class="fas fa-info-circle fa-lg"></i></i>
-                  <strong>Activities</strong>
+                  <strong>All Departments</strong>
                 </div>
               </a>
               <a href="/top-players">
@@ -143,7 +143,7 @@
       </div>
       <div class="float-right notVisibleOnCollapse">
         <a class="mr-2" href="/test"><strong><i class="fas fa-trophy"></i> Test Page</strong></a>
-        <a class="mr-2" href="#"><strong><i class="fas fa-info-circle"></i></i> Services</strong></a>
+        <a class="mr-2" href="/all-departments"><strong><i class="fas fa-address-card fa-lg"></i> Departments</strong></a>
         
         <%if(user){%>
           <%if(user.accountType=="student"){%>
@@ -198,6 +198,12 @@
                 </a>
               </div>
               <div class="text-center">
+                <a href="/notifications">
+                  <span><i class="fas fa-bell fa-lg"></i></span>
+                  <span class="d-block menu-text" >Notifications</span>
+                  </a>
+              </div> 
+              <div class="text-center">
                 <a href="/batch/<%=user.regNumber.slice(0,9)%>/details">
                   <span><i class="fas fa-chart-line fa-lg"></i></span>
                   <span class="d-block menu-text" >Batch</span>
@@ -209,6 +215,7 @@
                   <span class="d-block menu-text" >Department</span>
                   </a>
               </div>
+               
               <div class="text-center">
                 <a href="/group/<%=user.otherData.groupId%>/details">
                   <span><i class="fas fa-running fa-lg"></i></span>

@@ -1,16 +1,115 @@
 <%- include('includes/header') %>
-<div class="container container--narrow" >
-  <h4 class="text-center "><strong>All Available Members :</strong> </h4>
-  <ul id="allAvailableMembers" class="list-group pb-2">
-  </ul>
-  <form id="addParticipantsOnActivityForm" class="card" action="/activity-add-participants" method="POST">
-    <h4 class="text-center "><strong>All Participants :</strong> </h4>
-    <ul id="addedParticipants" class="list-group ">
-    </ul>
-    <input hidden type="text" id="selectedParticipants" name="selectedParticipants">
-    <button id="submitParticipantsButton" class="btn btn-primary">Submit Participants</button>
-  </form>
-  <script src="/activityParticipantsSelection.js"></script>
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+  <div class="col-lg-9 pt-1" >
+    <div class="">
+      <div style="width: 100%;position: relative;">
+        <img class="cover-image" style="height: 250px;" src="/images/voting-banner.jpg" width="1000" height="200"/>
+      </div>
+    </div>
+    <hr>
+    <h5 class="bolder text-primary text-center">Here will be all details about vote</h5>
+    <hr>
+    <div class="path"  style="display: flex;flex-wrap: wrap;" >
+      <div class="col-lg-6" >
+        <div class="member-container">
+          <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+          <div class="name-container">
+            <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
+            <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 " >
+        <div class="btn btn-block btn-success btn-lg">Accept yourself as a leader</div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="item-container mb-2">
+          <strong><p>All Nominations (5)</p></strong>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <div class=" btn btn-outline-info btn-block btn-sm pb-1"><strong>Sohag Roy</strong> </div>
+          <div class=" btn btn-outline-info btn-block btn-sm pb-1"><strong>Debarati Barman</strong> </div>
+          <div class=" btn btn-outline-info btn-block btn-sm pb-1"><strong>Pranab Sinha</strong></div>
+          <div class=" btn btn-outline-info btn-block btn-sm pb-1"><strong>Arnab Barman</strong></div>
+          <div class=" btn btn-outline-info btn-block btn-sm pb-1"><strong>Akash Sinha</strong></div>
+        
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="item-container mb-2">
+          <strong><p>Voting Section</p></strong>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <div class=" btn btn-outline-success pb-1" style="display: flex;flex-wrap:wrap;">
+            <div><strong>1.Sohag Roy</strong> </div>
+            <div class="ml-auto">- 52%</div>
+          </div>
+          <div class=" btn btn-outline-success pb-1" style="display: flex;flex-wrap:wrap;">
+            <div><strong>2.Pranab Roy</strong> </div>
+            <div class="ml-auto">- 20%</div>
+          </div>
+          <div class=" btn btn-outline-success pb-1" style="display: flex;flex-wrap:wrap;">
+            <div><strong>3.Akash Sinha</strong> </div>
+            <div class="ml-auto">- 15%</div>
+          </div>
+          <div class=" btn btn-outline-success pb-1" style="display: flex;flex-wrap:wrap;">
+            <div><strong>4.Alok Roy</strong> </div>
+            <div class="ml-auto">- 12%</div>
+          </div>
+          <div class=" btn btn-outline-success pb-1" style="display: flex;flex-wrap:wrap;">
+            <div><strong>5.Jony Roy</strong> </div>
+            <div class="ml-auto">- 1%</div>
+          </div>
+          <h5 class="pt-2 text-warning"><strong>Result declared on - 12 May 2022</strong></h5>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="item-container mb-2">
+      <h5><strong>Voting Details</strong></h5>
+      <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+      <p><strong>Type : </strong>Leder Selection </p>
+      <p><strong>From : </strong>Batch</p>
+      <p><strong>Department Name : </strong>Computer Science</p>
+      <p><strong>Created Date : </strong>12 May 2022</p>
+      <p><strong>Nomination Last Date : </strong>15 May 2022</p>
+      <p><strong>Voting Last Date : </strong>18 May 2022</p>
+      <p><strong>Result Declaration Date : </strong>19 May 2022</p>
+      <hr>
+      <h5><strong>Voting Leaders</strong></h5>
+      <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+      <div class="row">
+        <div class="col-lg-6">
+          <p><strong>Main Lead :</strong></p>
+          <div class="member-container">
+            <img class="member-avatar" src="/images/sohag.jpg" alt="">
+            <div class="name-container">
+              <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
+              <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <p><strong>Assistant Lead :</strong></p>
+          <div class="member-container">
+            <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+            <div class="name-container">
+              <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
+              <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
 </div>
+
 
 <%- include('includes/footer') %>

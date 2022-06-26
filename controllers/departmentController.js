@@ -71,3 +71,11 @@ exports.getDepartmentDetailsPage = function (req, res) {
     res.render('404')
   }
 }
+
+exports.getDepartmentPreviousDetailsPage = function (req, res) {
+  try{
+    res.render('department-previous-details-page')
+  }catch{
+    res.render('404')
+  }
+}

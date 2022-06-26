@@ -1,28 +1,49 @@
+const Notification = require('../models/Notification')
 const OfficialUser=require('../models/OfficialUsers')
 const Student = require('../models/Student')
 
 
-exports.test = function (req, res) {
-  let day=new Date()
-  var activeDate = new Date(day);
-  var numberOfDaysToAdd = 15;
-  var result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
-  let lastDate=new Date(result1)
-  if(lastDate>new Date()){
-    console.log("Large")
-  }else{
-    console.log("Small")
+exports.test =async function (req, res) {
+  try{
+  // let day=new Date()
+  // var activeDate = new Date(day);
+  // var numberOfDaysToAdd = 15;
+  // var result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
+  // let lastDate=new Date(result1)
+  // if(lastDate>new Date()){
+  //   console.log("Large")
+  // }else{
+  //   console.log("Small")
+  // }
+  // console.log("today :",day)
+  // console.log("new pole create date after :",lastDate)
+  let notification={
+    message:"Hello this is notification.",
+    gotoLink:"/yes",
+    gotoText:"/Go to the link..",
+    createdDate:new Date()
   }
-  console.log("today :",day)
-  console.log("new pole create date after :",lastDate)
-  
+  await Notification.sentNotificationToMultipleUsers(["2122COMSC0001","2122COMSC0004","2122COMSC0003"],notification)
+  await Notification.sentNotificationToOneUser("2122COMSC0001",notification)
   res.render('test-page')
+  }catch{
+    req.flash("errors", "There is some problem.")
+    req.session.save(() => res.redirect("/"))
+  }
+
 }
 
 
 
 
-
+exports.userMustBeLoggedIn = function (req, res,next) {
+  if(req.session.user){
+    next()
+  }else{
+    req.flash("errors", "You must logged in to perform that action.")
+    req.session.save(() => res.redirect("/"))
+  }
+}
 
 exports.ifUserLoggedIn = function (req, res,next) {
   req.isUserLoggedIn=false
@@ -171,3 +192,27 @@ exports.guestHomePage=async function(req,res){
 }
 
 
+exports.recentActivities=async function(req,res){
+  try {
+    res.render("recent-activities")
+  } catch {
+    res.render("404")
+  }
+}
+
+
+exports.allDepartments=async function(req,res){
+  try {
+    let departments=await OfficialUser.getAllDepartments()
+    departments.sort(function(a, b){
+      if(a.departmentName < b.departmentName) { return -1; }
+      if(a.departmentName > b.departmentName) { return 1; }
+      return 0;
+    })
+    res.render("all-departments",{
+      departments:departments
+    })
+  } catch {
+    res.render("404")
+  }
+}
