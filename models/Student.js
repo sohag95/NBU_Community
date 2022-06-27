@@ -377,4 +377,26 @@ Student.updateVerificationMessage = function (regNumber,verifiedBy) {
   })
 }
 
+
+Student.searchStudent = function(searchTerm) {
+  return new Promise(async (resolve, reject) => {
+    if (typeof searchTerm == "string") {
+      let students = await studentsCollection.aggregate([{ $match: { $text: { $search: searchTerm } } }, { $sort: { score: { $meta: "textScore" } } }]).toArray()
+      studentsData = students.map(student => {
+        data = {
+          regNumber: student.regNumber,
+          userName: student.userName,
+          departmentName:student.departmentName,
+          sessionYear:student.sessionYear
+        }
+        return data
+      })
+      console.log(studentsData)
+      resolve(studentsData)
+    } else {
+      reject()
+    }
+  })
+}
+
 module.exports=Student

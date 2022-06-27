@@ -216,3 +216,12 @@ exports.allDepartments=async function(req,res){
     res.render("404")
   }
 }
+
+
+exports.searchStudent=function(req,res){
+  Student.searchStudent(req.body.searchTerm).then(posts => {
+    res.json(posts)
+  }).catch(() => {
+    res.json([])
+  })
+}

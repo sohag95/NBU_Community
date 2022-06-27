@@ -26,6 +26,8 @@ router.get("/notifications",  userController.userMustBeLoggedIn,notificationCont
 router.get("/recent-activities",  userController.recentActivities)
 router.get("/all-departments",  userController.allDepartments)
 
+//Searching student by userName or regNumber 
+router.post("/search-student",userController.searchStudent)
 //user related routes
 router.get('/',userController.guestHomePage)
 router.get('/log-in',userController.getLogInForm)
