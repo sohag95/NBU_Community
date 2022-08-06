@@ -18,8 +18,181 @@
       <hr>
         
     </div>
-    <div class="item-container" style="height: 50vh;">
-      <p><strong>This section will be used to keep all other sub-sections.</strong></p>
+    <div class="item-container" >
+      <div id="accordion">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+               <strong> Newly Submitted Activities (<%=submittedActivities.newSubmitted.length%>)</strong>
+              </button>
+            </h5>
+          </div>
+      
+          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <%if(!submittedActivities.newSubmitted.length){%>
+                <div class="btn btn-block btn-info btn-lg">There is no activity on this status section.</div>
+              <%}else{%>
+                <%submittedActivities.newSubmitted.forEach((activity,index)=>{%>
+                  <div class="student-room-container mb-2">
+                    <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
+                    <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
+                    <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
+                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
+                    <p><strong>Note : </strong><%=activity.postControllerNote%></p>
+                    <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
+                      Go to activity details...
+                    </a>
+                  </div>
+                <%})%>
+              <%}%>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingTwo">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+               <strong>All Received Activities (<%=submittedActivities.received.length%>)</strong> 
+              </button>
+            </h5>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+            <div class="card-body">
+              <%if(!submittedActivities.received.length){%>
+                <div class="btn btn-block btn-info btn-lg">There is no activity on this status section.</div>
+              <%}else{%>
+                <%submittedActivities.received.forEach((activity,index)=>{%>
+                  <div class="student-room-container mb-2">
+                    <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
+                    <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
+                    <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
+                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
+                    <p><strong>Note : </strong><%=activity.postControllerNote%></p>
+                    <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
+                      Go to activity details...
+                    </a>
+                  </div>
+                <%})%>
+              <%}%>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingThree">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <strong>Editor Assigned Activities (<%=submittedActivities.editorAssigned.length%>)</strong>  
+              </button>
+            </h5>
+          </div>
+          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+            <div class="card-body">
+              <%if(!submittedActivities.editorAssigned.length){%>
+                <div class="btn btn-block btn-info btn-lg">There is no activity on this status section.</div>
+              <%}else{%>
+                <%submittedActivities.editorAssigned.forEach((activity,index)=>{%>
+                  <div class="student-room-container mb-2">
+                    <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
+                    <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
+                    <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
+                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
+                    <hr>
+                    <strong>Editor Data :</strong>
+                    <span class="d-block"><strong>Name : </strong><%=activity.editorData.userName%></span>
+                    <span class="d-block"><strong>Phone : </strong><%=activity.editorData.phone%></span>
+                    <span class="d-block"><strong>Registration Number : <%=activity.editorData.regNumber%></strong></span>
+                    <hr>
+                    <p><strong>Note : </strong><%=activity.postControllerNote%></p>
+                    <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
+                      Go to activity details...
+                    </a>
+                  </div>
+                <%})%>
+              <%}%>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingFour">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                <strong>Editor Accepted Activities (<%=submittedActivities.editingAccepted.length%>)</strong>  
+              </button>
+            </h5>
+          </div>
+          <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+            <div class="card-body">
+              <%if(!submittedActivities.editingAccepted.length){%>
+                <div class="btn btn-block btn-info btn-lg">There is no activity on this status section.</div>
+              <%}else{%>
+                <%submittedActivities.editingAccepted.forEach((activity,index)=>{%>
+                  <div class="student-room-container mb-2">
+                    <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
+                    <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
+                    <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
+                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
+                    <hr>
+                    <strong>Editor Data :</strong>
+                    <span class="d-block"><strong>Name : </strong><%=activity.editorData.userName%></span>
+                    <span class="d-block"><strong>Phone : </strong><%=activity.editorData.phone%></span>
+                    <span class="d-block"><strong>Registration Number : <%=activity.editorData.regNumber%></strong></span>
+                    <hr>
+                    <p><strong>Note : </strong><%=activity.postControllerNote%></p>
+                    <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
+                      Go to activity details...
+                    </a>
+                  </div>
+                <%})%>
+              <%}%>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingFive">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                <strong>Edited Activities <span class="text-warning">(Ready to publish) (<%=submittedActivities.edited.length%>)</span></strong>  
+              </button>
+            </h5>
+          </div>
+          <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+            <div class="card-body">
+              <%if(!submittedActivities.edited.length){%>
+                <div class="btn btn-block btn-info btn-lg">There is no activity on this status section.</div>
+              <%}else{%>
+                <%submittedActivities.edited.forEach((activity,index)=>{%>
+                  <div class="student-room-container mb-2">
+                    <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
+                    <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
+                    <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
+                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
+                    <hr>
+                    <strong>Editor Data :</strong>
+                    <span class="d-block"><strong>Name : </strong><%=activity.editorData.userName%></span>
+                    <span class="d-block"><strong>Phone : </strong><%=activity.editorData.phone%></span>
+                    <span class="d-block"><strong>Registration Number : <%=activity.editorData.regNumber%></strong></span>
+                    <hr>
+                    <p><strong>Note : </strong><%=activity.postControllerNote%></p>
+                    <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
+                      Go to activity details...
+                    </a>
+                  </div>
+                <%})%>
+              <%}%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="path text-center text-warning mt-2"   >
+      <div class="btn btn-block btn-success"><strong>See All Published Activities -></strong></div>
     </div>
   </div>
   <div class="col-lg notVisibleOnCollapse" >
@@ -27,40 +200,5 @@
 </div>
 
 <!-- New designing page till upper section -->
-<hr>
 
-
-<div style="display: flex;flex-wrap: wrap;">
-  <div class="col-lg"></div>
-  <div class="col-lg-7" >
-
-    <h5 class="bolder text-primary pt-1 text-center"><strong>Post Controller</strong></h5>
-    <div class="single-batch-container">
-      <div class="single-batch-data pb-4">
-        <div style="position: relative;">
-          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
-          <div class="text-success text-center"><strong><%=user.userName%></strong></div>
-        </div>
-        <hr>
-        <h5 class="bolder">Submitted Activities :</h5>
-        <div class="container">
-          <%submittedActivities.forEach((activity)=>{%>
-            <div class="student-room-container">
-              <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
-              <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
-              <strong class="d-block">Submission Date : </strong>
-              <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
-              <p><strong>Note : </strong><%=activity.postControllerNote%></p>
-              <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
-                Go to activity details...
-              </a>
-            </div> 
-          <%})%>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <div class="col-lg"></div>
-</div>
 <%- include('includes/footer') %>

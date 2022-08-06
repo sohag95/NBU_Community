@@ -1,39 +1,103 @@
 
 <%- include('includes/header') %> 
 <%- include('includes/flash') %>
-
+<!-- topic voting page design from below -->
 <div style="display: flex;flex-wrap: wrap;">
-  <div class="col-lg"></div>
-  <div class="col-lg-7" >
-
-    <h5 class="bolder text-primary pt-1 text-center"><strong>Voting Details Page</strong></h5>
-    <div class="single-batch-container">
-      <div class="single-batch-data pb-4">
-        <div style="position: relative;">
-          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
-          <div class="text-success text-center"><strong>Voting Type : <%=votingDetails.voteType%></strong></div>
-          <div class="text-success text-center"><strong>Vote From : <%=votingDetails.from%></strong></div>
-          <div class="text-success text-center"><strong>Department Name : <%=votingDetails.sourceName%></strong></div>
-          <div class="text-success text-center"><strong>Voting Date : 12/12/12</strong></div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+  <div class="col-lg-9 pt-1" >
+    <div class="">
+      <div style="width: 100%;position: relative;">
+        <img class="cover-image" style="height: 250px;" src="/images/voting-banner.jpg" width="1000" height="200"/>
+      </div>
+    </div>
+    <hr>
+    <h5 class="bolder text-primary text-center">Topic Voting Details (<span class="text-capitalize"><%=votingDetails.from%> Activity</span>)</h5>
+    <hr>
+    <div class="path text-center text-warning"   >
+      <h5 ><strong>Won topic - <%=votingDetails.topicOptions[votingDetails.result[0].topicIndex]%></strong></h5>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="item-container mb-2">
+          <strong><p>All Available Topics (5)</p></strong>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <%votingDetails.topicOptions.forEach((topic)=>{%>
+            <div class=" btn btn-outline-info btn-block btn-sm pb-1"><strong><%=topic%></strong> </div>
+          <%})%>
         </div>
-        <hr>
-        <div class="container">
-          <h5><strong>Activity Leaders :</strong></h5>
-          <div class="btn btn-sm btn-info btn-block">Voting activity leader...</div>
-        </div>
-        <div class="container">
-          <h5><strong>All Voting Options :</strong></h5>
-          <div class="btn btn-sm btn-info btn-block">Voting options with results...</div>
-        </div>
-        <div class="container">
-          <h5><strong>Voters Details :</strong></h5>
-          <div class="btn btn-sm btn-info btn-block">Voters details according to viewer...</div>
+      </div>
+      <div class="col-lg-7">
+        <div class="item-container mb-2">
+          <strong><p>Voting Result (Received Votes : <%=votingDetails.voters.length%>)</p></strong>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <%votingDetails.result.forEach((vote,index)=>{%>
+            <div class=" btn btn-outline-success btn-sm pb-1" style="display: flex;flex-wrap:wrap;">
+              <div><strong><%=index+1%>.<%=votingDetails.topicOptions[vote.topicIndex]%></strong> </div>
+              <div class="ml-auto">- <%=vote.parcentage%>%</div>
+            </div>
+          <%})%>
+          <h5 class="pt-2 text-warning"><strong>Result declared on - 12 May 2022</strong></h5>
         </div>
       </div>
     </div>
-
+    <hr>
+    <%if(checkData.isVoter){%>
+      <div class="path"   >
+        <h5 class="text-warning text-center"><strong>You Voted for - <%=votingDetails.topicOptions[checkData.votingIndex]%></strong></h5>
+      </div>
+    <%}%>
+    <hr>
+    <div class="item-container mb-2">
+      <h5><strong>Voting Details</strong></h5>
+      <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+      <p><strong>Type : </strong><%=votingDetails.voteType%> </p>
+      <p><strong>From : </strong><%=votingDetails.from%></p>
+      <p><strong>Source Name : </strong><%=votingDetails.sourceName%></p>
+      <p><strong>Created Date : </strong><%=votingDetails.votingDates.createdDate%></p>
+      <p><strong>Voting Last Date : </strong><%=votingDetails.votingDates.votingLastDate%></p>
+      <p><strong>Result Declaration Date : </strong><%=votingDetails.votingDates.resultDate%></p>
+      <hr>
+      
+      <h5><strong>Activity Leaders</strong></h5>
+      <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+      <div class="row">
+        <div class="col-lg-6">
+          <p><strong>Main Lead :</strong></p>
+          <div class="member-container">
+            <img class="member-avatar" src="/images/sohag.jpg" alt="">
+            <div class="name-container">
+              <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=votingDetails.leaders.mainLead.regNumber%>/profile"><%=votingDetails.leaders.mainLead.userName%></a></strong>
+              <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <p><strong>Assistant Lead :</strong></p>
+          <div class="member-container">
+            <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+            <div class="name-container">
+              <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=votingDetails.leaders.assistantLead.regNumber%>/profile"><%=votingDetails.leaders.assistantLead.userName%></a></strong>
+              <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="col-6">
+          <p><strong>Result Declared By :</strong></p>
+          <div class="member-container">
+            <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+            <div class="name-container">
+              <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=votingDetails.resultDeclaredBy.regNumber%>/profile"><%=votingDetails.resultDeclaredBy.userName%></a></strong>
+              <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-lg"></div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
 </div>
-
 <%- include('includes/footer') %>

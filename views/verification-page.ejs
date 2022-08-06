@@ -18,50 +18,60 @@
         <div class="item-container mb-2">
           <strong><p>Personal Info</p></strong>
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
-          <p><i class="fas fa-home"></i> <strong> Name - </strong> <span class="text-capitalize">Sohag Roy</span></p>
-          <p><i class="fas fa-graduation-cap"></i><strong> Phone No - </strong>7468987072</p>
-          <p><i class="fas fa-graduation-cap"></i><strong> Gmail Id - </strong>roysohag95@gmail.com (Optional)</p>
-          <p><i class="fas fa-male"></i><strong> Gender - </strong> Male</p> 
+          <p><i class="fas fa-home"></i> <strong> Name - </strong> <span class="text-capitalize"><%=studentData.userName%></span></p>
+          <p><i class="fas fa-graduation-cap"></i><strong> Phone No - </strong><%=studentData.phone%></p>
+          <p><i class="fas fa-graduation-cap"></i><strong> Gmail Id - </strong><%=studentData.email%> (Optional)</p>
+          <p><i class="fas fa-male"></i><strong> Gender - </strong> <%=studentData.gender%></p> 
         </div>
       </div>
       <div class="col-lg-6">
         <div class="item-container mb-2">
           <strong><p>Departmental Info</p></strong>
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
-          <p><i class="fas fa-home"></i> <strong> Reg No - </strong> 2122COMSC0006</p>
-          <p><i class="fas fa-home"></i> <strong> Department - </strong> Computer Science</p>
-          <p><i class="fas fa-home"></i> <strong> Session - </strong> 2021-2022</p>
-          <p><i class="fas fa-clock"></i><strong> Joined on - </strong>10 June 2022</p>    
+          <p><i class="fas fa-home"></i> <strong> Reg No - </strong> <%=studentData.regNumber%></p>
+          <p><i class="fas fa-home"></i> <strong> Department - </strong> <%=studentData.departmentName%></p>
+          <p><i class="fas fa-home"></i> <strong> Session - </strong> <%=studentData.departmentName%></p>
+          <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%=studentData.createdDate%></p>    
         </div>
       </div>
     </div>
     <hr>
-    <div style="display: flex;flex-wrap: wrap;" class>
-      <div class="col path" style="padding: 1rem; color: #fff;">
-        <p><h5><strong>Verification Type : case3</strong></h5></p>
-        <p>
-          <h5>
-            <strong>
-              Me,Sohag Roy as a verifier declaring that all data provided by the user is correct.So I am concedering this account as verified.
-            </strong>
-          </h5>
-        </p>
-        <div class="btn btn-block btn-md btn-success">Verified</div>
+    <%if(studentData.isVerified){%>
+      <div class="btn btn-success btn-lg btn-block">Account Verified!!</div>
+    <%}else{%>
+      <div style="display: flex;flex-wrap: wrap;" class>
+        <div class="col path" style="padding: 1rem; color: #fff;">
+          <p><h5><strong>Verification Type : <%=studentData.verificationType%></strong></h5></p>
+          <p>
+            <h5>
+              <strong>
+                Me,Sohag Roy as a verifier declaring that all data provided by the user is correct.So I am concedering this account as verified.
+              </strong>
+            </h5>
+          </p>
+          <div class="d-block">
+            <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/accept" method="post" >
+              <button class="btn btn-block btn-md btn-success">Verified</button>
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
-    <hr>
-    <div style="display: flex;flex-wrap: wrap;">
-      <div class="col path" style="padding: 1rem;color: #fff;">
-        <p>
-          <h5>
-            <strong>
-              Me,Sohag Roy as a verifier declaring that all data provided by the user is not correct.So I am rejecting this account.
-            </strong>
-          </h5>
-        </p>
-        <div class="btn btn-block btn-md btn-danger">Rejected</div>
+      <hr>
+      <div style="display: flex;flex-wrap: wrap;">
+        <div class="col path" style="padding: 1rem;color: #fff;">
+          <p>
+            <h5>
+              <strong>
+                Me,Sohag Roy as a verifier declaring that all data provided by the user is not correct.So I am rejecting this account.
+              </strong>
+            </h5>
+          </p>
+          <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/reject" method="post" class="d-block">
+            <button class="btn btn-block btn-md btn-danger">Rejected</button>
+          </form>
+        </div>
       </div>
-    </div>
+    <%}%>
   </div>
   <div class="col-lg notVisibleOnCollapse" >
   </div>
@@ -69,41 +79,5 @@
 
 
 <!-- new verification  design till upper section -->
-<hr>
 
-<div class="container" >
-  <div class="student-room-container mt-4">
-    <h4 class="text-info bolder text-center">Student's Account Details</h4>
-    <div class="row">
-      <div class="col-sm-6">
-        <p><strong>Registration Number : <%=studentData.regNumber%></strong></p>
-        <p><strong>Student Name : <%=studentData.userName%></strong></p>
-        <p><strong>Phone Number : <%=studentData.phone%></strong></p>
-        <p><strong>Gender : <%=studentData.gender%></strong></p>
-      </div>
-      <div class="col-sm-6">
-        <p><strong>Department Name : <%=studentData.departmentName%></strong></p>
-        <p><strong>Session Year : <%=studentData.sessionYear%></strong></p>
-        <p><strong>Email Id : <%=studentData.email%></strong></p>
-        <p><strong>Created : <%=studentData.createdDate%></strong></p>
-      </div>
-      <%if(studentData.isVerified){%>
-        <div class="btn btn-success btn-lg btn-block">Account Verified!!</div>
-      <%}else{%>
-        <p><strong>Verification Type : <%=studentData.verificationType%></strong></p>
-        <hr>
-        <div class="d-block">
-          <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/accept" method="post" >
-            <button class="btn btn-info btn-lg btn-block">Verified</button>
-          </form>
-        </div>
-        <hr>
-        <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/reject" method="post" class="d-block">
-          <button class="btn btn-danger btn-lg btn-block">Reject</button>
-        </form>
-        <hr>
-      <%}%>
-    </div>
-  </div>
-</div>
 <%- include('includes/footer') %>

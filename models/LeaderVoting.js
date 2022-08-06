@@ -2,6 +2,7 @@ const Department = require("./Department")
 const Group = require("./Group")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
+const StudentDataHandle = require("./StudentDataHandle")
 
 const votingCollection = require("../db").db().collection("VotingPoles")
 
@@ -19,13 +20,28 @@ let LeaderVoting=function(sourceData,createdFrom){
 // }
 
 LeaderVoting.prototype.getPoleData=function(){
+  let assistantLead=null
+  let mainLead={
+    userName:this.sourceData.leaders.mainLead.userName,
+    regNumber:this.sourceData.leaders.mainLead.regNumber,
+  }
+  if(this.sourceData.leaders.assistantLead){
+    assistantLead={
+      userName:this.sourceData.leaders.assistantLead.userName,
+      regNumber:this.sourceData.leaders.assistantLead.regNumber,
+    }
+  }
+  
   this.votingPoleData={
     voteType:"leader_selection",
     voteFrom:this.createdFrom,
     from:this.sourceData.from,
     sourceId:this.sourceData.sourceId,
     sourceName:this.sourceData.sourceName,
-    leaders:this.sourceData.leaders,
+    leaders:{
+      mainLead:mainLead,
+      assistantLead:assistantLead
+    },
     nominationTakers:[],
     voters:[],
     result:[],
@@ -70,16 +86,17 @@ LeaderVoting.prototype.getPoleData=function(){
 LeaderVoting.prototype.updateLeaderVotingPoleDataOnSource=function(poleId){
   return new Promise(async (resolve, reject) => { 
     try{
+      
       if(this.votingPoleData.from=="batch"){
         await SessionBatch.updateLeaderVotingPoleData(this.votingPoleData.sourceId,poleId,this.votingDates)
-      }else if(this.votingPoleData=="department"){
+      }else if(this.votingPoleData.from=="department"){
         await Department.updateLeaderVotingPoleData(this.votingPoleData.sourceId,poleId,this.votingDates)
-      }else if(this.createLeaderVotingPole=="group"){
+      }else if(this.votingPoleData.from=="group"){
         await Group.updateLeaderVotingPoleData(this.votingPoleData.sourceId,poleId,this.votingDates)
       }
       resolve()
     }catch{
-      console.log("error createLeaderVotingPole")
+      console.log("error updateLeaderVotingPoleDataOnSource")
       reject()
     }
   })
@@ -92,11 +109,16 @@ LeaderVoting.prototype.createLeaderVotingPole=function(createdBy){
       if(this.createdFrom=="byLeader"){
         this.votingPoleData.createdBy=createdBy
       }
+      //console.log("This.votingPoleData :",this.votingPoleData)
+
       let createdPole=await votingCollection.insertOne(this.votingPoleData)
         if(createdPole.acknowledged){
+          console.log("here i am! id:",createdPole.insertedId)
           await this.updateLeaderVotingPoleDataOnSource(createdPole.insertedId)
+          console.log("votingPoleData :",this.votingPoleData)
           resolve()
         }else{
+          console.log("createLeaderVotingPole reject part")
           reject()
         }
     }catch{
@@ -114,6 +136,8 @@ LeaderVoting.getNominationOnVotingPortal=function(poleId,nominator){
           nominationTakers:nominator
         }
       })
+      //add voting pole id on nominators account as nominated
+      await StudentDataHandle.addNominationTakenPoleIdOnCandidateAccount(nominator.regNumber,poleId)
       resolve()
     }catch{
       console.log("error getNominationOnVotingPortal")
@@ -130,6 +154,8 @@ LeaderVoting.giveLeaderVote=function(id,votingData){
           voters:votingData
         }
       })
+      //add pole id on voters account as voted
+      await StudentDataHandle.addVotingPoleIdOnVoterAccount(votingData.regNumber,id)
       resolve()
     }catch{
       reject()
@@ -137,9 +163,10 @@ LeaderVoting.giveLeaderVote=function(id,votingData){
   })
 }
 
-LeaderVoting.updateResultOnLeaderVotingPole=function(id,resultData,resultDeclarationData,wonLeader){
+LeaderVoting.updateResultOnLeaderVotingPole=function(id,resultData,resultDeclarationData,data){
   return new Promise(async (resolve, reject) => { 
     try{
+      let wonLeader=data.wonLeader
       await votingCollection.updateMany({_id: id},{
         $set:{
           "result":resultData,
@@ -149,6 +176,9 @@ LeaderVoting.updateResultOnLeaderVotingPole=function(id,resultData,resultDeclara
           "resultDeclaration":resultDeclarationData,
         }
       })
+      //add winning pole id on winner candidate's account
+      await StudentDataHandle.addWinningPoleIdOnWinnerAccount(data.wonLeader.regNumber,data.source,id)
+      
       console.log("Successfully ran this")
       resolve()
     }catch{
@@ -195,10 +225,9 @@ LeaderVoting.declareLeaderResultByLeader=function(votingDetails,resultData,resul
       
       console.log("Data :",data)
       //update voting deatils in voting pole
-      await LeaderVoting.updateResultOnLeaderVotingPole(votingDetails._id,resultData,resultDeclarationData,data.wonLeader)
+      await LeaderVoting.updateResultOnLeaderVotingPole(votingDetails._id,resultData,resultDeclarationData,data)
       //update leaderVotingData field value on source
       await LeaderVoting.updateSourceLeaderVotingDataField(data)
-      
       resolve()
     }catch{
       reject()
@@ -238,7 +267,7 @@ LeaderVoting.deaclreLeaderVotingPoleResultAutomatically=function(votingDetails){
         declarationType:"auto",
       }
       //update voting pole data
-      await LeaderVoting.updateResultOnLeaderVotingPole(votingDetails._id,resultData,resultDeclarationData,data.wonLeader)
+      await LeaderVoting.updateResultOnLeaderVotingPole(votingDetails._id,resultData,resultDeclarationData,data)
       //update leaderVotingData field value on source
       await LeaderVoting.updateSourceLeaderVotingDataField(data)
       
@@ -257,6 +286,7 @@ LeaderVoting.updateVotingSourceDataDuringAcceptance=function(votingDetails,newLe
       }else if(votingDetails.from=="department"){
         await Department.makeDepartmentPresentLeader(votingDetails.sourceId,newLeaderData)
       }else{
+        //***************--NOTICE--***************** */
         //this function has not created yet
         //await Group.makeGroupPresentLeader(votingDetails.sourceId,newLeaderData)
       console.log("Group present leader has not set yet.")
@@ -274,17 +304,17 @@ LeaderVoting.acceptSelfAsLeader=function(votingDetails,newLeaderData){
     try{
       if(newLeaderData.gole=="" || typeof newLeaderData.gole!="string"){
         reject("You should set your gole as a new leader.")
+      }else{
+        await votingCollection.updateMany({_id: votingDetails._id},{
+          $set:{
+            "isWonLeaderAccept":true,
+            "leaderSetGole":newLeaderData.gole,
+            "votingDates.acceptanceDate":new Date(),
+          }
+        })
+        await LeaderVoting.updateVotingSourceDataDuringAcceptance(votingDetails,newLeaderData)
+        resolve()
       }
-
-      await votingCollection.updateMany({_id: votingDetails._id},{
-        $set:{
-          "isWonLeaderAccept":true,
-          "leaderSetGole":newLeaderData.gole,
-          "votingDates.acceptanceDate":new Date(),
-        }
-      })
-      await LeaderVoting.updateVotingSourceDataDuringAcceptance(votingDetails,newLeaderData)
-      resolve()
     }catch{
       reject()
     }

@@ -182,7 +182,7 @@ Group.updatePreviousActivityFieldOnGroup= function(groupId,activityData){
         {
           $set: {
               "presentActivity":null,
-              "previousActivity":activityData
+              "previousActivity":id
             },
           $push:{
             "completedActivities":id
@@ -196,16 +196,39 @@ Group.updatePreviousActivityFieldOnGroup= function(groupId,activityData){
   })
 }
 
-Group.updateLeaderVotingPoleData= function(groupId,poleId,votingDates){
+Group.updatePresentActivityFieldAfterDeletion= function(groupId){
   return new Promise(async (resolve, reject) => {
     try{
         await groupsCollection.updateOne(
           { groupId: groupId },
           {
             $set: {
+              "presentActivity":null,
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Group.updateLeaderVotingPoleData= function(groupId,poleId,votingDates){
+  return new Promise(async (resolve, reject) => {
+    try{
+
+      let votingData={
+        votingPoleId:poleId,
+        votingDates:votingDates,
+        wonLeader:null
+      }
+        await groupsCollection.updateOne(
+          { groupId: groupId },
+          {
+            $set: {
               "isVoteGoingOn":true,
-              "leaderVotingData.votingPoleId":poleId,
-              "leaderVotingData.votingDates":votingDates
+              "leaderVotingData":votingData,
             }
           }
         )

@@ -17,7 +17,7 @@ SessionBatch.prototype.cleanUpData=function(){
     groupId:this.data.groupId,
     //voting data from bellow
     isVoteGoingOn:false,
-    leaderVotingData:{},//voting state operation handling variables
+    leaderVotingData:null,//voting state operation handling variables
     // leaderVotingData:{
     //   votingDates:{},
     //   votingpoleId:"",
@@ -38,7 +38,7 @@ SessionBatch.prototype.cleanUpData=function(){
     allLeaders:[],
     newMemberRequests:[],
     presentActivity:null,
-    previosActivity:null,
+    previosActivity:null,//contains previous activity id
     completedActivities:[],
     batchState:"1stYear",//values will be : 1stYear/2ndYear/3rdYear/seniours/xBatch
     createdDate:new Date()
@@ -168,8 +168,9 @@ SessionBatch.makeSessionBatchPresentLeader= function(batchId,newLeaderData){
       if(newLeader){
         //"pushing data on batche's all leaders"
         let leaderData={
-          regNumber:newLeader.regNumber,
-          userName:newLeader.userName
+          regNumber:newLeaderData.regNumber,
+          userName:newLeaderData.userName,
+          phone:newLeaderData.phone
         }
         await sessionBatchesCollection.updateOne(
           { batchId: batchId },
@@ -263,6 +264,23 @@ SessionBatch.updatePresentActivityFieldAfterResultDeclaration= function(batchId,
   })
 }
 
+SessionBatch.updatePresentActivityFieldAfterDeletion= function(batchId){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              "presentActivity":null,
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 
 SessionBatch.updatePresentActivityFieldAfterEditDetails= function(batchId,data){
   return new Promise(async (resolve, reject) => {
@@ -293,7 +311,7 @@ SessionBatch.updatePreviousActivityFieldOnBatch= function(batchId,activityData){
           {
             $set: {
               "presentActivity":null,
-              "previousActivity":activityData
+              "previousActivity":id
             },
             $push:{
               "completedActivities":id
@@ -311,18 +329,27 @@ SessionBatch.updatePreviousActivityFieldOnBatch= function(batchId,activityData){
 SessionBatch.updateLeaderVotingPoleData= function(batchId,poleId,votingDates){
   return new Promise(async (resolve, reject) => {
     try{
+      
+      let votingData={
+        votingPoleId:poleId,
+        votingDates:votingDates,
+        wonLeader:null
+      }
+      
         await sessionBatchesCollection.updateOne(
           { batchId: batchId },
           {
             $set: {
               "isVoteGoingOn":true,
-              "leaderVotingData.votingPoleId":poleId,
-              "leaderVotingData.votingDates":votingDates
+              "leaderVotingData":votingData,
             }
           }
         )
+
+        console.log("updateLeaderVotingPoleData run")
       resolve()
     }catch{
+      console.log("updateLeaderVotingPoleData error run")
       reject()
     }
   })

@@ -234,8 +234,9 @@ Department.makeDepartmentPresentLeader=function(departmentCode,newLeaderData){
       if(newLeader){
         console.log("pushing data on department leaders")
         let leaderData={
-          regNumber:newLeader.regNumber,
-          userName:newLeader.userName
+          regNumber:newLeaderData.regNumber,
+          userName:newLeaderData.userName,
+          phone:newLeaderData.phone
         }
         await departmentsCollection.updateOne(
           {departmentCode:departmentCode},
@@ -354,7 +355,7 @@ Department.updatePreviousActivityFieldOnDepartment= function(departmentCode,acti
         {
           $set: {
               "presentActivity":null,
-              "previousActivity":activityData
+              "previousActivity":id
             },
             $push:{
               "completedActivities":id
@@ -368,16 +369,38 @@ Department.updatePreviousActivityFieldOnDepartment= function(departmentCode,acti
   })
 }
 
-Department.updateLeaderVotingPoleData= function(departmentCode,poleId,votingDates){
+Department.updatePresentActivityFieldAfterDeletion= function(departmentCode){
   return new Promise(async (resolve, reject) => {
     try{
         await departmentsCollection.updateOne(
           { departmentCode: departmentCode },
           {
             $set: {
+              "presentActivity":null,
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Department.updateLeaderVotingPoleData= function(departmentCode,poleId,votingDates){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let votingData={
+        votingPoleId:poleId,
+        votingDates:votingDates,
+        wonLeader:null
+      }
+        await departmentsCollection.updateOne(
+          { departmentCode: departmentCode },
+          {
+            $set: {
               "isVoteGoingOn":true,
-              "leaderVotingData.votingPoleId":poleId,
-              "leaderVotingData.votingDates":votingDates
+              "leaderVotingData":votingData,
             }
           }
         )

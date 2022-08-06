@@ -169,6 +169,52 @@ exports.ifActivityPresent=async function(req,res,next){
   }
 }
 
+exports.ifStudentActivityLeader=function(req,res,next){
+  if(req.activityDetails.leaders.mainLead.regNumber==req.regNumber ||req.activityDetails.leaders.assistantLead.regNumber==req.regNumber ){
+     console.log("passed!!")
+     next()
+   }else{
+     req.flash("errors", "Only activity leader can delete an activity!")
+     req.session.save( ()=> {
+       res.redirect("/")
+     })
+   }
+}
+
+exports.ifActivityDeleteable=function(req,res,next){
+  if(req.activityDetails.status=="created" || req.activityDetails.status=="voted"){
+     console.log("passed2!!")
+     next()
+   }else{
+     req.flash("errors", "Activity can't be deleted as activity is already received!")
+     req.session.save( ()=> {
+       res.redirect("/")
+     })
+   }
+}
+
+exports.deleteActivity=function(req,res){
+  let activityData={
+    _id:req.activityDetails._id,
+    sourceId:req.activityDetails.activitySourceId,
+    source:req.activityDetails.activityType,
+    votingId:req.activityDetails.votingId
+  }
+  Activity.deleteActivity(activityData).then(()=>{
+    req.flash("success", "Activity successfully deleted!!")
+    if(activityData.source=="batch"){
+      res.redirect(`/batch/${activityData.sourceId}/details`)
+    }else if(activityData.source=="department"){
+      res.redirect(`/department/${activityData.sourceId}/details`)
+    }else{
+      res.redirect(`/group/${activityData.sourceId}/details`)
+    }
+  }).catch(()=>{
+    req.flash("errors", "There is some problem!")
+    res.redirect(`/activity/${activityData._id}/details`)
+  })
+}
+
 exports.getActivityDetailsPage=function(req,res){
   let activityDetails=req.activityDetails
   let votingDetails
@@ -357,7 +403,7 @@ exports.uploadVideoCoverPhoto=function(req,res){
       req.activityDetails=undefined
       req.flash("success", "Video cover photo successfully updated!!")
       res.redirect(`/activity/${req.params.id}/details`)
-    }).catch(()=>{
+    }).catch((e)=>{
       req.flash("errors", e)
       res.redirect(`/activity/${req.params.id}/details`)
     })
@@ -386,7 +432,7 @@ exports.publishActivity=function(req,res){
     req.activityDetails=undefined
     req.flash("success", "Video editing work successfully received!!")
     res.redirect(`/activity/${req.params.id}/details`)
-  }).catch(()=>{
+  }).catch((e)=>{
     req.flash("errors", e)
     res.redirect(`/activity/${req.params.id}/details`)
   })
@@ -398,7 +444,7 @@ exports.likeActivity=function(req,res){
       req.activityDetails=undefined
       req.flash("success", "Activity liked!!")
       res.redirect(`/activity/${req.params.id}/details`)
-    }).catch(()=>{
+    }).catch((e)=>{
       req.flash("errors", e)
       res.redirect(`/activity/${req.params.id}/details`)
     })
@@ -414,7 +460,7 @@ exports.dislikeActivity=function(req,res){
       req.activityDetails=undefined
       req.flash("success", "Activity disliked!!")
       res.redirect(`/activity/${req.params.id}/details`)
-    }).catch(()=>{
+    }).catch((e)=>{
       req.flash("errors", e)
       res.redirect(`/activity/${req.params.id}/details`)
     })
@@ -436,7 +482,7 @@ exports.commentOnActivity=function(req,res){
       req.activityDetails=undefined
       req.flash("success", "Comment added successfully!!")
       res.redirect(`/activity/${req.params.id}/details`)
-    }).catch(()=>{
+    }).catch((e)=>{
       req.flash("errors", e)
       res.redirect(`/activity/${req.params.id}/details`)
     })

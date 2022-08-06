@@ -16,7 +16,7 @@ const activityController=require('./controllers/activityController')
 const votingController=require('./controllers/votingController')
 const checkingController=require('./controllers/checkingController')
 const notificationController=require('./controllers/notificationController')
-
+    
 //####################################
 router.get('/test',userController.test)
 //####################################
@@ -28,6 +28,7 @@ router.get("/all-departments",  userController.allDepartments)
 
 //Searching student by userName or regNumber 
 router.post("/search-student",userController.searchStudent)
+
 //user related routes
 router.get('/',userController.guestHomePage)
 router.get('/log-in',userController.getLogInForm)
@@ -78,6 +79,7 @@ router.get('/videoEditor-home',officialUserController.videoEditorMustBeLoggedIn,
 //from=(batch/department/group) || id=(batchId/departmentCode/groupId)
 router.get("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getActivityCreationPage)
 router.post("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getExtraDataToCreateActivity,activityController.createNewActivity)
+router.post("/activity/:id/delete",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,activityController.ifStudentActivityLeader,activityController.ifActivityDeleteable,activityController.deleteActivity)
 router.get("/activity/:id/details",userController.ifUserLoggedIn,activityController.ifActivityPresent,activityController.getActivityDetailsPage)
 router.post("/activity/:id/edit",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkActivityLeaderOrNot,activityController.editActivityDetails)
 router.post("/activity/:id/submit",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkActivityLeaderOrNot,activityController.activitySubmitted)
@@ -94,7 +96,7 @@ router.post("/video-editing/:id/completed",officialUserController.videoEditorMus
 //activity topic voting related routers
 router.post("/vote/:activityId/:id/topic",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoter,votingController.giveTopicVote)
 router.post("/vote/:activityId/:id/declare-topic-result",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoteResultDeclarableOrNot,votingController.declareTopicResult)
-router.get("/vote/:id/details",userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.votingDetailsPage)
+router.get("/topic-voting/:id/details",userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.topicVotingDetailsPage)
 //like,dislike,comment routers
 router.post("/activity/:id/like",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.ifActivityAlreadyLiked,activityController.likeActivity)
 router.post("/activity/:id/dislike",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.ifActivityAlreadyLiked,activityController.dislikeActivity)

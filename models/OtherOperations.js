@@ -170,4 +170,21 @@ OtherOperations.checkIfAllNominationTakerVotedOrNot=function(votingDetails){
 
 }
 
+
+OtherOperations.getActivityLeadersRegNumbers=function(leaders){
+  let leadRegNumbers=[]
+  leadRegNumbers.push(leaders.mainLead.regNumber)
+  if(leaders.assistantLead){//assistantLead might get null value
+    leadRegNumbers.push(leaders.assistantLead.regNumber)
+  }
+  return leadRegNumbers
+}
+
+OtherOperations.getParticipantsRegNumbers=function(activityParticipants){
+  let participantsRegNumbers= activityParticipants.map((participant)=>{
+    return participant.regNumber
+  })
+  return participantsRegNumbers
+}
+
  module.exports=OtherOperations

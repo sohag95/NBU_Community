@@ -417,6 +417,28 @@ OfficialUsers.allDepartments=function(){
     }
   })
 }
+
+
+OfficialUsers.addPublishedActivityIdOnActivityStorage=function(id){
+  return new Promise(async(resolve, reject) => {
+    try {
+      await officialUsersCollection.updateMany(
+        { dataType: "allActivityHandling" },
+        {
+          $push: {
+            allActivities: id,
+            recentActivities:id
+          }
+        }
+      )
+      console.log("Successfully ran!!")
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
 module.exports=OfficialUsers
 
     

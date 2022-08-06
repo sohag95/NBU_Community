@@ -189,4 +189,17 @@ TopicVoting.declareTopicResult=function(votingDetails,resultData,declaredBy,acti
     }
   })
 }
+
+TopicVoting.deleteVotingPole=function(id){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      //before deletion we must decrease credit points of students those are participated
+      await votingCollection.deleteOne({_id: id})
+      resolve()
+    }catch{
+      console.log("deleteVotingPole")
+      reject()
+    }
+  })
+}
 module.exports=TopicVoting

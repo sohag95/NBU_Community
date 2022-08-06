@@ -1,5 +1,6 @@
 const Department = require('../models/Department')
 const Group=require('../models/Group')
+const Activity=require('../models/Activity')
 const SessionBatch=require('../models/SessionBatch')
 
 exports.createNewSessionBatch=async function(req,res){
@@ -49,9 +50,10 @@ exports.isSessionBatchExists = function (req, res, next) {
 
 
 
-exports.getSessionBatchDetailsPage = function (req, res) {
+exports.getSessionBatchDetailsPage =async function (req, res) {
   try{
     let batchDetails=req.batchDetails
+    let previousActivityData=null
     let checkData={
       isUserLoggedIn:req.isUserLoggedIn,
       isBatchMember:false,
@@ -87,12 +89,29 @@ exports.getSessionBatchDetailsPage = function (req, res) {
       }
     
     }
-    
+    if(batchDetails.previousActivity){
+      let activityDetails=await Activity.getActivityDetailsById(batchDetails.previousActivity)
+      previousActivityData={
+        _id:activityDetails._id,
+        activityType:activityDetails.activityType,
+        sourceName:activityDetails.sourceName,
+        activitySourceId:activityDetails.activitySourceId,
+        topic:activityDetails.topic,
+        title:activityDetails.title,
+        videoCoverPhoto:activityDetails.videoCoverPhoto,
+        likes:activityDetails.likes.length,
+        comments:activityDetails.comments.length,
+        activityDate:activityDetails.activityDates.activityDate,
+        publishedDate:activityDetails.activityDates.publishedDate,
+      }
+    }
+    console.log("Previous activity data:",previousActivityData)
     console.log("batch Details :",batchDetails)
     console.log("checkData: ",checkData)
     res.render('get-batch-details-page',{
       batchDetails:batchDetails,
-      checkData:checkData
+      previousActivityData:previousActivityData,
+      checkData:checkData,
     })
   }catch{
     res.render('404')

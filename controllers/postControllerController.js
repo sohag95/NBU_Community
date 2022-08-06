@@ -6,8 +6,16 @@ exports.postControllerHome =async function (req, res) {
     let activityIds=await OfficialUsers.getAllSubmittedActivityIdsFromPostController()
     console.log("Ids :",activityIds)
     let activities=await Activity.getAllActivityDetailsOfArrayIds(activityIds)
-    activities=activities.map((activity)=>{
-      return data={
+    let allActivities={
+      newSubmitted:[],
+      received:[],
+      editorAssigned:[],
+      editingAccepted:[],
+      edited:[]
+    }
+    
+    activities.forEach((activity)=>{
+      let activityData={
         _id:activity._id,
         activitySourceId:activity.activitySourceId,
         sourceName:activity.sourceName,
@@ -15,9 +23,24 @@ exports.postControllerHome =async function (req, res) {
         submissionDate:activity.activityDates.submissionDate,
         postControllerNote:activity.postControllerNote
       }
+      if(activityData.status=="activitySubmitted"){
+        allActivities.newSubmitted.push(activityData)
+      }else if(activityData.status=="received"){
+        allActivities.received.push(activityData)
+      }else if(activityData.status=="editorAssigned"){
+        activityData.editorData=activity.videoEditorDetails
+        allActivities.editorAssigned.push(activityData)
+      }else if(activityData.status=="editingAccepted"){
+        activityData.editorData=activity.videoEditorDetails
+        allActivities.editingAccepted.push(activityData)
+      }else if(activityData.status=="edited"){
+        activityData.editorData=activity.videoEditorDetails
+        allActivities.edited.push(activityData)
+      }
     })
+    console.log("Activities:",allActivities)
     res.render('postController-home',{
-      submittedActivities:activities
+      submittedActivities:allActivities
     })
   }catch{
     res.render("404")

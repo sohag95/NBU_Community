@@ -6,19 +6,31 @@ exports.videoEditorHome =async function (req, res) {
     let assignedIds=await OfficialUsers.getAllAssignedActivityIdsOfEditor()
     console.log("Ids :",assignedIds)
     let activities=await Activity.getAllActivityDetailsOfArrayIds(assignedIds)
-    activities=activities.map((activity)=>{
-      return data={
+    let allActivities={
+      newAssigned:[],
+      accepted:[],
+      edited:[]
+    }
+    activities.forEach((activity)=>{
+      let activityData={
         _id:activity._id,
         activitySourceId:activity.activitySourceId,
         sourceName:activity.sourceName,
         status:activity.status,
-        submissionDate:activity.activityDates.submissionDate,
+        assignedDate:activity.activityDates.editorAssignedDate,
         videoEditorNote:activity.videoEditorNote
       }
+      if(activityData.status=="editorAssigned"){
+        allActivities.newAssigned.push(activityData)
+      }else if(activityData.status=="editingAccepted"){
+        allActivities.accepted.push(activityData)
+      }else if(activityData.status=="edited"){
+        allActivities.edited.push(activityData)
+      }
     })
-    console.log("ActivityData:",activities)
+    console.log("ActivityData:",allActivities)
     res.render('videoEditor-home',{
-      assignedActivities:activities
+      assignedActivities:allActivities
     })
   }catch{
     res.render("404")

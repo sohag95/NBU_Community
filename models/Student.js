@@ -116,6 +116,7 @@ let Student=function(regData,batchData,communityController){
       verifiedBy:verifiedBy,
       isXstudent:false,
       createdDate:new Date(),
+      creditPoints:0
     }
     //for users notification storage
     this.notification={
@@ -126,10 +127,18 @@ let Student=function(regData,batchData,communityController){
     //for students other needed record fields
     this.studentData={
       regNumber:this.data.regNumber,
-      organizedActivities:[],
-      perticipatedActivities:[],
-      wonVotes:[],
-      creditePoints:0
+      activities:{
+        leadActivities:[],
+        participatedActivities:[]
+      },
+      winningVotingPoles:{
+        batchLeader:[],
+        departmentLeader:[],
+        groupLeader:[]
+      },
+      nominationTakenPoles:[],
+      voteGivenPoles:[],
+      activityGroupIds:[]
     }
    }catch{
     this.errors.push("Sorry,there is some problem!")

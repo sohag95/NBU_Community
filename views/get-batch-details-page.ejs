@@ -10,8 +10,8 @@
         <div class="text-center">
           <h5>
             <strong>
-              <span class="text-primary d-block" > Department : Bengali</span>
-              <span class="text-primary d-block"> Batch Session : 2021-2022</span>
+              <span class="text-primary d-block" > Department :<a href="/department/<%=batchDetails.batchId.slice(4,9)%>/details"> <%=batchDetails.departmentName%></a></span>
+              <span class="text-primary d-block"> Batch Session : 20<%=batchDetails.batchId.slice(0,2)%>-20<%=batchDetails.batchId.slice(2,4)%></span>
             </strong>
           </h5>  
         </div>
@@ -19,53 +19,131 @@
       <hr>
     </div>
 
+    <%if(batchDetails.isVoteGoingOn){%>
+      <div class=" mt-2 mb-2" >
+        <div class="path text-secondary" >
+          <strong style="color:#fff;"><h5>New Leader Selection Board :</h5></strong>
+          <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+            <div class="student-room-container" style="width: 100%;">
+                  <strong  class="d-block text-primary">Pole Created Date : <span class="text-secondary"><%=batchDetails.leaderVotingData.votingDates.createdDate%></span> </strong> 
+                  <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary"><%=batchDetails.leaderVotingData.votingDates.nominationLastDate%></span></strong>
+                  <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary"><%=batchDetails.leaderVotingData.votingDates.votingLastDate%></span></strong>
+                  <%if(batchDetails.leaderVotingData.votingDates.resultDate){%>
+                    <hr>
+                    <h6 class="text-warning"><strong>Result has published :</strong></h6>
+                    <strong  class="d-block text-primary">Won Leader : <span class="text-secondary"><%=batchDetails.leaderVotingData.wonLeader.userName%></span></strong> 
+                    <strong  class="d-block text-primary">Result Date : <span class="text-secondary"><%=batchDetails.leaderVotingData.votingDates.resultDate%></span></strong>
+                    <%if(batchDetails.leaderVotingData.wonLeader.regNumber==user.regNumber){%>
+                      <strong  class="d-block text-warning">Congrats!! You have won the election.Accept yourself as a leader.</strong>
+                    <%}else{%>
+                      <strong  class="d-block text-warning">New Leader will be added when he will accept his/her winning.</strong>
+                    <%}%>
+                  <%}%>
+                  <a href="/leader-voting/<%=batchDetails.leaderVotingData.votingPoleId%>/details" class="btn btn-sm btn-block btn-primary">Go to the voting page</a>
+            </div>
+        </div>
+      </div>
+    <%}else{%>  
     <div class=" mt-2 mb-2" >
-      <div class="path text-center" style="padding: 1rem;">
-          <div class="col" style="width: 100%;">
-            this section will contain present activities of the portal
+      <div class="path text-info" >
+        <strong style="color:#fff;"><h5>Activity Board :</h5></strong>
+        <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+          <div class="col member-container" style="width: 100%;">
+            <%if(!batchDetails.presentActivity){%>
+              <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
+              <a href="/activity/batch/<%=batchDetails.batchId%>/create" class="btn btn-block btn-warning btn-lg">
+                Create New Batch Activity
+              </a>
+              <%}else{%>
+                <%if(checkData.isBatchMember){%>
+                <div class="btn btn-info btn-sm btn-block mr-1">Say the leader to create new activity!!</div>
+                <%}else{%>
+                  <div class="btn btn-info btn-sm btn-block mr-1">There is no activity going on.</div>
+                <%}%>
+              <%}%>
+            <%}else{%>
+              <div class="student-room-container" >
+                <%if(batchDetails.presentActivity.isTopicByVote && !batchDetails.presentActivity.isVoteCompleted){%>
+                  <div style="width: 100%;">
+                    <%if(batchDetails.batchId==user.regNumber.slice(0,9)){%>
+                    <strong  class="d-block text-info text-center">Topic for next activity is going to be selected by voting.Please give your vote.</strong>
+                    <%}else{%>
+                      <strong  class="d-block text-info text-center">Topic selection for next activity is going on.</strong> 
+                    <%}%>
+                  </div>
+                <%}else{%>
+                  <div style="width: 100%;">
+                    <h5  class="d-block text-warning "><strong>Running activity -</strong> </h5>
+                    <strong class="d-block">Topic : <%=batchDetails.presentActivity.topic%></strong>
+                    <strong class="d-block">Title : <%=batchDetails.presentActivity.title%></strong>
+                  </div>  
+                <%}%>  
+                <a href="/activity/<%=batchDetails.presentActivity.activityId%>/details">
+                  <div class="btn btn-primary btn-sm btn-block mr-1">Go to activity details</div>
+                </a>    
+              </div>
+            <%}%>
           </div>
       </div>
     </div>
+    <%}%>
+
     <hr>
-    <div class="item-container path">
-      <strong><h5>New Membersip Requests (4)</h5></strong>
-        <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-        <div style="display: flex;    flex-wrap: wrap;">
-          <div class="col-md-6 left-member-container" >
-              <div class="member-container align-items-center">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
+    <%if(checkData.isBatchLeader){%>
+      <%if(batchDetails.newMemberRequests.length){%>
+        <div class="item-container path">
+          <strong><h5>New Membersip Requests (<%=batchDetails.newMemberRequests.length%>)</h5></strong>
+            <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+            <%if(batchDetails.newMemberRequests.length==1){%>
+              <div class="col">
+                <div class="member-container align-items-center">
+                  <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                  <div class="name-container">
+                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.newMemberRequests[0].regNumber%>/profile"><%=batchDetails.allMembers[0].userName%></a></strong>
+                    <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                  </div>
+                  <a class="d-block" href="/verification/case3/<%=batchDetails.newMemberRequests[0].regNumber%>/page">
+                    <div class="btn btn-warning btn-sm mr-1">Verify Account</div>
+                  </a>
                 </div>
-                <div class="btn btn-sm btn-warning float-right">Verify Account</div>
               </div>
-              <div class="member-container align-items-center">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
+            <%}else{%>
+              <%let middleIndex=parseInt(batchDetails.newMemberRequests.length/2)%>
+              <div style="display: flex;    flex-wrap: wrap;">
+                <div class="col-md-6 left-member-container" >
+                  <%for(let i=0;i<middleIndex;i++){%>
+                    <div class="member-container align-items-center">
+                      <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                      <div class="name-container">
+                        <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.newMemberRequests[i].regNumber%>/profile"><%=batchDetails.newMemberRequests[i].userName%></a></strong>
+                      </div>
+                      <a class="d-block" href="/verification/case3/<%=batchDetails.newMemberRequests[i].regNumber%>/page">
+                        <div class="btn btn-warning btn-sm mr-1">Verify Account</div>
+                      </a>
+                    </div>
+                  <%}%>
                 </div>
-                <div class="btn btn-sm btn-warning float-right">Verify Account</div>
+                <div class="col-md-6 right-member-container" >
+                  <%for(let j=middleIndex;j<batchDetails.newMemberRequests.length;j++){%>
+                    <div class="member-container align-items-center">
+                      <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                      <div class="name-container">
+                        <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.newMemberRequests[j].regNumber%>/profile"><%=batchDetails.newMemberRequests[j].userName%></a></strong>
+                      </div>
+                      <a class="d-block" href="/verification/case3/<%=batchDetails.newMemberRequests[j].regNumber%>/page">
+                        <div class="btn btn-warning btn-sm mr-1">Verify Account</div>
+                      </a>
+                    </div>
+                  <%}%>
+                </div>
               </div>
-          </div>
-          <div class="col-md-6 right-member-container" >
-            <div class="member-container align-items-center">
-              <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-              <div class="name-container">
-                <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-              </div>
-              <div class="btn btn-sm btn-warning float-right">Verify Account</div>
-            </div>
-            <div class="member-container align-items-center">
-              <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-              <div class="name-container">
-                <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-              </div>
-              <div class="btn btn-sm btn-warning float-right">Verify Account</div>
-            </div>
-          </div>
+            <%}%>
         </div>
-    </div>
-    <hr>
+        <hr>
+      <%}%>
+    <%}%>
+
+    
     <h5 class="text-primary text-center"><strong >Batch Details</strong></h5>
     <hr>
     <div class="row">
@@ -75,93 +153,73 @@
             <strong><h5 class="bolder">Present Leaders</h5></strong>
             <hr style="margin-bottom: .25rem;margin-top: 0rem;">
             <strong class="d-block text-info">Main Lead :</strong>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+            <%if(batchDetails.presentLeader){%>
+              <div class=" student-room-container" >
+                <div class="d-flex align-items-center">
+                  <div >
+                    <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                  </div>
+                  <div class="ml-2">
+                    <span class="d-block"><strong >Name : </strong><%=batchDetails.presentLeader.userName%></span>
+                    <span class="d-block"><strong >Phone : </strong><%=batchDetails.presentLeader.phone%></span>
+                  </div>
+                </div>
+                <%if(batchDetails.presentLeader.votingPoleId){%>
+                <a  href="/leader-voting/<%=batchDetails.presentLeader.votingPoleId%>/details">
+                  <i class="text-info">Go to voting details...</i>
+                </a>
+                <%}else{%>
+                  <i class="text-warning">(Default Leader)</i>
+                <%}%>
               </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
+            <%}else{%>
+              <div class="btn btn-lg btn-block btn-info">Leader not available!!</div>
+            <%}%>
             <strong class="d-block text-info">Assistant Lead :</strong>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+            <%if(batchDetails.previousLeader){%>
+              <div class=" student-room-container" >
+                <div class="d-flex align-items-center">
+                  <div >
+                    <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                  </div>
+                  <div class="ml-2">
+                    <span class="d-block"><strong >Name : </strong><%=batchDetails.previousLeader.userName%></span>
+                    <span class="d-block"><strong >Phone : </strong><%=batchDetails.previousLeader.phone%></span>
+                  </div>
+                </div>
+                <%if(batchDetails.previousLeader.votingPoleId){%>
+                  <a  href="/leader-voting/<%=batchDetails.previousLeader.votingPoleId%>/details">
+                    <i class="text-info">Go to voting details...</i>
+                  </a>
+                  <%}else{%>
+                    <i class="text-warning">(Default Leader)</i>
+                  <%}%>
               </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
+            <%}else{%>
+              <div class="btn btn-lg btn-block btn-info">Leader not available!!</div>
+            <%}%>
           </div>
 
           <div class="item-container mb-2 allLeadersContainer" >
-            <strong><h5 class="bolder">All Leaders (3)</h5></strong>
+            <strong><h5 class="bolder">All Leaders (<%=batchDetails.allLeaders.length%>)</h5></strong>
             <hr style="margin-bottom: .55rem;margin-top: 0rem;">
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
+            <%if(!batchDetails.allLeaders.length){%>
+              <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>
+            <%}else{%>
+              <%batchDetails.allLeaders.forEach((leader)=>{%>
+                <div class="d-flex align-items-center student-room-container" >
+                  <div >
+                    <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                  </div>
+                  <div class="ml-2">
+                    <span class="d-block"><strong >Name : </strong><%=leader.userName%></span>
+                    <%if(checkData.isBatchMember){%>
+                      <span class="d-block"><strong >Phone : </strong><%=leader.phone%></span>
+                    <%}%>
+                  </div>
+                </div>
+              <%})%>
+            <%}%>
           </div>
         
         </div>
@@ -169,7 +227,12 @@
       <div class="col-md-8" >
         <h5 class="bolder text-center">Last Activity</h5>
         <div class=" mb-2">
-          <%- include('includes/activity-banner-structure') %>
+          <%if(previousActivityData){%>
+            <%- include('includes/previous-activity-banner') %>
+          <%}else{%>
+            <%- include('includes/no-previous-activity-banner') %>
+          <%}%>
+          
         </div>
         <hr>
         <div class="btn btn-block btn-secondary btn-md">See all activities -></div>
@@ -178,45 +241,67 @@
 
     <hr>
       <div class="item-container">
-        <strong><h5 class="bolder">All Members (30)</h5></strong>
+        <strong><h5 class="bolder">All Members (<%=batchDetails.allMembers.length%>)</h5></strong>
         <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-            
-        <div style="display: flex;    flex-wrap: wrap;">
-          <div class="col-md-6 left-member-container" >
+        <%if(!batchDetails.allMembers.length){%>
+          <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
+        <%}else{%>  
+          <%if(batchDetails.allMembers.length==1){%>
+            <div class="col">
               <div class="member-container">
                 <img class="member-avatar"  src="/images/sohag.jpg" alt="">
                 <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
+                  <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[0].regNumber%>/profile"><%=batchDetails.allMembers[0].userName%></a></strong>
                   <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
                 </div>
               </div>
-              <div class="member-container">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                  <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+            </div>
+          <%}else{%>
+            <%let middle=parseInt(batchDetails.allMembers.length/2)%>
+            <div style="display: flex;    flex-wrap: wrap;">
+              <div class="col-md-6 left-member-container" >
+                <%for(let i=0;i<middle;i++){%>
+                  <div class="member-container">
+                    <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                    <div class="name-container">
+                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[i].regNumber%>/profile"><%=batchDetails.allMembers[i].userName%></a></strong>
+                      <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                    </div>
+                  </div>
+                <%}%>
+              </div>
+              <div class="col-md-6 right-member-container" >
+                <%for(let j=middle;j<batchDetails.allMembers.length;j++){%>
+                <div class="member-container">
+                  <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                  <div class="name-container">
+                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[j].regNumber%>/profile"><%=batchDetails.allMembers[j].userName%></a></strong>
+                    <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                  </div>
                 </div>
-              </div>
-          </div>
-          <div class="col-md-6 right-member-container" >
-            <div class="member-container ">
-              <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-              <div class="name-container">
-                <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Akash Goshwami</a></strong>
-                <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                <%}%>
               </div>
             </div>
-            <div class="member-container">
-              <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-              <div class="name-container">
-                <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
-              </div>
-            </div>
-          </div>
-        </div>
+          <%}%>
+        <%}%>
       </div>
     <hr>  
+    <%if(checkData.isBatchLeader && !batchDetails.isVoteGoingOn){%>
+      <hr>
+      <div class="student-room-container ml-2 mr-2 mb-1">
+        <h5><strong>New Leader Selection :</strong></h5>
+        <h6 class="text-warning"><strong>Present leader activation date : </strong><%=batchDetails.presentLeader.createdDate%></h6>
+        <h6 class="text-danger">[This section will only work/shown after 15 days of present leader selection.Main leader can create voting pole in case he/she is not interested to lead activity]</h6>
+        <div class="container">
+          <div class="" style="width: 100%;">
+            <form action="/create/batch/<%=batchDetails.batchId%>/leader-voting-pole" method="post">
+              <button class="btn  btn-info btn-sm btn-block">Create New Leader Selection Pole</button>
+            </form>
+          </div>
+        </div> 
+      </div>
+      <hr>
+    <%}%>
   </div>
   <div class="col-lg notVisibleOnCollapse" >
   </div>
@@ -243,7 +328,7 @@
               <ul class="list-group">
                   <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
                     <div>
-                      <span class="d-block"><strong>Departmet Name : <%=batchDetails.departmentName%></strong></span>
+                      <span class="d-block"><strong>Departmet Name : </strong></span>
                       <span class="d-block"><strong>Course Duration : (data didn't taken)</strong>Years</span>  
                     </div>
                     <div>

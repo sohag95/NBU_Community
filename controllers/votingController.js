@@ -25,6 +25,7 @@ exports.ifVotingPoleExists =async function (req, res,next) {
 
 //Topic voting functionalities
 exports.giveTopicVote = function (req, res) {
+  console.log("Received Data :",req.body)
     let votingData={
       regNumber:req.regNumber,
       userName:req.userName,
@@ -70,7 +71,7 @@ exports.declareTopicResult = function (req, res) {
 }
 
 
-exports.votingDetailsPage = function (req, res) {
+exports.topicVotingDetailsPage = function (req, res) {
   let votingDetails=req.votingDetails
   req.votingDetails=undefined
   let checkData={
@@ -78,6 +79,7 @@ exports.votingDetailsPage = function (req, res) {
     isVotingLeader:false,
     isVoteMember:false,
     isVoter:false,
+    votingIndex:null
   }
 
   if(checkData.isUserLoggedIn){
@@ -110,10 +112,22 @@ exports.votingDetailsPage = function (req, res) {
     votingDetails.voters.forEach((voter)=>{
       if(voter.regNumber==req.regNumber){
         checkData.isVoter=true
+        checkData.votingIndex=voter.votingIndex
       }
     })
   }
+  //voting parcentage calculation for each topic
+  let totalVote=votingDetails.voters.length
+  votingDetails.result=votingDetails.result.map((data)=>{
+    let newInfo={
+      topicIndex:data.topicIndex,
+      parcentage:(data.votes*100)/totalVote
+    }
+    console.log("new Info :",newInfo)
+    return newInfo
+  })
   console.log("check data:",checkData)
+  console.log("Voting details :",votingDetails)
   res.render("topic-voting-details-page",{
     votingDetails:votingDetails,
     checkData:checkData
@@ -129,6 +143,7 @@ exports.createLeaderVotingPole = function (req, res) {
     regNumber:req.regNumber,
     userName:req.userName
   }
+  console.log("Source Data:",req.sourceData)
   let leaderVoting=new LeaderVoting(req.sourceData,"byLeader")
   leaderVoting.createLeaderVotingPole(createdBy).then(()=>{
     req.sourceData=undefined
@@ -190,8 +205,20 @@ exports.getLeaderVotingStatusAndCheckData =async function (req, res, next) {
 exports.getLeaderVotingPage =async function (req, res) {
   let votingDetails=req.votingDetails 
   let checkData=req.checkData
+  if(votingDetails.result.length){
+    //voting parcentage calculation for each topic
+  let totalVote=votingDetails.voters.length
+  votingDetails.result=votingDetails.result.map((data)=>{
+    let newInfo={
+      leaderIndex:data.leaderIndex,
+      parcentage:(data.votes*100)/totalVote
+    }
+    return newInfo
+  })
+  }
   // console.log("Voting Details :",votingDetails)
-  // console.log("CheckData :",req.checkData)
+  console.log("CheckData :",req.checkData)
+  console.log("new result :",votingDetails.result)
   res.render("leader-voting-details-page",{
     votingDetails:votingDetails,
     checkData:checkData
@@ -241,8 +268,8 @@ exports.giveLeaderVote = function (req, res) {
   if(!hasError){
     let votingData={
       regNumber:req.regNumber,
-      userName:req.userName,
       votingIndex:Number(req.body.leaderIndex)
+      //userName:req.userName,No need to take name
     }
     console.log("Voting Data:",votingData)
     LeaderVoting.giveLeaderVote(req.votingDetails._id,votingData).then(()=>{

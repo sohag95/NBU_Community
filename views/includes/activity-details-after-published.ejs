@@ -25,11 +25,19 @@
               <div class="post-header" style="width: 100%;display: flex;">
                 <div class="mr-auto" style="padding-left: 5px;">
                   <div style="margin: 0;padding: 0;">
-                    <a href="#"><strong>Bengali (2021-2022) | <i><span>Published on 12/12/12</span></i></strong></a>
+                    <a href="#"><strong>
+                      <span class="text-capitalize"><%=activityDetails.activityType%></span>  
+                      | <%=activityDetails.sourceName%> 
+                      <%if(activityDetails.activityType=="batch"){%>
+                        (20<%=activityDetails.activitySourceId.slice(0,2)%>-20<%=activityDetails.activitySourceId.slice(2,4)%>)
+                      <%}%>
+                       | 
+                      <i><span>Published on <%= activityDetails.activityDates.publishedDate.getMonth() + 1 %>/<%= activityDetails.activityDates.publishedDate.getDate() %>/<%= activityDetails.activityDates.publishedDate.getFullYear() %></span></i></strong>
+                    </a>
                   </div>
                   <div style="margin: 0;padding: 0;">
                     <h5 class="bolder">
-                      Enjoying first activity by visiting campus | Campus tour
+                      <%=activityDetails.title%> | <%=activityDetails.topic%>
                     </h5>
                   </div>
                 </div>
@@ -90,7 +98,7 @@
                                 <strong><a href="/student/<%=comment.regNumber%>/profile"> <%=comment.userName %></a> </strong>
                               </a>
                             <div >
-                              <i><strong>Commented on </strong> 12/12/2022</i>
+                              <i><strong>Commented on </strong> <%= comment.createdDate.getMonth() + 1 %>/<%= comment.createdDate.getDate() %>/<%= comment.createdDate.getFullYear() %></i>
                             </div>
                               <p class="btmMarginZero textJustifyAlign" ><strong class="bolder"> Comment : </strong> <%= comment.comment %></p>                                           
                           </div> 
@@ -121,45 +129,44 @@
         <div class="item-container mb-2">
           <h6><strong>Other Platforms</strong></h6>
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
-          <div class="btn btn-outline-info btn-block btn-sm pb-2">Activity On Facebook</div>
-          <div class="btn btn-outline-info btn-block btn-sm pb-2">Activity On Instagram</div>
-          <div class="btn btn-outline-info btn-block btn-sm pb-2">Activity On LinkedIn</div>
-          <div class="btn btn-outline-info btn-block btn-sm pb-2">Activity On Twitter</div>
+          <%if(activityDetails.videoLinks.facebook || activityDetails.videoLinks.instagram || activityDetails.videoLinks.linkedIn){%>
+            <%if(activityDetails.videoLinks.facebook){%>
+                <div class="btn btn-outline-info btn-block btn-sm pb-2">
+                  <a  href="<%=activityDetails.videoLinks.facebook%>">Activity On Facebook</a>
+                </div>
+            <%}%>
+            <%if(activityDetails.videoLinks.instagram){%>
+                <div class="btn btn-outline-info btn-block btn-sm pb-2">
+                  <a href="<%=activityDetails.videoLinks.instagram%>">
+                    Activity On Instagram
+                  </a>
+                </div>
+            <%}%>
+            <%if(activityDetails.videoLinks.linkedIn){%>
+                <div class="btn btn-outline-info btn-block btn-sm pb-2">
+                  <a href="<%=activityDetails.videoLinks.linkedIn%>">
+                    Activity On LinkedIn
+                  </a>
+                </div>
+            <%}%>
+          <%}else{%>
+            <div class="btn btn-info btn-block btn-sm pb-2">No Available</div>
+          <%}%>
+          
         </div>
         <div class="item-container">
-          <h6><strong>All  Participants (10)</strong></h6>
+          <h6><strong>All  Participants (<%=activityDetails.participants.length%>)</strong></h6>
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
-    
-          <div class="student-room-container" style="display: flex;">
-            <div >
-              <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-            </div>
-            <strong style=" margin-left: 1rem;">Sohag Roy</strong>
-          </div>
-          <div class="student-room-container" style="display: flex;">
-            <div >
-              <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-            </div>
-            <strong style=" margin-left: 1rem;">Sohag Roy</strong>
-          </div>
-          <div class="student-room-container" style="display: flex;">
-            <div >
-              <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-            </div>
-            <strong style=" margin-left: 1rem;">Sohag Roy</strong>
-          </div>
-          <div class="student-room-container" style="display: flex;">
-            <div >
-              <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-            </div>
-            <strong style=" margin-left: 1rem;">Sohag Roy</strong>
-          </div>
-          <div class="student-room-container" style="display: flex;">
-            <div >
-              <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-            </div>
-            <strong style=" margin-left: 1rem;">Sohag Roy</strong>
-          </div>     
+          <%activityDetails.participants.forEach((participant)=>{%>
+            <a href="/student/<%=participant.regNumber%>/profile">
+              <div class="student-room-container" style="display: flex;">
+                <div >
+                  <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                </div>
+                <strong class="ml-4"><%=participant.userName%></strong>
+              </div>
+            </a>
+          <%})%>    
         </div>
       </div>
       </div>
@@ -180,15 +187,26 @@
         <div class="item-container mb-2">
           <h5><strong>Activity Details</strong></h5>
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
-          <p><strong>Topic : </strong>Campus Tour <strong class="text-warning"> (By Voting)</strong> </p>
-          <p><strong>From : </strong>Batch</p>
-          <p><strong>Department Name : </strong>Computer Science</p>
-          <p><strong>Created Date : </strong>12 May 2022</p>
-          <p><strong>Topic Voting Date : </strong>15 May 2022</p>
-          <p><strong>Activity Date : </strong>18 May 2022</p>
-          <p><strong>Activity Submission Date : </strong>19 May 2022</p>
-          <p><strong>Activity Received Date : </strong>19 May 2022</p>
-          <p><strong>Activity Published Date : </strong>19 May 2022</p>
+          <p><strong>Topic : </strong><%=activityDetails.topic%> 
+            <%if(activityDetails.isTopicByVote){%>
+              <strong class="text-warning"><a href="/topic-voting/<%=activityDetails.votingId%>/details">(By Voting)</a> </strong> 
+            <%}else{%>
+              <strong class="text-warning">(By Leader)</strong> 
+            <%}%> 
+          </p>
+          <p><strong>From : </strong><a href="/<%=activityDetails.activityType%>/<%=activityDetails.activitySourceId%>/details"><strong class="text-capitalize"><%=activityDetails.activityType%></strong></a></p>
+          <p><strong>Department Name : </strong><%=activityDetails.sourceName%></p>
+          <p><strong>Created Date : </strong><%= activityDetails.activityDates.createdDate.getMonth() + 1 %>/<%= activityDetails.activityDates.createdDate.getDate() %>/<%= activityDetails.activityDates.createdDate.getFullYear() %></p>
+          <%if(activityDetails.isTopicByVote){%>
+            <p><strong>Topic Voting Date : </strong><%= activityDetails.activityDates.votingResultDate.getMonth() + 1 %>/<%= activityDetails.activityDates.votingResultDate.getDate() %>/<%= activityDetails.activityDates.votingResultDate.getFullYear() %></p>
+          <%}%>
+          <p><strong>Activity Date : </strong><%= activityDetails.activityDates.activityDate.getMonth() + 1 %>/<%= activityDetails.activityDates.activityDate.getDate() %>/<%= activityDetails.activityDates.activityDate.getFullYear() %></p>
+          <p><strong>Activity Submission Date : </strong><%= activityDetails.activityDates.submissionDate.getMonth() + 1 %>/<%= activityDetails.activityDates.submissionDate.getDate() %>/<%= activityDetails.activityDates.submissionDate.getFullYear() %></p>
+          <p><strong>Activity Received Date : </strong><%= activityDetails.activityDates.receivedDate.getMonth() + 1 %>/<%= activityDetails.activityDates.receivedDate.getDate() %>/<%= activityDetails.activityDates.receivedDate.getFullYear() %></p>
+          <p><strong>Activity video editing Date : </strong><%= activityDetails.activityDates.editedDate.getMonth() + 1 %>/<%= activityDetails.activityDates.editedDate.getDate() %>/<%= activityDetails.activityDates.editedDate.getFullYear() %></p>
+          <p><strong>Activity Published Date : </strong><%= activityDetails.activityDates.publishedDate.getMonth() + 1 %>/<%= activityDetails.activityDates.publishedDate.getDate() %>/<%= activityDetails.activityDates.publishedDate.getFullYear() %></p>
+          <hr>
+          <p><strong>Activity Short Details : </strong><i><%=activityDetails.shortDetails%></i></p>
           <hr>
           <h5><strong>Activity Leaders</strong></h5>
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
@@ -198,7 +216,7 @@
               <div class="member-container">
                 <img class="member-avatar" src="/images/sohag.jpg" alt="">
                 <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
+                  <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=activityDetails.leaders.mainLead.regNumber%>/profile"><%=activityDetails.leaders.mainLead.userName%></a></strong>
                   <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
                 </div>
               </div>
@@ -208,7 +226,28 @@
               <div class="member-container">
                 <img class="member-avatar"  src="/images/sohag.jpg" alt="">
                 <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
+                  <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=activityDetails.leaders.assistantLead.regNumber%>/profile"><%=activityDetails.leaders.assistantLead.userName%></a></strong>
+                  <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="col-lg-6">
+              <p><strong>Last Activity Handler :(last updation - <%= activityDetails.activityHandler.lastDate.getMonth() + 1 %>/<%= activityDetails.activityHandler.lastDate.getDate() %>/<%= activityDetails.activityHandler.lastDate.getFullYear() %>)</strong></p>
+              <div class="member-container">
+                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                <div class="name-container">
+                  <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=activityDetails.activityHandler.handler.regNumber%>"><%=activityDetails.activityHandler.handler.userName%></a></strong>
+                  <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <p><strong>Video Editor :</strong></p>
+              <div class="member-container">
+                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                <div class="name-container">
+                  <strong class="d-block ml-2" style="width: 100%;"><a href="#"><%=activityDetails.videoEditorDetails.userName%></a></strong>
                   <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
                 </div>
               </div>
@@ -229,128 +268,3 @@
 
 
 <!-- New structure till upper section -->
-
-<hr>
-<div style="display: flex;flex-wrap: wrap;">
-  <div class="col-lg"></div>
-  <div class="col-lg-7" >
-
-    <h5 class="bolder text-primary pt-1 text-center"><strong>Activity Details</strong></h5>
-        <div class="container">
-          <!-- ############--Post Structure--############ -->      
-            
-            <div class=" mb-2">
-              <div class="item-container" >
-                <div style="display: flex;">
-                  <div class="text-center">
-                    <img class="avatar-small" style="top:7px ;margin-left: 0rem;margin-right: 2px;" src="/images/sohag.jpg" alt="">
-                  </div>
-                  <div class="post-header" style="width: 100%;display: flex;">
-                    <div class="mr-auto" style="padding-left: 5px;">
-                      <div style="margin: 0;padding: 0;">
-                        <a href="#"><strong>Sohag Roy</strong></a>
-                      </div>
-                      <div style="margin: 0;padding: 0;">
-                        <i><span>Posted on 12/12/12</span></i> <span style="font-weight: 500;">.</span><i class="fas fa-user-friends fa-sm"></i>
-                      </div>
-                    </div>
-                    <div class="float-right">
-                      <p style="margin-right: 8px;" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <strong><i class="fas fa-ellipsis-h"></i></strong>
-                      </p>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <p class="dropdown-item text-primary" >For Post Owner</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <hr style="margin-bottom: .35rem;margin-top: 2px;">
-                <p>
-                  <div class="activityCoverPhotoContainer">
-                    <img class="activityCoverPhoto" src="<%=activityDetails.videoCoverPhoto%>" alt="">
-                  </div>
-                </p>
-                
-                <div style="display: flex;">
-                  <div class="text-left <%= liked ? 'text-primary' : '' %>" style="width: 50%;">
-                    <i class="far fa-thumbs-up"></i><span> <%= activityDetails.likes.length %> <%= activityDetails.likes.length>1 ? 'Likes' : 'Like' %></span>
-                  </div>
-                  <div class="text-right" style="width: 50%;">
-                    <span><%= activityDetails.comments.length %> <%= activityDetails.comments.length>1  ? 'Comments' : 'Comment'%></span> 
-                  </div>
-                </div>
-                <div style="display: flex;margin-bottom: 5px; border-top: 1px solid rgb(126, 124, 124);border-bottom: 1px solid rgb(126, 124, 124);">
-                  <div class="text-center" style="width: 50%;">
-                    <%  if(liked){%> 
-                      <form class="inlineContainer" action="/activity/<%=activityDetails._id%>/dislike" method="POST">
-                        <button class="btn  btn-block text-primary" style="border: 0px;background: #fff;" type="submit">
-                            <i class="far fa-thumbs-up"></i> Liked
-                        </button>
-                      </form>
-                    <%}else{%> 
-                      <form class="inlineContainer" action="/activity/<%=activityDetails._id%>/like" method="POST">
-                        <button class="btn  btn-block " style="border: 0px;background: #fff;" type="submit">
-                            <i class="far fa-thumbs-up"></i> Like 
-                        </button>
-                      </form>
-                    <%}%>
-                  </div>
-                  <div class="text-center" style="width: 50%;">
-                    <button class="btn  btn-block" style="border: 0px;background: #fff;" type="button" data-toggle="collapse" data-target="#collapse<%= activityDetails._id %>" aria-expanded="false" aria-controls="collapseExample">
-                      <i class="far fa-comment-alt"></i> <%= activityDetails.comments.length>1  ? 'Comments' : 'Comment'%>
-                    </button>
-                  </div>
-                </div>
-                <div class="collapse" id="collapse<%= activityDetails._id %>">
-                  <div class="card card-body">
-                    <p class="inlineContainer">  
-                      <%if( activityDetails.comments.length==0){%>
-                        <div class="text-muted small list-group-item">
-                          <p class="btmMarginZero bolderFont">No one comment on this post till now , be the first one.</p>
-                        </div>
-                      <%}%>                         
-                        <!-- comments loop will be here -->
-                        <% activityDetails.comments.forEach(function(comment) { %>
-                          <div class="text-muted small list-group-item">
-                              <a href="/student/<%=comment.regNumber%>/profile">
-                                <img class="avatar-tiny" src="/images/sohag.jpg">
-                                <strong><a href="/student/<%=comment.regNumber%>/profile"> <%=comment.userName %></a> </strong>
-                              </a>
-                            <div >
-                              <i><strong>Commented on </strong> 12/12/2022</i>
-                            </div>
-                              <p class="btmMarginZero textJustifyAlign" ><strong class="bolder"> Comment : </strong> <%= comment.comment %></p>                                           
-                          </div> 
-                        <% }) %>                                      
-                        <!-- close -->
-                    </p>
-                  </div>
-                </div>
-                <!-- comment section -->
-                  <div style="display: flex;">
-                    <div class="text-center">
-                      <img class="avatar-small" style="top:1px ;margin-left: 0rem;margin-right: 2px;" src="/images/sohag.jpg" alt="">
-                    </div>
-                    <div class="post-form-container" style="padding: 4px;">
-                      <form action="/activity/<%= activityDetails._id %>/comment" method="post" style="display: flex;">
-                        <input type="text" name="comment" class="post-input-field" placeholder="Write your comment here." required autocomplete="off">
-                        <button class="post-button" type="submit" style="background-color: #f0f2f5;">Comment</button>
-                      </form>
-                    </div>
-                  </div>
-              </div>
-            </div>
-            <script>
-              function deletePost() {
-              return confirm('Do you really want to delete the post.');
-              }
-            </script>
-            
-  
-          <!-- ######################## -->
-          <hr>
-          <div class="btn btn-lg btn-info btn-block">Activity details will be shown here</div>  
-        </div>
-  </div>
-  <div class="col-lg"></div>
-</div>
