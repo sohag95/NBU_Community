@@ -4,6 +4,8 @@ const SessionBatch = require("./SessionBatch")
 const Department = require("./Department")
 const Group = require("./Group")
 const Activity = require("./Activity")
+const AddCreditPoints = require("./AddCreditPoints")
+const GetAllMembers = require("./GetAllMembers")
 const votingCollection = require("../db").db().collection("VotingPoles")
 const activityCollection = require("../db").db().collection("Activities")
 
@@ -108,6 +110,7 @@ TopicVoting.giveTopicVote=function(id,votingData){
           voters:votingData
         }
       })
+      await AddCreditPoints.creditAfterTopicVoteToVoter(votingData.regNumber)
       resolve()
     }catch{
       reject()
@@ -183,6 +186,10 @@ TopicVoting.declareTopicResult=function(votingDetails,resultData,declaredBy,acti
             "activityDates.votingResultDate":new Date()
           }
         })
+      //get all members regNumber array to sent NOTIFICATION
+      let allMembers=await GetAllMembers.getAllSourceMembers(this.activityData.activitySourceId,this.activityData.activityType)
+      await Notification.activityTopicSelectionResultPublishedToAllSourceMembers(allMembers,new ObjectId(activityId),data.source,data.wonTopic)
+        
       resolve()
     }catch{
       reject()

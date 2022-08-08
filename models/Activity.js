@@ -1,7 +1,9 @@
 const { ObjectId } = require("mongodb")
 const Department = require("./Department")
+const GetAllMembers = require("./GetAllMembers")
 const Group = require("./Group")
 const LeaderVoting = require("./LeaderVoting")
+const Notification = require("./Notification")
 const OfficialUsers = require("./OfficialUsers")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
@@ -135,6 +137,7 @@ Activity.prototype.getActivityData=async function(){
     //     regNumber:"2022COMSC0001",
     //     userName:"Sohag Roy",
     //     comment:"hello i am here"
+    //     createdDate:new Date()
     //   }
     // ]
     
@@ -198,7 +201,9 @@ Activity.prototype.createNewActivity=function(){
             //console.log("Created activity :",createdActivity)
             //update activity creating source's present activity field
             await this.updatePresentActivityFieldBySource(activityData)
-           
+            //get all members regNumber array to sent notification
+            let allMembers=await GetAllMembers.getAllSourceMembers(this.activityData.activitySourceId,this.activityData.activityType)
+            await Notification.activityCreatedToAllSourceMembers(allMembers,createdActivity.insertedId,this.activityData.activityType,activityData.isTopicByVote)
             resolve(createdActivity.insertedId)
           }else{
             reject("Activity not created!")
@@ -320,7 +325,7 @@ Activity.getActivityDetailsById=function(id){
   })
 }
 
-//i have to work on this function later.Function called is not working
+//i have to work on this function later.Function called is not working...now the function is working from topicVoting class
 Activity.updateActivityDataAfterVoteResult=function(id,wonTopic){
   return new Promise(async (resolve, reject) => { 
     try{
@@ -369,7 +374,7 @@ Activity.getAllActivityMember=function(activityData){
         allMembers=await Department.getAllAvailableActivityMemberOnDepartment(activityData.sourceId)
       }
       if(activityData.from=="group"){
-        //i have to do it later
+        allMembers=await Group.getAllAvailableActivityMemberOnGroup(activityData.sourceId)
       }
       resolve(allMembers)
     }catch{
@@ -397,6 +402,8 @@ Activity.submitActivityByLeader=function(id,activityParticipants,submittedBy){
       //get all participants regNumber array
       let participantsRegNumbers=OtherOperations.getParticipantsRegNumbers(activityParticipants)
       await StudentDataHandle.addActivityIdOnAllParticipantsAccount(participantsRegNumbers,new ObjectId(id))
+      //----notification to post controller-----
+      await Notification.newActivitySubmittedToPostController(new ObjectId(id))
       resolve()
     }catch{
       reject("There is some problem.")
@@ -442,6 +449,9 @@ Activity.assignVideoEditor=function(data,id){
         }
       })
       await OfficialUsers.assignActivityIdToEditorAccount(id)
+      //--notify post controller that editing is accepted
+      await Notification.activityVideoAssignedToEditor(editorData.regNumber,new ObjectId(id))
+     
       resolve()
     }catch{
       reject("There is some problem.")
@@ -461,6 +471,9 @@ Activity.acceptVideoEditingByEditor=function(id,note){
           "videoEditorNote":note
         }
       })
+      //--notify post controller that editing is accepted
+      await Notification.activityAssignedEditorAcceptedToPostController(new ObjectId(id))
+     
       resolve()
     }catch{
       reject("There is some problem.")
@@ -479,6 +492,8 @@ Activity.videoEditingCompletedByEditor=function(id){
           "activityDates.editedDate":new Date(),
         }
       })
+      //---notify post controller that video editing is completed
+      await Notification.activityVideoEditedToPostController(id)
       resolve()
     }catch{
       reject("There is some problem.")
@@ -561,13 +576,18 @@ Activity.prototype.updateSourceFieldValueAfterActivityPublished=function(activit
   })
 }
 
-Activity.prototype.publishActivity=function(activityData,sourceData){
+Activity.prototype.publishActivity=function(activityData,sourceData,editorRegNumber){
   return new Promise(async (resolve, reject) => { 
     try{
       //set given linked
       let videoLinks=this.cleanUpLinkData()
+      //---notification---
+      //get all members regNumber array to sent notification
+      let allMembers=await GetAllMembers.getAllSourceMembers(sourceData.sourceId,sourceData.from)
       //update state with changing data on activity
       await this.updatePublishedState(activityData._id,videoLinks)
+      //---sent notification as activity published
+      await Notification.activityPublishedToAllSourceMembers(allMembers,activityData._id,sourceData.from)
       //update activity source field values
       await this.updateSourceFieldValueAfterActivityPublished(activityData,sourceData)
       //storing published activity id
@@ -583,8 +603,13 @@ Activity.prototype.publishActivity=function(activityData,sourceData){
       //---------------------------------------
       //create voting pole to select new leader as after each activity there should have new leader
       let leaderVoting=new LeaderVoting(sourceData,"auto")
-      await leaderVoting.createLeaderVotingPole("autoGenerated")
+      let poleId=await leaderVoting.createLeaderVotingPole("autoGenerated")
       //---------------------------------------
+      //------SENT NOTIFICATION as new voting pole created---------
+      await Notification.newLeaderSelectionStartedToAllSourceMembers(allMembers,poleId,sourceData.from)
+      //--sent notification to activity video editor
+      await Notification.activityPublishedToEditor(editorRegNumber,activityData._id)
+     
       resolve()
     }catch{
       reject("There is some problem.")

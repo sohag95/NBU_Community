@@ -280,24 +280,25 @@ Department.getAllAvailableActivityMemberOnDepartment= function(departmentCode){
       let departmentDetails=await Department.getDepartmentDataByDepartmentCode(departmentCode)
       let batchIds=[]
         if(departmentDetails.activeBatches.firstYear){
-          batchIds.push(departmentDetails.activeBatches.firstYear)
+          batchIds.push(departmentDetails.activeBatches.firstYear.batchId)
         }
         if(departmentDetails.activeBatches.secondYear){
-          batchIds.push(departmentDetails.activeBatches.secondYear)
+          batchIds.push(departmentDetails.activeBatches.secondYear.batchId)
         }
         if(departmentDetails.activeBatches.seniours){
-          batchIds.push(departmentDetails.activeBatches.seniours)
+          batchIds.push(departmentDetails.activeBatches.seniours.batchId)
         }
         if(departmentDetails.courceDuration=="3"){
           if(departmentDetails.activeBatches.thirdYear){
-            batchIds.push(departmentDetails.activeBatches.thirdyear)
+            batchIds.push(departmentDetails.activeBatches.thirdyear.batchId)
           }
         }
       let allMembers=[]
-      batchIds.forEach(async(batchId)=>{
-        let members=await SessionBatch.getAllAvailableActivityMemberOnDepartment(batchId)
-        allMembers.concat(members)
-      })
+      for (let batchId of batchIds) {
+        let batchMembers = await SessionBatch.getAllAvailableActivityMemberFromBatch(batchId)
+        allMembers=allMembers.concat(batchMembers)
+      }
+      
       resolve(allMembers)
     }catch{
       reject()

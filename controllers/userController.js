@@ -1,30 +1,15 @@
-const Notification = require('../models/Notification')
+const GetAllMembers = require('../models/GetAllMembers')
 const OfficialUser=require('../models/OfficialUsers')
 const Student = require('../models/Student')
 
 
 exports.test =async function (req, res) {
   try{
-  // let day=new Date()
-  // var activeDate = new Date(day);
-  // var numberOfDaysToAdd = 15;
-  // var result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
-  // let lastDate=new Date(result1)
-  // if(lastDate>new Date()){
-  //   console.log("Large")
-  // }else{
-  //   console.log("Small")
-  // }
-  // console.log("today :",day)
-  // console.log("new pole create date after :",lastDate)
-  let notification={
-    message:"Hello this is notification.",
-    gotoLink:"/yes",
-    gotoText:"/Go to the link..",
-    createdDate:new Date()
-  }
-  await Notification.sentNotificationToMultipleUsers(["2122COMSC0001","2122COMSC0004","2122COMSC0003"],notification)
-  await Notification.sentNotificationToOneUser("2122COMSC0001",notification)
+  //await StudentDataHandle.addVotingPoleIdOnVoterAccount("2122COMSC0001","123")
+  //await StudentDataHandle.addActivityIdOnAllParticipantsAccount(["2122COMSC0001","2122COMSC0004","2122COMSC0003"],"123456")
+  //await Notification.accountVerifiedToAccountHolder("2122COMSC0001")
+  let allMembers=await GetAllMembers.getAllSourceMembers("2COMSCCOMAP","group")
+   
   res.render('test-page')
   }catch{
     req.flash("errors", "There is some problem.")

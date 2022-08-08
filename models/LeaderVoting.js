@@ -1,4 +1,5 @@
 const Department = require("./Department")
+const GetAllMembers = require("./GetAllMembers")
 const Group = require("./Group")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
@@ -116,7 +117,7 @@ LeaderVoting.prototype.createLeaderVotingPole=function(createdBy){
           console.log("here i am! id:",createdPole.insertedId)
           await this.updateLeaderVotingPoleDataOnSource(createdPole.insertedId)
           console.log("votingPoleData :",this.votingPoleData)
-          resolve()
+          resolve(createdPole.insertedId)
         }else{
           console.log("createLeaderVotingPole reject part")
           reject()
@@ -176,6 +177,10 @@ LeaderVoting.updateResultOnLeaderVotingPole=function(id,resultData,resultDeclara
           "resultDeclaration":resultDeclarationData,
         }
       })
+      //--sent notification as voting result published
+      //get all members regNumber array to sent notification
+      let allMembers=await GetAllMembers.getAllSourceMembers(data.sourceId,data.source)
+      await Notification.newLeaderSelectionResultPublishedToAllSourceMembers(allMembers,id,data.source)
       //add winning pole id on winner candidate's account
       await StudentDataHandle.addWinningPoleIdOnWinnerAccount(data.wonLeader.regNumber,data.source,id)
       

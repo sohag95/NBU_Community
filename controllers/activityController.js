@@ -428,7 +428,9 @@ exports.publishActivity=function(req,res){
     sourceName:req.activityDetails.sourceName,
     leaders:req.activityDetails.leaders
   }
-  activity.publishActivity(activityData,sourceData).then(()=>{
+  //to sent notification to video editor
+  let editorRegNumber=req.activityDetails.videoEditorDetails.regNumber
+  activity.publishActivity(activityData,sourceData,editorRegNumber).then(()=>{
     req.activityDetails=undefined
     req.flash("success", "Video editing work successfully received!!")
     res.redirect(`/activity/${req.params.id}/details`)

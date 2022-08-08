@@ -5,6 +5,7 @@ const SessionBatch = require("../models/SessionBatch")
 const Department = require("../models/Department")
 const Group = require("../models/Group")
 const Student = require("../models/Student")
+const GetAllMembers = require("../models/GetAllMembers")
 
 exports.ifVotingPoleExists =async function (req, res,next) {
   try{
@@ -145,13 +146,16 @@ exports.createLeaderVotingPole = function (req, res) {
   }
   console.log("Source Data:",req.sourceData)
   let leaderVoting=new LeaderVoting(req.sourceData,"byLeader")
-  leaderVoting.createLeaderVotingPole(createdBy).then(()=>{
-    req.sourceData=undefined
-    console.log("Executed properly.")
-    req.flash("success", "Voting pole successfully created.")
-    req.session.save( () =>{
-      res.redirect(`/${req.params.from}/${req.params.id}/details`)
-    })
+  leaderVoting.createLeaderVotingPole(createdBy).then(async(poleId)=>{
+    //Notification sending after creation leader voting pole  
+    let allMembers=await GetAllMembers.getAllSourceMembers(req.sourceData.sourceId,req.sourceData.from)
+    await Notification.newLeaderSelectionStartedToAllSourceMembers(allMembers,poleId,req.sourceData.from)
+      
+      console.log("Executed properly.")
+      req.flash("success", "Voting pole successfully created.")
+      req.session.save( () =>{
+        res.redirect(`/${req.params.from}/${req.params.id}/details`)
+      })
   }).catch(()=>{
     req.flash("errors", "There is some problem.")
     req.session.save( () =>{

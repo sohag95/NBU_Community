@@ -1,3 +1,5 @@
+const AddCreditPoints = require("./AddCreditPoints")
+
 const studentDataCollection = require("../db").db().collection("Student_Data")
 
 
@@ -16,6 +18,7 @@ StudentDataHandle.addActivityIdOnLeadersAccount=function(regNumbers,activityId){
           "activities.leadActivities":activityId
           }
         },{ multi: true })
+        await AddCreditPoints.creditToActivityLeaders(regNumbers)
       resolve()
     }catch{
       console.log(" error on addActivityIdOnLeadersAccount")
@@ -35,6 +38,7 @@ StudentDataHandle.addActivityIdOnAllParticipantsAccount= function(participantsRe
           "activities.participatedActivities":activityId
           }
         },{ multi: true })
+        await AddCreditPoints.creditToAllActivityParticipants(participantsReg)
     resolve()
     }catch{
       console.log(" error on addActivityIdOnAllParticipantsAccount")
@@ -63,6 +67,7 @@ StudentDataHandle.addWinningPoleIdOnWinnerAccount= function(regNumber,leadType,p
           [dataContainerField]:poleId
         }
       })
+    await AddCreditPoints.creditToWinningLeaderByVote(regNumber,leadType)
   resolve()
   }catch{
     console.log(" error on addWinningPoleIdOnWinnerAccount")
@@ -82,6 +87,7 @@ StudentDataHandle.addNominationTakenPoleIdOnCandidateAccount= function(regNumber
           nominationTakenPoles:poleId
         }
       })
+      await AddCreditPoints.creditAfterGattingNominationToNominator(regNumber)
   resolve()
   }catch{
     console.log(" error on addNominationTakenPoleIdOnCandidateAccount")
@@ -101,6 +107,7 @@ StudentDataHandle.addVotingPoleIdOnVoterAccount= function(regNumber,poleId){
           voteGivenPoles:poleId
         }
       })
+      await AddCreditPoints.creditAfterLeaderVoteToVoter(regNumber)
   resolve()
   }catch{
     console.log(" error on addVotingPoleIdOnVoterAccount")
@@ -113,10 +120,9 @@ StudentDataHandle.addVotingPoleIdOnVoterAccount= function(regNumber,poleId){
 
 
 
-
 //*********************--NOTICE--**********************/
 
-//Functionality has not created yet
+//Belowed Functionality has not created yet
 StudentDataHandle.addActivityGroupIdOnMemberAccount=async function(){
  //member regNumber
  return new Promise(async (resolve, reject) => { 

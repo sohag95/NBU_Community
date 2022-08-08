@@ -1,4 +1,5 @@
 const groupsCollection = require("../db").db().collection("Groups")
+const Department = require("./Department")
 const OtherOperations=require('./OtherOperations')
 
 let Group=function(data){
@@ -130,6 +131,26 @@ Group.updatePresentActivityField= function(groupId,activityData){
       resolve()
     }catch{
       reject()
+    }
+  })
+}
+
+Group.getAllAvailableActivityMemberOnGroup= function(groupId){
+  return new Promise(async(resolve, reject) => {
+    try{
+      let allGroupMembers=[]
+      // let groupDetails=await groupsCollection.findOne({groupId:groupId})
+      // let departmentCodes=groupDetails.presentDepartments.map((department)=>{
+      //   return department.departmentCode
+      // })
+      let departmentCodes=OtherOperations.getDepartmentCodesFromGroupId(groupId)
+      for (let departmentCode of departmentCodes) {
+        let departmentMembers = await Department.getAllAvailableActivityMemberOnDepartment(departmentCode)
+        allGroupMembers=allGroupMembers.concat(departmentMembers)
+      }
+      resolve(allGroupMembers)
+    }catch{
+     reject()
     }
   })
 }

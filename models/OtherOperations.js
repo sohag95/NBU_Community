@@ -4,7 +4,6 @@ this.data=data
 }
 OtherOperations.getDepartmentCodesFromGroupId=function(groupId){
   let number=Number(groupId.slice(0,1))
-  console.log(number)
   let departmentCodes=[]
   let start=1
   let end=6
@@ -14,7 +13,6 @@ OtherOperations.getDepartmentCodesFromGroupId=function(groupId){
     start+=5
     end+=5
   }
-  console.log("Codes :",departmentCodes)
   return departmentCodes
  }
 

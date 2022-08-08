@@ -45,13 +45,7 @@ Verification.prototype.markAsVerfiedAccount=function(){
           "verifiedBy":this.verifierData
         }
       })
-      let notification={
-        message:"Your account has been verified successfully.",
-        gotoLink:null,
-        gotoText:null,
-        createdDate:new Date()
-      }
-      await Notification.sentNotificationToOneUser(this.studentData.regNumber,notification)
+      await Notification.accountVerifiedToAccountHolder(this.studentData.regNumber)
       resolve()
     }catch{
       reject()
