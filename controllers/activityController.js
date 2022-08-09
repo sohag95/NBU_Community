@@ -331,9 +331,13 @@ exports.activitySubmitted=function(req,res){
     regNumber:req.regNumber,
     userName:req.userName
   }
+  let neededData={
+    sourceId:req.activityDetails.activitySourceId,
+    source:req.activityDetails.activityType
+  }
   let activityParticipants=JSON.parse(req.body.selectedParticipants)
   console.log("Participants :",activityParticipants)
-  Activity.submitActivityByLeader(req.params.id,activityParticipants,submittedBy).then(()=>{
+  Activity.submitActivityByLeader(req.params.id,activityParticipants,submittedBy,neededData).then(()=>{
     req.activityDetails=undefined
     req.flash("success", "Activity state successfully updated!!")
     res.redirect(`/activity/${req.params.id}/details`)
@@ -348,7 +352,11 @@ exports.activityReceivedByPostController=function(req,res){
   if(!note){
     note="Did not put any note here."
   }
- Activity.receiveActivityByPostController(req.params.id,note).then(()=>{
+  let neededData={
+    sourceId:req.activityDetails.activitySourceId,
+    source:req.activityDetails.activityType
+  }
+ Activity.receiveActivityByPostController(req.params.id,note,neededData).then(()=>{
   req.activityDetails=undefined
   req.flash("success", "Activity successfully received!!")
   res.redirect(`/activity/${req.params.id}/details`)
@@ -359,7 +367,11 @@ exports.activityReceivedByPostController=function(req,res){
 }
 
 exports.assignVideoEditor=function(req,res){
- Activity.assignVideoEditor(req.body,req.activityDetails._id).then(()=>{
+  let neededData={
+    sourceId:req.activityDetails.activitySourceId,
+    source:req.activityDetails.activityType
+  }
+ Activity.assignVideoEditor(req.body,req.activityDetails._id,neededData).then(()=>{
   req.activityDetails=undefined
   req.flash("success", "Video editor assigned successfully!!")
   res.redirect(`/activity/${req.params.id}/details`)
@@ -384,8 +396,12 @@ exports.acceptVideoEditingByEditor=function(req,res){
  })
 }
 
-exports.videoEditingCompletedByEditor=function(req,res){ 
- Activity.videoEditingCompletedByEditor(req.activityDetails._id).then(()=>{
+exports.videoEditingCompletedByEditor=function(req,res){
+  let neededData={
+    sourceId:req.activityDetails.activitySourceId,
+    source:req.activityDetails.activityType
+  } 
+ Activity.videoEditingCompletedByEditor(req.activityDetails._id,neededData).then(()=>{
   req.activityDetails=undefined
   req.flash("success", "Video editing work successfully received!!")
   res.redirect(`/activity/${req.params.id}/details`)
@@ -442,7 +458,11 @@ exports.publishActivity=function(req,res){
 
 exports.likeActivity=function(req,res){
   if(!req.activityLiked){
-    Activity.likeActivity(req.activityDetails._id,req.regNumber).then(()=>{
+    let neededData={
+      sourceId:req.activityDetails.activitySourceId,
+      source:req.activityDetails.activityType
+    } 
+    Activity.likeActivity(req.activityDetails._id,req.regNumber,neededData).then(()=>{
       req.activityDetails=undefined
       req.flash("success", "Activity liked!!")
       res.redirect(`/activity/${req.params.id}/details`)
@@ -458,7 +478,11 @@ exports.likeActivity=function(req,res){
 
 exports.dislikeActivity=function(req,res){
   if(req.activityLiked){
-    Activity.dislikeActivity(req.activityDetails._id,req.regNumber).then(()=>{
+    let neededData={
+      sourceId:req.activityDetails.activitySourceId,
+      source:req.activityDetails.activityType
+    } 
+    Activity.dislikeActivity(req.activityDetails._id,req.regNumber,neededData).then(()=>{
       req.activityDetails=undefined
       req.flash("success", "Activity disliked!!")
       res.redirect(`/activity/${req.params.id}/details`)
@@ -480,7 +504,11 @@ exports.commentOnActivity=function(req,res){
       comment:req.body.comment,
       createdDate:new Date()
     }
-    Activity.commentOnActivity(req.activityDetails._id,commentDetails).then(()=>{
+    let neededData={
+      sourceId:req.activityDetails.activitySourceId,
+      source:req.activityDetails.activityType
+    } 
+    Activity.commentOnActivity(req.activityDetails._id,commentDetails,neededData).then(()=>{
       req.activityDetails=undefined
       req.flash("success", "Comment added successfully!!")
       res.redirect(`/activity/${req.params.id}/details`)

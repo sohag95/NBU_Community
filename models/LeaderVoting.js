@@ -1,8 +1,10 @@
 const Department = require("./Department")
 const GetAllMembers = require("./GetAllMembers")
+const GlobalNotifications = require("./GlobalNotifications")
 const Group = require("./Group")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
+const SourceNotifications = require("./SourceNotifications")
 const StudentDataHandle = require("./StudentDataHandle")
 
 const votingCollection = require("../db").db().collection("VotingPoles")
@@ -117,6 +119,8 @@ LeaderVoting.prototype.createLeaderVotingPole=function(createdBy){
           console.log("here i am! id:",createdPole.insertedId)
           await this.updateLeaderVotingPoleDataOnSource(createdPole.insertedId)
           console.log("votingPoleData :",this.votingPoleData)
+          //sent source notification
+          await SourceNotifications.leaderVotingGoingOn(createdPole.insertedId,this.votingPoleData.sourceId,this.votingPoleData.from)
           resolve(createdPole.insertedId)
         }else{
           console.log("createLeaderVotingPole reject part")
@@ -183,7 +187,10 @@ LeaderVoting.updateResultOnLeaderVotingPole=function(id,resultData,resultDeclara
       await Notification.newLeaderSelectionResultPublishedToAllSourceMembers(allMembers,id,data.source)
       //add winning pole id on winner candidate's account
       await StudentDataHandle.addWinningPoleIdOnWinnerAccount(data.wonLeader.regNumber,data.source,id)
-      
+      //--sent global Notification
+      await GlobalNotifications.newLeaderVotingResultPublished(id,data)
+      //--sent source notification
+      await SourceNotifications.leaderResultPublished(id,data.sourceId,data.source)
       console.log("Successfully ran this")
       resolve()
     }catch{
@@ -222,6 +229,7 @@ LeaderVoting.declareLeaderResultByLeader=function(votingDetails,resultData,resul
       let data={
         source:votingDetails.from,
         sourceId:votingDetails.sourceId,
+        sourceName:votingDetails.sourceName,
         wonLeader:{
           regNumber:votingDetails.nominationTakers[resultData[0].leaderIndex].regNumber,
           userName:votingDetails.nominationTakers[resultData[0].leaderIndex].userName

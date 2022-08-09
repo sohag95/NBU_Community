@@ -1,12 +1,14 @@
 const { ObjectId } = require("mongodb")
 const Department = require("./Department")
 const GetAllMembers = require("./GetAllMembers")
+const GlobalNotifications = require("./GlobalNotifications")
 const Group = require("./Group")
 const LeaderVoting = require("./LeaderVoting")
 const Notification = require("./Notification")
 const OfficialUsers = require("./OfficialUsers")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
+const SourceNotifications = require("./SourceNotifications")
 const StudentDataHandle = require("./StudentDataHandle")
 const TopicVoting = require("./TopicVoting")
 
@@ -204,6 +206,11 @@ Activity.prototype.createNewActivity=function(){
             //get all members regNumber array to sent notification
             let allMembers=await GetAllMembers.getAllSourceMembers(this.activityData.activitySourceId,this.activityData.activityType)
             await Notification.activityCreatedToAllSourceMembers(allMembers,createdActivity.insertedId,this.activityData.activityType,activityData.isTopicByVote)
+            //sent global notification
+            await GlobalNotifications.activityCreated(createdActivity.insertedId,this.activityData.activitySourceId,this.activityData.sourceName,this.activityData.activityType)
+            //--notification to souce---
+            await SourceNotifications.activityCreated(createdActivity.insertedId,this.activityData.activitySourceId,this.activityData.activityType,activityData.isTopicByVote)
+            
             resolve(createdActivity.insertedId)
           }else{
             reject("Activity not created!")
@@ -240,7 +247,9 @@ Activity.deleteActivity=function(activityData){
        }
        //delete the activity details
        await activityCollection.deleteOne({_id:activityData._id})
-       console.log("Hello i am here!")
+       
+       //--source notification
+       await SourceNotifications.activityDeleted(activityData.sourceId,activityData.source)
       resolve()
     }catch{
       reject()
@@ -288,6 +297,8 @@ Activity.prototype.updateEditData=function(id){
         }
       })
       await this.updateSourcePresentActivityFieldData()
+      //sent source notification
+      await SourceNotifications.activityFieldsUpdated(new ObjectId(id),this.neededData.sourceId,this,neededData.source)
       resolve()
     }catch{
       console.log("I am from editActivityDetails")
@@ -384,7 +395,7 @@ Activity.getAllActivityMember=function(activityData){
 }
 
 
-Activity.submitActivityByLeader=function(id,activityParticipants,submittedBy){
+Activity.submitActivityByLeader=function(id,activityParticipants,submittedBy,neededData){
   return new Promise(async (resolve, reject) => { 
     try{
       //update state and date
@@ -404,6 +415,8 @@ Activity.submitActivityByLeader=function(id,activityParticipants,submittedBy){
       await StudentDataHandle.addActivityIdOnAllParticipantsAccount(participantsRegNumbers,new ObjectId(id))
       //----notification to post controller-----
       await Notification.newActivitySubmittedToPostController(new ObjectId(id))
+      //sent notification to source
+      await SourceNotifications.ActivitySubmitted(new ObjectId(id),neededData.sourceId,neededData.source)
       resolve()
     }catch{
       reject("There is some problem.")
@@ -412,7 +425,7 @@ Activity.submitActivityByLeader=function(id,activityParticipants,submittedBy){
 }
 
 
-Activity.receiveActivityByPostController=function(id,note){
+Activity.receiveActivityByPostController=function(id,note,neededData){
   return new Promise(async (resolve, reject) => { 
     try{
       //update state and date
@@ -423,6 +436,8 @@ Activity.receiveActivityByPostController=function(id,note){
           "postControllerNote":note
         }
       })
+      //sent source notification
+      await SourceNotifications.activityReceived(new ObjectId(id),neededData.sourceId,neededData.source)
       resolve()
     }catch{
       reject("There is some problem.")
@@ -431,7 +446,7 @@ Activity.receiveActivityByPostController=function(id,note){
 }
 
 
-Activity.assignVideoEditor=function(data,id){
+Activity.assignVideoEditor=function(data,id,neededData){
   return new Promise(async (resolve, reject) => { 
     try{
       //update state and date
@@ -441,7 +456,7 @@ Activity.assignVideoEditor=function(data,id){
         phone:data.phone
       }
       console.log("Editor data :",editorData)
-      await activityCollection.updateOne({_id: new ObjectId(id)},{
+      await activityCollection.updateOne({_id: id},{
         $set:{
           "status":"editorAssigned",
           "videoEditorDetails":editorData,
@@ -449,9 +464,10 @@ Activity.assignVideoEditor=function(data,id){
         }
       })
       await OfficialUsers.assignActivityIdToEditorAccount(id)
-      //--notify post controller that editing is accepted
-      await Notification.activityVideoAssignedToEditor(editorData.regNumber,new ObjectId(id))
-     
+      //--notify editor as video assigned
+      await Notification.activityVideoAssignedToEditor(editorData.regNumber,id)
+      //sent source notification
+      await SourceNotifications.editorAssigned(id,neededData.sourceId,neededData.source)
       resolve()
     }catch{
       reject("There is some problem.")
@@ -481,7 +497,7 @@ Activity.acceptVideoEditingByEditor=function(id,note){
   })
 }
 
-Activity.videoEditingCompletedByEditor=function(id){
+Activity.videoEditingCompletedByEditor=function(id,neededData){
   return new Promise(async (resolve, reject) => { 
     try{
       //update state and date
@@ -494,6 +510,8 @@ Activity.videoEditingCompletedByEditor=function(id){
       })
       //---notify post controller that video editing is completed
       await Notification.activityVideoEditedToPostController(id)
+      //sent source notification
+      await SourceNotifications.activityEdited(id,neededData.sourceId,neededData.source)
       resolve()
     }catch{
       reject("There is some problem.")
@@ -609,8 +627,11 @@ Activity.prototype.publishActivity=function(activityData,sourceData,editorRegNum
       await Notification.newLeaderSelectionStartedToAllSourceMembers(allMembers,poleId,sourceData.from)
       //--sent notification to activity video editor
       await Notification.activityPublishedToEditor(editorRegNumber,activityData._id)
-     
-      resolve()
+     //--sent global notification
+     await GlobalNotifications.activityPublished(activityData._id,sourceData.from)
+    //--sent source notification
+    await SourceNotifications.activityPublished(activityData._id,sourceData.sourceId,sourceData.from)
+     resolve()
     }catch{
       reject("There is some problem.")
     }
@@ -618,7 +639,7 @@ Activity.prototype.publishActivity=function(activityData,sourceData,editorRegNum
 }
 
 
-Activity.likeActivity=function(id,regNumber){
+Activity.likeActivity=function(id,regNumber,neededData){
   return new Promise(async (resolve, reject) => { 
     try{
       await activityCollection.updateOne({_id:id},{
@@ -626,6 +647,8 @@ Activity.likeActivity=function(id,regNumber){
           "likes":regNumber,
         }
       })
+      //--sent source notification
+      await SourceNotifications.activityLiked(id,neededData.sourceId,neededData.source)
       resolve()
     }catch{
       reject("There is some problem.")
@@ -633,7 +656,7 @@ Activity.likeActivity=function(id,regNumber){
   })
 }
 
-Activity.dislikeActivity=function(id,regNumber){
+Activity.dislikeActivity=function(id,regNumber,neededData){
   return new Promise(async (resolve, reject) => { 
     try{
       await activityCollection.updateOne({_id:id},{
@@ -641,6 +664,9 @@ Activity.dislikeActivity=function(id,regNumber){
           "likes":regNumber,
         }
       })
+      //--sent source notification
+      await SourceNotifications.dislikedActivity(id,neededData.sourceId,neededData.source)
+    
       resolve()
     }catch{
       reject("There is some problem.")
@@ -648,25 +674,31 @@ Activity.dislikeActivity=function(id,regNumber){
   })
 }
 
-Activity.commentOnActivity=function(id,commentDetails){
+Activity.commentOnActivity=function(id,commentDetails,neededData){
   return new Promise(async (resolve, reject) => { 
     try{
+      let errMsg=[]
       if (typeof commentDetails.comment != "string") {
-        reject("Comment is not on string type!")
+        errMsg.push("Comment is not on string type!")
       }
       if (commentDetails.comment.length>200) {
-        reject("Comment can't contain more then 200 character!")
+        errMsg.push("Comment can't contain more then 200 character!")
       }
       if (commentDetails.comment=="") {
-        reject("You should write some text as comment.")
+        errMsg.push("You should write some text as comment.")
       }
-
-      await activityCollection.updateOne({_id:id},{
-        $push:{
-          "comments":commentDetails
-        }
-      })
-      resolve()
+      if(!errMsg.length){
+        await activityCollection.updateOne({_id:id},{
+          $push:{
+            "comments":commentDetails
+          }
+        })
+        //--sent source notification
+        await SourceNotifications.commentOnActivity(id,neededData.sourceId,neededData.source)
+        resolve()
+      }else{
+        reject(errMsg)
+      }
     }catch{
       reject("There is some problem.")
     }

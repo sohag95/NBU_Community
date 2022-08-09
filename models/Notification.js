@@ -3,7 +3,42 @@ const notificationCollection = require("../db").db().collection("Notifications")
 let Notification=function(data){
   this.data=data
 }
-
+///--sending notification section starts
+Notification.sentNotificationToOneUser=function(regNumber,notification){
+  return new Promise(async (resolve, reject) => {
+    try{
+      await notificationCollection.updateOne(
+        {regNumber:regNumber},
+        {
+          $push:{
+          notifications:notification
+        },$inc:{
+            unseenNotificationNumber:1
+        }})
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+Notification.sentNotificationToMultipleUsers=function(regNumbers,notification){
+  return new Promise(async (resolve, reject) => {
+    try{
+      await notificationCollection.updateMany(
+        {regNumber:{$in:regNumbers}},
+        {
+          $push:{
+            notifications:notification
+        },$inc:{
+            unseenNotificationNumber:1
+        }},{ multi: true })
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+//----sending notification section ends
 //--------------STUDENTS notification section starts-----------
 //done
 Notification.accountVerifiedToAccountHolder=function(regNumber){
@@ -16,15 +51,7 @@ Notification.accountVerifiedToAccountHolder=function(regNumber){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:regNumber},
-        {
-          $push:{
-          notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser(regNumber,notification)
       resolve()
     }catch{
       reject()
@@ -52,15 +79,7 @@ Notification.activityCreatedToAllSourceMembers=function(regNumbers,activityId,ac
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateMany(
-        {regNumber:{$in:regNumbers}},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }},{ multi: true })
-
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
       reject()
@@ -79,15 +98,7 @@ Notification.activityTopicSelectionResultPublishedToAllSourceMembers=function(re
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateMany(
-        {regNumber:{$in:regNumbers}},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }},{ multi: true })
-
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
       reject()
@@ -106,15 +117,7 @@ Notification.activityPublishedToAllSourceMembers=function(regNumbers,activityId,
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateMany(
-        {regNumber:{$in:regNumbers}},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }},{ multi: true })
-
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
       reject()
@@ -136,15 +139,7 @@ Notification.newLeaderSelectionStartedToAllSourceMembers=function(regNumbers,pol
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateMany(
-        {regNumber:{$in:regNumbers}},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }},{ multi: true })
-
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
       reject()
@@ -163,15 +158,7 @@ Notification.newLeaderSelectionResultPublishedToAllSourceMembers=function(regNum
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateMany(
-        {regNumber:{$in:regNumbers}},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }},{ multi: true })
-
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
       reject()
@@ -189,15 +176,7 @@ Notification.creditToActivityLeaders=function(regNumbers,creditPoints){
         gotoLink:null,
         createdDate:new Date()
       }
-      await notificationCollection.updateMany(
-        {regNumber:{$in:regNumbers}},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }},{ multi: true })
-
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
       reject()
@@ -215,15 +194,7 @@ Notification.creditToAllActivityParticipants=function(regNumbers,creditPoints){
         gotoLink:null,
         createdDate:new Date()
       }
-      await notificationCollection.updateMany(
-        {regNumber:{$in:regNumbers}},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }},{ multi: true })
-
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
       reject()
@@ -242,15 +213,7 @@ Notification.creditToWinningLeaderByVote=function(regNumber,leaderType,creditPoi
         gotoLink:null,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:regNumber},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser(regNumber,notification)
       resolve()
     }catch{
       reject()
@@ -270,15 +233,7 @@ Notification.creditAfterLeaderVoteToVoter=function(regNumber,creditPoints){
         gotoLink:null,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:regNumber},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser(regNumber,notification)
       resolve()
     }catch{
       reject()
@@ -296,15 +251,7 @@ Notification.creditAfterGattingNominationToNominator=function(regNumber,leaderTy
         gotoLink:null,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:regNumber},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser(regNumber,notification)
       resolve()
     }catch{
       reject()
@@ -321,15 +268,7 @@ Notification.creditAfterTopicVoteToVoter=function(regNumber,creditPoints){
         gotoLink:null,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:regNumber},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser(regNumber,notification)
       resolve()
     }catch{
       reject()
@@ -349,15 +288,7 @@ Notification.yearChangingToAllBatchMembers=function(regNumbers,newYear){
         gotoLink:null,
         createdDate:new Date()
       }
-      await notificationCollection.updateMany(
-        {regNumber:{$in:regNumbers}},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }},{ multi: true })
-
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
       reject()
@@ -377,15 +308,7 @@ Notification.rejectedAccountDuringVerificationToAdmin=function(rejectedRegNumber
         gotoLink:null,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:"2022ADMIN9999"},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser("2022ADMIN9999",notification)
       resolve()
     }catch{
       reject()
@@ -406,15 +329,7 @@ Notification.reportedByStudentsToSocietyController=function(reportingType,report
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:"2022UNSCN9999"},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser("2022UNSCN9999",notification)
       resolve()
     }catch{
       reject()
@@ -435,15 +350,8 @@ Notification.newActivitySubmittedToPostController=function(activityId){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:"2022POSTC9999"},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      
+      await Notification.sentNotificationToOneUser("2022POSTC9999",notification)
       resolve()
     }catch{
       reject()
@@ -462,15 +370,7 @@ Notification.activityAssignedEditorAcceptedToPostController=function(activityId)
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:"2022POSTC9999"},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser("2022POSTC9999",notification)
       resolve()
     }catch{
       reject()
@@ -489,15 +389,7 @@ Notification.activityVideoEditedToPostController=function(activityId){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:"2022POSTC9999"},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser("2022POSTC9999",notification)
       resolve()
     }catch{
       reject()
@@ -519,15 +411,7 @@ Notification.activityVideoAssignedToEditor=function(regNumber,activityId){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:regNumber},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser(regNumber,notification)
       resolve()
     }catch{
       reject()
@@ -546,15 +430,7 @@ Notification.activityPublishedToEditor=function(regNumber,activityId){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      await notificationCollection.updateOne(
-        {regNumber:regNumber},
-        {
-          $push:{
-            notifications:notification
-        },$inc:{
-            unseenNotificationNumber:1
-        }})
-
+      await Notification.sentNotificationToOneUser(regNumber,notification)
       resolve()
     }catch{
       reject()
