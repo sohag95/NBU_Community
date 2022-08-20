@@ -1,6 +1,7 @@
 const groupsCollection = require("../db").db().collection("Groups")
 const Department = require("./Department")
 const OtherOperations=require('./OtherOperations')
+const SourceNotifications = require("./SourceNotifications")
 
 let Group=function(data){
  this.data=data
@@ -28,6 +29,7 @@ Group.prototype.createNewGroup=function(){
     try{
       this.prepareGroupDataField()
       await groupsCollection.insertOne(this.data)
+      await SourceNotifications.createSourceNotificationTable(this.data.groupId)
       resolve()
     }catch{
       reject()

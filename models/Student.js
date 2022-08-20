@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs")
 const Department = require("./Department")
 const OfficialUsers = require("./OfficialUsers")
 const validator = require("validator")
+const Notification = require("./Notification")
 
 let Student=function(regData,batchData,communityController){
   this.data=regData
@@ -251,6 +252,21 @@ Student.prototype.createNewAccount=function(){
   })
 }
 
+
+Student.deleteAccount=function(regNumber){
+  return new Promise(async (resolve, reject) => {
+    try{
+      await studentDataCollection.deleteOne({regNumber:regNumber})
+      await notificationCollection.deleteOne({regNumber:regNumber})
+      await studentDataCollection.deleteOne({regNumber:regNumber})
+      await OfficialUsers.removeRejectedIdFromAdminAccountedArray(regNumber)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
 Student.prototype.studentLogIn = function () {
   return new Promise((resolve, reject) => {
     if (typeof this.data.phone != "string") {
@@ -262,7 +278,7 @@ Student.prototype.studentLogIn = function () {
     console.log("Auth data :",this.data)
     studentsCollection
       .findOne({ phone:this.data.phone })
-      .then(attemptedUser => {
+      .then(async(attemptedUser) => {
         if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
           this.data = {
             regNumber:attemptedUser.regNumber,
@@ -284,7 +300,9 @@ Student.prototype.studentLogIn = function () {
           if(!attemptedUser.email){
             this.data.otherData.emailNotSet=true
           }
-      
+          //get unseen notification number
+          let unseenNotifications=await Notification.getUnseenNotificationNumbers(this.data.regNumber)
+          this.data.otherData.unseenNotifications=unseenNotifications
           console.log("Other data :",this.data.otherData)
           resolve("Congrats!")
         } else {
@@ -347,6 +365,26 @@ Student.getStudentDataByRegNumber = function (regNumber) {
       }).catch((e)=>{
         reject()
       })
+    }catch{
+      reject()
+    }
+  })
+}
+
+Student.getAccountDetailsByRegNumbers = function (regNumbers) {
+  return new Promise(async(resolve, reject) => {
+    try{  
+    let accountsDetails= await studentsCollection.find({regNumber:{$in:regNumbers}}).toArray()
+    accountsDetails=accountsDetails.map((account)=>{
+      return  {
+        regNumber:account.regNumber,
+        userName:account.userName,
+        departmentName:account.departmentName,
+        verifiedBy:account.verifiedBy
+      }
+    })
+    console.log("accounts:",accountsDetails)
+    resolve(accountsDetails)
     }catch{
       reject()
     }

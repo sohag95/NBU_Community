@@ -16,7 +16,8 @@ const activityController=require('./controllers/activityController')
 const votingController=require('./controllers/votingController')
 const checkingController=require('./controllers/checkingController')
 const notificationController=require('./controllers/notificationController')
-    
+const reportController=require('./controllers/reportController')
+      
 //####################################
 router.get('/test',userController.test)
 //####################################
@@ -35,9 +36,9 @@ router.get('/log-in',userController.getLogInForm)
 router.get('/sign-up-form',userController.getSignUpForm)
 
 //verification related routers
-router.get("/verification/:case/:regNumber/page",verificationController.checkVerifier,verificationController.checkStudentAccount,verificationController.getVerificationPage)
-router.post("/verification/:case/:regNumber/accept",verificationController.checkVerifier,verificationController.checkStudentAccount,verificationController.accountVerified)
-router.post("/verification/:case/:regNumber/reject",verificationController.checkVerifier,verificationController.checkStudentAccount,verificationController.accountReject)
+router.get("/verification/:case/:regNumber/page",userController.userMustBeLoggedIn,verificationController.checkVerifier,verificationController.checkStudentAccount,verificationController.getVerificationPage)
+router.post("/verification/:case/:regNumber/accept",userController.userMustBeLoggedIn,verificationController.checkVerifier,verificationController.checkStudentAccount,verificationController.checkifAlreadyVerified,verificationController.accountVerified)
+router.post("/verification/:case/:regNumber/reject",userController.userMustBeLoggedIn,verificationController.checkVerifier,verificationController.checkStudentAccount,verificationController.checkifAlreadyRejected,verificationController.accountReject)
 
 //NBU Community / Society controller related router
 router.get('/societyController-home',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.societyControllerHome)
@@ -55,7 +56,12 @@ router.post("/addNewGroup",  officialUserController.adminMustBeLoggedIn,adminCon
 router.post("/addNewSessionBatch",  officialUserController.adminMustBeLoggedIn,sessionBatchController.createNewSessionBatch)
 router.post("/addNewSessionYear",  officialUserController.adminMustBeLoggedIn,adminController.addNewSessionYear)
 router.post("/setPresentSessionYear",  officialUserController.adminMustBeLoggedIn,adminController.setPresentSessionYear)
+router.post("/delete/:regNumber/account",  officialUserController.adminMustBeLoggedIn,adminController.deleteAccount)
+router.get('/rejected-accounts',officialUserController.adminMustBeLoggedIn,adminController.getRejectedAccounts)
 
+//-----SOURCE related routers----
+
+router.get("/source/:from/:id/notifications",checkingController.ifSourcePresent,notificationController.getSourceNotifiations)
 //sessionBatch related routers
 router.get("/batch/:batchId/details",userController.ifUserLoggedIn,sessionBatchController.isSessionBatchExists,sessionBatchController.getSessionBatchDetailsPage)
 
@@ -110,6 +116,10 @@ router.post("/leader-voting/:id/nomination",userController.ifUserLoggedIn,voting
 router.post("/leader-voting/:id/give-vote",studentController.studentMustBeLoggedIn,userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.getLeaderVotingStatusAndCheckData,checkingController.checkLeaderVotingData,votingController.giveLeaderVote)
 router.post("/leader-voting/:id/declare-result-by-leader",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.ifVotingResultDeclarable,votingController.declareLeaderResultByLeader)
 router.post("/leader-voting/:id/accept-as-leader",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.newLeaderAcceptableOrNot,votingController.acceptSelfAsLeader)
+
+
+//Reporting related router
+router.post("/sent-report",studentController.studentMustBeLoggedIn,reportController.checkReportType,reportController.checkIfAlreadyReported,reportController.sentReport)
 
 //Logging out router
 router.post("/loggingOut", userController.loggingOut)

@@ -153,67 +153,70 @@ exports.ifActivityAlreadyLiked=function(req,res,next){
 
 
 exports.ifSourcePresent=async function(req,res,next){
-  req.sourceData={}
-  let sourcePresent=true
-  if(req.params.from=="batch"){
-    let sourceData=await SessionBatch.findSessionBatchDetailsByBatchId(req.params.id)
-    if(sourceData){
-      req.sourceData={
-        from:req.params.from,
-        sourceId:sourceData.batchId,
-        sourceName:sourceData.departmentName,
-        leaders:{
-          mainLead:sourceData.presentLeader,
-          assistantLead:sourceData.previousLeader,
+  try{
+    req.sourceData=null
+    let sourcePresent=false
+    if(req.params.from=="batch"){
+      let sourceData=await SessionBatch.findSessionBatchDetailsByBatchId(req.params.id)
+      if(sourceData){
+        req.sourceData={
+          from:req.params.from,
+          sourceId:sourceData.batchId,
+          sourceName:sourceData.departmentName,
+          leaders:{
+            mainLead:sourceData.presentLeader,
+            assistantLead:sourceData.previousLeader,
+          }
         }
+        sourcePresent=true
+      }
+    }else if(req.params.from=="department"){
+      let sourceData=await Department.findDepartmentByDepartmentCode(req.params.id)
+      
+      if(sourceData){
+        req.sourceData={
+          from:req.params.from,
+          sourceId:sourceData.departmentCode,
+          sourceName:sourceData.departmentName,
+          leaders:{
+            mainLead:sourceData.presentLeader,
+            assistantLead:sourceData.previousLeader,
+          }
+        }
+        sourcePresent=true
+      }
+    }else if(req.params.from=="group"){
+      let  sourceData=await Group.findGroupByGroupId(req.params.id)
+      
+      if(sourceData){
+        req.sourceData={
+          from:req.params.from,
+          sourceId:sourceData.groupId,
+          sourceName:sourceData.groupName,
+          leaders:{
+            mainLead:sourceData.presentLeader,
+            assistantLead:sourceData.previousLeader,
+          }
+        }
+        sourcePresent=true
       }
     }else{
-      sourcePresent=false
+      req.flash("errors", "Data manipulation detected.")
+      req.session.save( ()=> {
+        res.redirect("/")
+      })
     }
-  }else if(req.params.from=="department"){
-    let sourceData=await Department.findDepartmentByDepartmentCode(req.params.id)
-    
-    if(sourceData){
-      req.sourceData={
-        from:req.params.from,
-        sourceId:sourceData.departmentCode,
-        sourceName:sourceData.departmentName,
-        leaders:{
-          mainLead:sourceData.presentLeader,
-          assistantLead:sourceData.previousLeader,
-        }
-      }
+    if(sourcePresent){
+      next()
     }else{
-      sourcePresent=false
+      res.render("404")
     }
-  }else if(req.params.from=="group"){
-    let  sourceData=await Group.findGroupByGroupId(req.params.id)
-    
-    if(sourceData){
-      req.sourceData={
-        from:req.params.from,
-        sourceId:sourceData.groupId,
-        sourceName:sourceData.groupName,
-        leaders:{
-          mainLead:sourceData.presentLeader,
-          assistantLead:sourceData.previousLeader,
-        }
-      }
-    }else{
-      sourcePresent=false
-    }
-  }else{
-    req.flash("errors", "Data manipulation detected.")
-    req.session.save( ()=> {
-      res.redirect("/")
-    })
-  }
-  if(sourcePresent){
-    next()
-  }else{
+  }catch{
     res.render("404")
   }
 }
+
+
 
 exports.ifCreatorLeader=function(req,res,next){
   if(req.sourceData.leaders.mainLead.regNumber==req.regNumber || req.sourceData.leaders.assistantLead.regNumber==req.regNumber){

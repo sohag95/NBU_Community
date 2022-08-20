@@ -2,6 +2,7 @@ const Admin=require('../models/Admin')
 const OfficialUsers=require('../models/OfficialUsers')
 const Group=require('../models/Group')
 const OtherOperations=require('../models/OtherOperations')
+const Student = require('../models/Student')
 
 exports.adminHome =async function (req, res) {
   try{
@@ -12,16 +13,44 @@ exports.adminHome =async function (req, res) {
         return department
       }
     })
+    let rejectedAccountIds=await OfficialUsers.getRejectedAccounts()
     console.log("remain Departments:",remainDepartments)
     console.log("All groups:",getAllGroups)
     res.render('admin-home',{
       remainDepartments:remainDepartments,
-      allGroups:getAllGroups
+      allGroups:getAllGroups,
+      rejectedAccounts:rejectedAccountIds.length
     })
   }catch{
     res.render('404')
   }
-  
+}
+
+exports.getRejectedAccounts =async function (req, res) {
+  try{
+    let regNumbers=await OfficialUsers.getRejectedAccounts()
+    let rejectedAccounts=await Student.getAccountDetailsByRegNumbers(regNumbers)
+    console.log("reg numbers:",regNumbers)
+    res.render('rejected-accounts',{
+      rejectedAccounts:rejectedAccounts
+    })
+  }catch{
+    res.render('404')
+  }
+}
+
+exports.deleteAccount =async function (req, res) {
+  Student.deleteAccount(req.params.regNumber).then(()=>{
+    req.flash("success", "Rejected account deleted successfully!!")
+    req.session.save(function () {
+      res.redirect("/rejected-accounts")
+    })
+  }).catch(()=>{
+    req.flash("errors", "There was some problem!!")
+    req.session.save(function () {
+      res.redirect("/admin-home")
+    })
+  })
 }
 
 exports.addDepartment = function (req, res) {

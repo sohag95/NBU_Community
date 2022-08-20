@@ -41,6 +41,56 @@ OfficialUsers.prototype.adminLogIn=function(){
   })
 }
 
+
+OfficialUsers.addRejectedAccountOnAdminAccount=function(regNumber){
+  return new Promise(async(resolve, reject) => {
+    try {
+      await officialUsersCollection.updateOne(
+        { dataType: "adminAuthData" },
+        {
+          $push: {
+            rejectedAccounts: regNumber
+          }
+        }
+      )
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
+
+OfficialUsers.getRejectedAccounts=function(){
+  return new Promise(async(resolve, reject) => {
+    try {
+      let data=await officialUsersCollection.findOne({ dataType: "adminAuthData" })
+      resolve(data.rejectedAccounts)
+    } catch {
+      reject()
+    }
+  })
+}
+
+
+OfficialUsers.removeRejectedIdFromAdminAccountedArray=function(regNumber){
+  return new Promise(async(resolve, reject) => {
+    try {
+      await officialUsersCollection.updateOne(
+        { dataType: "adminAuthData" },
+        {
+          $pull: {
+            rejectedAccounts: regNumber
+          }
+        }
+      )
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
 OfficialUsers.prototype.NBUCommunityControllerLogIn=function(){
   return new Promise((resolve, reject) => {
     try {
@@ -120,7 +170,7 @@ OfficialUsers.getAllDepartments=function(){
           let allDepartments=data.departments
           resolve(allDepartments)
         })
-        .catch(function () {
+        .catch(()=> {
           reject("Please try again later.")
         })
     } catch {

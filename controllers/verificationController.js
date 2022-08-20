@@ -5,8 +5,10 @@ const Department = require("../models/Department")
 
 exports.checkVerifier=async function(req,res,next){
   try{
-    if(req.session.user){
-      if(req.accountType=="societyController"){
+      if(req.params.case=="rejected"){
+        req.verifierData=null
+        next()
+      }else if(req.accountType=="societyController"){
         req.verifierData={
           verifierType:"Society Controller",
           regNumber:req.regNumber,
@@ -67,10 +69,6 @@ exports.checkVerifier=async function(req,res,next){
         req.flash("errors", "You don't have permission to perform that action.")
         req.session.save(() => res.redirect("/"))
       } 
-    }else{
-      req.flash("errors", "You should log-in first to perform that action.")
-      req.session.save(() => res.redirect("/log-in"))
-    }
   }catch{
     req.flash("errors", "There is some problem.")
     req.session.save(() => res.redirect("/"))
@@ -81,7 +79,6 @@ exports.checkVerifier=async function(req,res,next){
 
 exports.checkStudentAccount=async function(req,res,next){
   try{
-    if(req.session.user){
       let studentData=await Student.getStudentDataByRegNumber(req.params.regNumber)
       if(studentData){
         req.studentData={
@@ -91,33 +88,57 @@ exports.checkStudentAccount=async function(req,res,next){
           gender:studentData.gender,
           sessionYear:studentData.sessionYear,
           groupId:studentData.groupId,
+          batchId:studentData.regNumber.slice(0,9),
           departmentName:studentData.departmentName,
           email:studentData.email,
           isVerified:studentData.isVerified,
           verificationType:studentData.verifiedBy.verificationType,
           createdDate:studentData.createdDate,
+          isRejected:false
+        }
+        if(req.studentData.verificationType=="rejected"){
+          req.studentData.isRejected=true
         }
       }else{
-        res.render("404")
+        req.flash("errors", "Student account deleted or you may nodified data!!")
+        req.session.save(() => res.render("404"))
       }
       next()
-    }else{
-      req.flash("errors", "You should log-in first to perform that action.")
-      req.session.save(() => res.redirect("/log-in"))
-    }
   }catch{
     req.flash("errors", "Sorry,there is some problem.Try again later.")
     req.session.save(() => res.redirect("/"))
   }
 }
 
+exports.checkifAlreadyVerified=function(req,res,next){
+  if(!req.studentData.isVerified){
+    next()
+  }else{
+    req.flash("errors", "The account is already verified!")
+    req.session.save(() => res.redirect(`/verification/${req.studentData.verificationType}/${req.studentData.regNumber}/page`))
+  }
+}
+
+exports.checkifAlreadyRejected=function(req,res,next){
+  if(!req.studentData.isRejected){
+    if(req.studentData.verificationType=="case3"){
+      next()
+    }else{
+      req.flash("errors", "Only 'case3' verification type accounts can be rejected!!")
+      req.session.save(() => res.redirect(`/verification/${req.studentData.verificationType}/${req.studentData.regNumber}/page`))
+    }
+  }else{
+    req.flash("errors", "The is already rejected!")
+    req.session.save(() => res.redirect(`/verification/${req.studentData.verificationType}/${req.studentData.regNumber}/page`))
+  }
+}
 
 exports.getVerificationPage=function(req,res){
   res.render("verification-page",{
     studentData:req.studentData
   })
 }
-
+ 
 exports.accountVerified=function(req,res){
   let verifierData=req.verifierData
   let studentData={
@@ -125,7 +146,7 @@ exports.accountVerified=function(req,res){
     userName:req.studentData.userName,
     groupId:req.studentData.groupId,
     departmentCode:req.studentData.regNumber.slice(4,9),
-    batchId:req.studentData.regNumber.slice(0,9),
+    batchId:req.studentData.batchId,
     departmentName:req.studentData.departmentName,
     isVerified:req.studentData.isVerified,
     verificationType:req.studentData.verificationType,
@@ -144,9 +165,19 @@ exports.accountVerified=function(req,res){
 
 exports.accountReject=function(req,res){
   let studentData=req.studentData
-  let verification=new Verification()
+  if(req.body.reason){
+    let verification=new Verification(studentData,req.verifierData)
+    verification.rejectAccount(req.body.reason).then(()=>{
+
+      req.flash("success", "Account has rejected successfully.")
+      req.session.save(() => res.redirect(`/verification/rejected/${studentData.regNumber}/page`))
+    }).catch(()=>{
+      req.flash("errors", "Error occured somewhare. ")
+      req.session.save(() => res.redirect(`/verification/${studentData.verificationType}/${studentData.regNumber}/page`))
+    })
+  }else{
+    req.flash("errors", "You must give the reason of rejection.")
+    req.session.save(() => res.redirect(`/verification/${studentData.verificationType}/${studentData.regNumber}/page`))
+  }
   
-  res.render("verification-page",{
-    studentData:req.studentData
-  })
 }

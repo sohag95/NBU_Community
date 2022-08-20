@@ -3,6 +3,7 @@ const Student = require("./Student")
 const SessionBatch = require("./SessionBatch")
 const Group = require("./Group")
 const Notification = require("./Notification")
+const OfficialUsers = require("./OfficialUsers")
 
 const studentsCollection = require("../db").db().collection("Students")
 const departmentsCollection = require("../db").db().collection("Departments")
@@ -36,6 +37,7 @@ Verification.prototype.validateData=function(){
   console.log("User Data :",this.studentData)
   console.log("Verifier Data :",this.verifierData)
 }
+
 Verification.prototype.markAsVerfiedAccount=function(){
   return new Promise(async (resolve, reject) => { 
     try{
@@ -121,9 +123,12 @@ Verification.prototype.updateRemainAccountsVerificationMessage=function(){
           }
         ]
       }
-      this.remainingRequests.forEach(async(member)=>{
+      // this.remainingRequests.forEach(async(member)=>{
+      //   await Student.updateVerificationMessage(member.regNumber,verifiedBy)
+      // })
+      for( let member in this.remainingRequests){
         await Student.updateVerificationMessage(member.regNumber,verifiedBy)
-      })
+      }
       resolve()
     }catch{
       reject()
@@ -134,9 +139,12 @@ Verification.prototype.updateRemainAccountsVerificationMessage=function(){
 Verification.prototype.pushAllRemainAccountsOnBatch=function(){
   return new Promise(async (resolve, reject) => { 
     try{
-      this.remainingRequests.forEach(async(memberData)=>{
+      for(let memberData in this.remainingRequests){
         await SessionBatch.sentNewStudentRequestOnBatch(this.studentData.batchId,memberData)
-      })
+      }
+      // this.remainingRequests.forEach(async(memberData)=>{
+      //   await SessionBatch.sentNewStudentRequestOnBatch(this.studentData.batchId,memberData)
+      // })
       resolve()
     }catch{
       reject()
@@ -186,7 +194,6 @@ Verification.prototype.case1Verification=function(){
       reject()
     }
   })
-  
 }
 
 
@@ -211,6 +218,7 @@ Verification.prototype.updateNewMemberRequestsFieldOnBatch=function(){
       )
       resolve()
     }catch{
+      console.log("problem from updateNewMemberRequestsFieldOnBatch")
       reject()
     }
   })
@@ -269,6 +277,45 @@ Verification.prototype.verifyStudentAccount=function(){
       }
     }catch{
       reject("error from main function")
+    }
+  })
+}
+
+
+Verification.prototype.markAsRejectedAccount=function(reason){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      await studentsCollection.findOneAndUpdate({regNumber:this.studentData.regNumber},{
+        $set:{
+          "verifiedBy.verificationType":"rejected",
+          "verifiedBy.message":reason,
+          "verifiedBy.rejectedBy":this.verifierData
+        }
+      })
+      await Notification.accountVerifiedToAccountHolder(this.studentData.regNumber)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Verification.prototype.rejectAccount=function(reason){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      console.log("student data :",this.studentData)
+      console.log("verifier data :",this.verifierData)
+      console.log("reason:",reason)
+      //
+      //update account verification data
+      await this.markAsRejectedAccount(reason)
+      //add regNumber to admin's rejectAccount array
+      await OfficialUsers.addRejectedAccountOnAdminAccount(this.studentData.regNumber)
+      //remove account id from source
+      await this.updateNewMemberRequestsFieldOnBatch()
+      resolve()
+    }catch{
+      reject()
     }
   })
 }

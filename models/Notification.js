@@ -3,6 +3,43 @@ const notificationCollection = require("../db").db().collection("Notifications")
 let Notification=function(data){
   this.data=data
 }
+//get unseen notification number
+Notification.getUnseenNotificationNumbers=function(regNumber){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let notificationData=await notificationCollection.findOne({regNumber:regNumber})
+      resolve(notificationData.unseenNotificationNumber)
+    }catch{
+      reject()
+    }
+  })
+}
+
+Notification.getNotificationData=function(regNumber){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let notificationData=await notificationCollection.findOne({regNumber:regNumber})
+      resolve(notificationData)
+    }catch{
+      reject()
+    }
+  })
+}
+Notification.setUnseenNotificationAsZero=function(regNumber){
+  return new Promise(async (resolve, reject) => {
+    try{
+      await notificationCollection.findOneAndUpdate(
+        {regNumber:regNumber},{
+        $set:{
+          unseenNotificationNumber:0
+        }
+      })
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 ///--sending notification section starts
 Notification.sentNotificationToOneUser=function(regNumber,notification){
   return new Promise(async (resolve, reject) => {

@@ -6,7 +6,7 @@
   <div class="col-lg-9 pt-1" >
     <div class="">
       <div style="width: 100%;position: relative;">
-        <img class="department-batch-group-cover-image" src="/images/department-banner/BNGLI.jpg" width="1000" height="250"/>
+        <img class="department-batch-group-cover-image" src="/images/department-banner/BNGLI.jpg" />
         <div class="text-center">
           <h5>
             <strong>
@@ -16,77 +16,145 @@
           </h5>  
         </div>
       </div>  
-      <hr>
     </div>
 
-    <%if(batchDetails.isVoteGoingOn){%>
-      <div class=" mt-2 mb-2" >
-        <div class="path text-secondary" >
-          <strong style="color:#fff;"><h5>New Leader Selection Board :</h5></strong>
-          <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-            <div class="student-room-container" style="width: 100%;">
-                  <strong  class="d-block text-primary">Pole Created Date : <span class="text-secondary"><%=batchDetails.leaderVotingData.votingDates.createdDate%></span> </strong> 
-                  <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary"><%=batchDetails.leaderVotingData.votingDates.nominationLastDate%></span></strong>
-                  <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary"><%=batchDetails.leaderVotingData.votingDates.votingLastDate%></span></strong>
-                  <%if(batchDetails.leaderVotingData.votingDates.resultDate){%>
-                    <hr>
-                    <h6 class="text-warning"><strong>Result has published :</strong></h6>
-                    <strong  class="d-block text-primary">Won Leader : <span class="text-secondary"><%=batchDetails.leaderVotingData.wonLeader.userName%></span></strong> 
-                    <strong  class="d-block text-primary">Result Date : <span class="text-secondary"><%=batchDetails.leaderVotingData.votingDates.resultDate%></span></strong>
-                    <%if(batchDetails.leaderVotingData.wonLeader.regNumber==user.regNumber){%>
-                      <strong  class="d-block text-warning">Congrats!! You have won the election.Accept yourself as a leader.</strong>
-                    <%}else{%>
-                      <strong  class="d-block text-warning">New Leader will be added when he will accept his/her winning.</strong>
-                    <%}%>
-                  <%}%>
-                  <a href="/leader-voting/<%=batchDetails.leaderVotingData.votingPoleId%>/details" class="btn btn-sm btn-block btn-primary">Go to the voting page</a>
-            </div>
-        </div>
-      </div>
-    <%}else{%>  
     <div class=" mt-2 mb-2" >
-      <div class="path text-info" >
-        <strong style="color:#fff;"><h5>Activity Board :</h5></strong>
-        <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-          <div class="col member-container" style="width: 100%;">
-            <%if(!batchDetails.presentActivity){%>
-              <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
-              <a href="/activity/batch/<%=batchDetails.batchId%>/create" class="btn btn-block btn-warning btn-lg">
-                Create New Batch Activity
-              </a>
-              <%}else{%>
-                <%if(checkData.isBatchMember){%>
-                <div class="btn btn-info btn-sm btn-block mr-1">Say the leader to create new activity!!</div>
-                <%}else{%>
-                  <div class="btn btn-info btn-sm btn-block mr-1">There is no activity going on.</div>
+      <div class=" path text-secondary" style="display: flex;    flex-wrap: wrap;    padding: 1.4rem">
+        <!-- activity board starts here -->
+        <%let gotoText=null%>
+        <%let gotoLink=null%>  
+        <div style="display: flex;    flex-wrap: wrap;">
+          <div class="col-lg-6">
+            <strong style="color:#fff;"><h5>Activity Board :</h5></strong>
+            <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+            <div class="member-container d-block" style="height:8rem ;max-height:8rem ;overflow-y: scroll;">
+              <!-- activity details contsiner starts | Voting board + Activity Board-->
+              <%if(batchDetails.isVoteGoingOn){%>
+              <!--Voting related informations starts--> 
+                <%gotoLink="/leader-voting/"+batchDetails.leaderVotingData.votingPoleId+"/details"%>
+                <h5 class="bolder text-warning text-center"><strong>Leader Voting is Going On</strong></h5>
+                <hr style="margin-bottom: .2rem;margin-top: 0rem;">
+                <%if(batchDetails.leaderVotingData.votingDates.resultDate){%>
+                  <%gotoText="See the voting result"%> 
+                  <h6 class="bolder text-warning text-center" style="margin-bottom:0px"><strong>Result has published !!</strong></h6>
+                  <%if(batchDetails.leaderVotingData.wonLeader.regNumber==user.regNumber){%>
+                    <strong  class="d-block text-info text-center">Congrats!! You have won the election.Accept yourself as a leader.</strong>
+                  <%}else{%>
+                    <strong  class="d-block text-info text-center">New Leader will be added when he/she will accept himself/herself as a new leader.</strong>  
+                  <%}%>
+                  <strong  class="d-block text-primary">Won Leader : <span class="text-secondary">Sohag Roy</span></strong> 
+                  <strong  class="d-block text-primary">Result Date : <span class="text-secondary">12/12/2022</span></strong>
+                  <hr>
                 <%}%>
-              <%}%>
-            <%}else{%>
-              <div class="student-room-container" >
+                <strong  class="d-block text-primary">Pole Created Date : <span class="text-secondary">12/12/2022</span> </strong> 
+                <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary">12/12/2022</span></strong>
+                <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary">12/12/2022</span></strong>
+              <!--Voting related informations ends-->
+              <%}else if(batchDetails.presentActivity){%>
+                <%gotoLink="/activity/"+batchDetails.presentActivity.activityId+"/details"%>
+                <!--Activity related informations starts-->  
+                <h5 class="bolder text-warning text-center"><strong>Batch Activity is Going On</strong></h5>
+                <hr style="margin-bottom: .2rem;margin-top: 0rem;">
                 <%if(batchDetails.presentActivity.isTopicByVote && !batchDetails.presentActivity.isVoteCompleted){%>
-                  <div style="width: 100%;">
-                    <%if(batchDetails.batchId==user.regNumber.slice(0,9)){%>
+                  <h6 class="bolder text-warning text-center" style="margin-bottom:0px"><strong>Topic voting is going on!!</strong></h6>
+                  <%if(checkData.isBatchMember){%>
+                    <%gotoText="Give topic vote"%>
                     <strong  class="d-block text-info text-center">Topic for next activity is going to be selected by voting.Please give your vote.</strong>
-                    <%}else{%>
-                      <strong  class="d-block text-info text-center">Topic selection for next activity is going on.</strong> 
-                    <%}%>
-                  </div>
+                  <%}else{%>
+                    <%gotoText="Go to topic voting page"%>
+                    <strong  class="d-block text-info text-center">Topic selection for next activity is going on.</strong> 
+                  <%}%>    
                 <%}else{%>
-                  <div style="width: 100%;">
-                    <h5  class="d-block text-warning "><strong>Running activity -</strong> </h5>
-                    <strong class="d-block">Topic : <%=batchDetails.presentActivity.topic%></strong>
-                    <strong class="d-block">Title : <%=batchDetails.presentActivity.title%></strong>
-                  </div>  
-                <%}%>  
-                <a href="/activity/<%=batchDetails.presentActivity.activityId%>/details">
-                  <div class="btn btn-primary btn-sm btn-block mr-1">Go to activity details</div>
-                </a>    
-              </div>
+                  <%gotoText="Check activity status"%>
+                  <h6  class="d-block bolder text-primary mb-0 text-center"><strong>Activity Short Details </strong> </h6>
+                  <strong class="d-block"><span class="text-primary">Topic :</span> Social Work</strong>
+                  <strong class="d-block"><span class="text-primary">Title :</span> We are going to help poor people.</strong>
+                <%}%> 
+                <!--Activity related informations ends-->
+              <%}else{%>
+                <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
+                  <%gotoText="Create new activity"%>
+                  <%gotoLink="/activity/batch/"+batchDetails.batchId+"/create"%>
+                  <h6  class="d-block bolder text-warning mb-0 text-center"><strong>No Activity available!! </strong> </h6>
+                  <strong  class="d-block text-info text-center">As a present leader you should create an activity.Do some creative activity on your leadership.</strong>
+                <%}else{%>
+                  <%if(checkData.isBatchMember){%>
+                    <h6  class="d-block bolder text-warning mb-0 text-center"><strong>No Activity available!! </strong> </h6>
+                    <div class="d-block text-info text-center">Contact with the present leader to create new activity!!</div>
+                  <%}else{%>
+                    <div class="d-block text-info text-center">There is no activity going on.</div>
+                  <%}%>
+                <%}%>
+              <%}%> 
+              <!-- activity details contsiner ends -->
+            </div>
+            <!-- activity goto link starts -->
+            <%if(gotoLink){%>
+              <a href="<%=gotoLink%>" class="btn btn-block btn-primary"><%=gotoText%> <i class="fas fa-arrow-right"></i></a>
+            <%}else{%>
+              <div class="btn btn-block btn-primary disabled">No activity available!!</div>
             <%}%>
+            
+            <!-- activity goto link ends -->
           </div>
+          <!-- Activity board ends here -->
+          <!-- source notification part starts here -->
+          <div class="col-lg-6">
+            <strong style="color:#fff;"><h5>Notification Board : <%= sourceNotifications.length==5 ? "(last-5)":""%></h5></strong>
+            <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+            <div class="member-container d-block" style="height:8rem ;overflow-y: scroll;">
+              <%if(!sourceNotifications.length){%>
+                <div class="btn btn-block btn-info">No notification available!!</div>
+              <%}else{%>
+              <%sourceNotifications.forEach((notification)=>{%>
+                <div class="notification-container mb-1 not-viewed">
+                  <div style="display: flex;width: 100%;">
+                      <div class="row"  style="width: 100%;">
+                        <div class="col"  style="width: 100%;">
+                          <div style="width: 100%;">
+                            <strong class="bolder"><%=notification.message%></strong>  
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <%if(notification.gotoText){%>
+                    <hr style="padding: 0;margin: 0;">
+                    <div class="ml-1" >
+                      <a class="d-inline bolder text-primary mr-3" href="<%=notification.gotoLink%>"> <%=notification.gotoText%></a>
+                      <strong class="float-right"><i>12/12/12</i></strong> 
+                    </div>
+                  <%}%>
+                </div>
+              <%})%>
+              <%}%>
+            </div>
+            <a href="/source/batch/<%=batchDetails.batchId%>/notifications" class="btn btn-block btn-info">See all notifications <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <!-- source notification part ends here -->
+        <!-- daysOut will be true if present leader selected before 15 days -->
+        <!-- NOT COMPLETED -->
+        <%let daysOut=true%>
+        <%if(checkData.isBatchLeader && !batchDetails.isVoteGoingOn && !batchDetails.presentActivity && daysOut){%>
+            <hr>
+            <div class="member-container mt-2">
+                <div>
+                  <h5 class="bolder text-primary"><strong>New Leader Selection voting pole creation:</strong></h5>
+                  <h6 class="bolder text-warning"><strong>Present leader activation date : </strong><%=batchDetails.presentLeader.createdDate%></h6>
+                  <h6 class="bolder text-danger">[This section will only work/shown after 15 days of present leader selection.Main leader can create voting pole in case he/she is not interested to lead activity]</h6>
+                  <div class="container">
+                    <div class="" style="width: 100%;">
+                      <form action="/create/batch/<%=batchDetails.batchId%>/leader-voting-pole" method="post">
+                        <button class="btn  btn-info btn-sm btn-block">Create New Leader Selection Pole</button>
+                      </form>
+                    </div>
+                  </div> 
+                </div>
+            </div>
+            <%}%>
+            <!-- Leader section ends -->
       </div>
     </div>
-    <%}%>
 
     <hr>
     <%if(checkData.isBatchLeader){%>
@@ -99,7 +167,7 @@
                 <div class="member-container align-items-center">
                   <img class="member-avatar"  src="/images/sohag.jpg" alt="">
                   <div class="name-container">
-                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.newMemberRequests[0].regNumber%>/profile"><%=batchDetails.allMembers[0].userName%></a></strong>
+                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.newMemberRequests[0].regNumber%>/profile"><%=batchDetails.newMemberRequests[0].userName%></a></strong>
                     <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
                   </div>
                   <a class="d-block" href="/verification/case3/<%=batchDetails.newMemberRequests[0].regNumber%>/page">
@@ -285,355 +353,16 @@
           <%}%>
         <%}%>
       </div>
-    <hr>  
-    <%if(checkData.isBatchLeader && !batchDetails.isVoteGoingOn){%>
-      <hr>
-      <div class="student-room-container ml-2 mr-2 mb-1">
-        <h5><strong>New Leader Selection :</strong></h5>
-        <h6 class="text-warning"><strong>Present leader activation date : </strong><%=batchDetails.presentLeader.createdDate%></h6>
-        <h6 class="text-danger">[This section will only work/shown after 15 days of present leader selection.Main leader can create voting pole in case he/she is not interested to lead activity]</h6>
-        <div class="container">
-          <div class="" style="width: 100%;">
-            <form action="/create/batch/<%=batchDetails.batchId%>/leader-voting-pole" method="post">
-              <button class="btn  btn-info btn-sm btn-block">Create New Leader Selection Pole</button>
-            </form>
-          </div>
-        </div> 
-      </div>
-      <hr>
-    <%}%>
+ 
+    
   </div>
   <div class="col-lg notVisibleOnCollapse" >
   </div>
 </div>
-<hr>
+
 
 
 <!-- New design from upper section -->
-
-<div style="display: flex;flex-wrap: wrap;">
-  <div class="col-lg"></div>
-  <div class="col-lg-7" >
-
-    <h5 class="bolder text-primary pt-1 text-center"><strong>Batch Details (<%=batchDetails.batchSessionYear%>)</strong></h5>
-    <div class="single-batch-container">
-      <div class="single-batch-data pb-4">
-        <div style="position: relative;">
-          <img class="single-batch-image"  src="/images/sponsor-banner2.png" alt="">
-          <div class="text-success text-center"><strong>Department Name : <%=batchDetails.departmentName%></strong></div>
-        </div>
-        <hr>
-            <div class="container">
-              <h5><strong>Department :</strong></h5>
-              <ul class="list-group">
-                  <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                    <div>
-                      <span class="d-block"><strong>Departmet Name : </strong></span>
-                      <span class="d-block"><strong>Course Duration : (data didn't taken)</strong>Years</span>  
-                    </div>
-                    <div>
-                      <a href="/department/<%=batchDetails.batchId.slice(4,9)%>/details"  class="btn btn-primary btn-sm">Department Details</a>
-                    </div>
-                  </li>
-              </ul>
-            </div>
-          <%if(batchDetails.isVoteGoingOn){%>
-            <hr>
-            <div class="ml-2 mr-2 mb-1">
-              <h5><strong>New Leader Selection :</strong></h5>
-              <div class="container">
-                <div class="student-room-container" style="width: 100%;">
-                  <strong  class="d-block text-info">Created Date : <%=batchDetails.leaderVotingData.votingDates.createdDate%></strong> 
-                  <strong  class="d-block text-info">Nomination Last Date : <%=batchDetails.leaderVotingData.votingDates.nominationLastDate%></strong>
-                  <strong  class="d-block text-info">Voting Last Date : <%=batchDetails.leaderVotingData.votingDates.votingLastDate%></strong>
-                  <%if(batchDetails.leaderVotingData.votingDates.resultDate){%>
-                    <hr>
-                    <h6 class="text-warning"><strong>Result has published :</strong></h6>
-                    <strong  class="d-block text-info">Won Leader : <%=batchDetails.leaderVotingData.wonLeader.userName%></strong> 
-                    <strong  class="d-block text-info">Result Date : <%=batchDetails.leaderVotingData.votingDates.resultDate%></strong>
-                    <%if(batchDetails.leaderVotingData.wonLeader.regNumber==user.regNumber){%>
-                      <strong  class="d-block text-warning">Congrats!! You have won the election.Accept yourself as a leader.</strong>
-                    <%}else{%>
-                      <strong  class="d-block text-warning">New Leader will be added when he will accept his winning.</strong>
-                    <%}%>
-                  <%}%>
-                  <a href="/leader-voting/<%=batchDetails.leaderVotingData.votingPoleId%>/details" class="btn btn-sm btn-block btn-primary">Go to the voting page</a>
-                </div>
-              </div> 
-            </div>
-            <hr>
-          <%}else{%>
-            <%if(checkData.isBatchLeader){%>
-            <hr>
-            <div class="ml-2 mr-2 mb-1">
-              <h5><strong>New Leader Selection :</strong></h5>
-              <h6 class="text-warning"><strong>Present leader activation date : </strong><%=batchDetails.presentLeader.createdDate%></h6>
-              <h6 class="text-danger">[This section will only work/shown after 15 days of present leader selection.]</h6>
-              <div class="container">
-                <div class="student-room-container" style="width: 100%;">
-                  <form action="/create/batch/<%=batchDetails.batchId%>/leader-voting-pole" method="post">
-                    <button class="btn  btn-info btn-sm btn-block">Create New Leader Selection Pole</button>
-                  </form>
-                </div>
-              </div> 
-            </div>
-            <hr>
-            <%}%>
-          <%}%>
-
-        <h4 class="text-center text-success"><strong>Leader Board</strong> </h4>
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>Activities :</strong></h5>
-          <div class="container">
-            <%if(!batchDetails.presentActivity){%>
-              <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
-              <a href="/activity/batch/<%=batchDetails.batchId%>/create" class="btn btn-block btn-primary btn-lg">
-                Create New Batch Activity
-              </a>
-              <%}else{%>
-                <div class="btn btn-info btn-sm btn-block mr-1">There is no present activity!</div>
-              <%}%>
-            <%}else{%>
-              <div class="student-room-container" >
-                <%if(batchDetails.presentActivity.isTopicByVote && !batchDetails.presentActivity.isVoteCompleted){%>
-                  <div style="width: 100%;">
-                    <strong  class="d-block text-info text-center">Topic for next activity is going to be selected by voting.Please give your vote.</strong>
-                  </div>
-                <%}else{%>
-                  <div style="width: 100%;">
-                    <strong  class="d-block text-info">Running activity -</strong>
-                    <strong class="d-block">Topic : <%=batchDetails.presentActivity.topic%></strong>
-                    <strong class="d-block">Title : <%=batchDetails.presentActivity.title%></strong>
-                  </div>  
-                <%}%>  
-                <a href="/activity/<%=batchDetails.presentActivity.activityId%>/details">
-                  <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
-                </a>    
-              </div>
-            <%}%>
-          </div>
-          <hr>
-          <div class="container">
-            <%if(!batchDetails.previousActivity){%>
-              <div class="btn btn-info btn-lg btn-block mr-1">There is no previous activity!</div>
-            <%}else{%>
-              <div class="student-room-container" >
-                  <div style="width: 100%;">
-                    <strong  class="d-block text-info">Previous activity -</strong>
-                    <strong class="d-block">Topic : <%=batchDetails.previousActivity.topic%></strong>
-                    <strong class="d-block">Title : <%=batchDetails.previousActivity.title%></strong>
-                    <strong class="d-block">Activity Date : <i>12/12/12</i></strong>
-                    <strong class="d-block">Published Date : <i>12/12/12</i></strong>
-                  </div>  
-                  <a href="/activity/<%=batchDetails.previousActivity._id%>/details">
-                    <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
-                  </a>    
-              </div>
-            <%}%>
-          </div>
-          <%if(batchDetails.completedActivities){%>
-            <hr>
-            <div class="container">
-              <h6 class="text-info"><strong>Completed Activities :</strong></h6>
-              <%batchDetails.completedActivities.forEach((activityId,index)=>{%>
-                <a href="/activity/<%=activityId%>/details">
-                  <div class="btn btn-outline-success btn-block btn-sm"><strong>Activity Number : <%=index+1%></strong> </div>
-                </a>
-              <%})%>
-            </div>
-          <%}%>
-        </div>
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>Present Leader :</strong></h5>
-          <%if(batchDetails.presentLeader){%>
-            
-          <div class="student-room-container" style="display: flex;width: 100%;">
-            <div class="mr-2" >
-              <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-            </div>
-            <div class="row"  style="width: 100%;">
-              <div class="col-sm-6"  style="width: 100%;display: flex;">
-                <div style="width: 100%;">
-                  <strong class="d-block">Name : <%=batchDetails.presentLeader.userName%></strong>
-                  <strong class="d-block">Phone Number : <%=batchDetails.presentLeader.phone%></strong>
-                  <a href="/leader-voting/<%=batchDetails.presentLeader.votingPoleId%>/details">
-                    <strong>Go to voting details...</strong>
-                  </a>
-                </div>
-              </div>
-              <div class="col-sm-6 " style="margin: auto;">
-                <div class="float-btn" style="display: flex;">
-                  <a href="/student/<%=batchDetails.presentLeader.regNumber%>/profile">
-                    <%if(checkData.isPresentLeader){%>
-                      <div class="btn btn-warning btn-sm mr-1">Your profile</div>
-                    <%}else{%>
-                      <div class="btn btn-primary btn-sm mr-1">View profile</div>
-                    <%}%>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        <%}else{%>
-          <div class="btn btn-lg btn-block btn-info">There is no present leader available!!</div>
-        <%}%>
-        </div>
-      
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>Previous Leader :</strong></h5>
-          <%if(batchDetails.previousLeader){%>
-          <div class="student-room-container" style="display: flex;width: 100%;">
-            <div class="mr-2" >
-              <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-            </div>
-            <div class="row"  style="width: 100%;">
-              <div class="col-sm-6"  style="width: 100%;display: flex;">
-                <div style="width: 100%;">
-                  <strong class="d-block">Name : <%=batchDetails.previousLeader.userName%></strong>
-                  <strong class="d-block">Phone :  <%=batchDetails.previousLeader.phone%></strong>
-                  <a href="/leader-voting/<%=batchDetails.previousLeader.votingPoleId%>/details">
-                    <strong>Go to voting details...</strong>
-                  </a>
-                </div>
-              </div>
-              <div class="col-sm-6 " style="margin: auto;">
-                <div class="float-btn" style="display: flex;">
-                  <a href="/student/<%=batchDetails.previousLeader.regNumber%>/profile">
-                    <%if(checkData.isPreviousLeader){%>
-                      <div class="btn btn-warning btn-sm mr-1">Your profile</div>
-                    <%}else{%>
-                      <div class="btn btn-primary btn-sm mr-1">View profile</div>
-                    <%}%>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <%}else{%>
-            <div class="btn btn-lg btn-block btn-info">There is no previous leader available!!</div>
-          <%}%>
-        </div>
-
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>All Leaders :</strong></h5>
-          <%if(!batchDetails.allLeaders.length){%>
-            <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>
-          <%}else{%>
-            <%batchDetails.allLeaders.forEach((leader)=>{%>
-              <div class="student-room-container" style="display: flex;width: 100%;">
-                <div class="mr-2" >
-                  <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-                </div>
-                <div class="row"  style="width: 100%;">
-                  <div class="col-sm-6"  style="width: 100%;display: flex;">
-                    <div style="width: 100%;">
-                      <strong class="d-block">Name : <%=leader.userName%></strong>
-                      <%if(checkData.isBatchMember){%>
-                        <strong class="d-block">Phone : <%=leader.phone%></strong>
-                      <%}%>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 " style="margin: auto;">
-                    <div class="float-btn" style="display: flex;">
-                      <a href="/student/<%=leader.regNumber%>/profile">
-                        <%if(user.regNumber==leader.regNumber){%>
-                          <div class="btn btn-warning btn-sm mr-1">Your profile</div>
-                        <%}else{%>
-                          <div class="btn btn-primary btn-sm mr-1">View profile</div>
-                        <%}%>
-                      </a>
-                    </div>
-                  </div>
-                </div>              
-              </div>
-            <%})%>
-          <%}%>
-        </div>
-
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>All Members :</strong></h5>
-          <%if(!batchDetails.allMembers.length){%>
-            <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
-          <%}else{%>
-            <%batchDetails.allMembers.forEach((member)=>{%>
-              <div class="student-room-container" style="display: flex;width: 100%;">
-                <div class="mr-2" >
-                  <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-                </div>
-                <div class="row"  style="width: 100%;">
-                  <div class="col-sm-6"  style="width: 100%;display: flex;">
-                    <div style="width: 100%;">
-                      <strong class="d-block">Name : <%=member.userName%></strong>
-                      <%if(checkData.isBatchMember){%>
-                        <strong class="d-block">Phone : <%=member.phone%></strong>
-                      <%}%>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 " style="margin: auto;">
-                    <div class="float-btn" style="display: flex;">
-                      <a href="/student/<%=member.regNumber%>/profile">
-                        <%if(user.regNumber==member.regNumber){%>
-                          <div class="btn btn-warning btn-sm mr-1">Your profile</div>
-                        <%}else{%>
-                          <div class="btn btn-primary btn-sm mr-1">View profile</div>
-                        <%}%>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <%})%>
-          <%}%>
-        </div>
-
-        <%if(checkData.isBatchLeader){%>
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>All New Membership Requests :</strong></h5>
-          <%if(!batchDetails.newMemberRequests.length){%>
-            <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
-          <%}else{%>
-            <%batchDetails.newMemberRequests.forEach((member)=>{%>
-              <div class="student-room-container" style="display: flex;width: 100%;">
-                <div class="mr-2" >
-                  <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-                </div>
-                <div class="row"  style="width: 100%;">
-                  <div class="col-sm-6"  style="width: 100%;display: flex;">
-                    <div style="width: 100%;">
-                      <strong class="d-block">Name : <%=member.userName%></strong>
-                      <%if(checkData.isBatchMember){%>
-                        <strong class="d-block">Phone : <%=member.phone%></strong>
-                      <%}%>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 " style="margin: auto;">
-                    <div class="float-btn" style="display: flex;">
-                      <a href="/verification/case3/<%=member.regNumber%>/page">
-                        <div class="btn btn-primary btn-sm mr-1">Verify Account</div>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <%})%>
-          <%}%>
-        </div>
-      <%}%>
-
-        </div>
-      </div>
-
-    </div>
-  <div class="col-lg"></div>
-</div>
-
-
 
 <%- include('includes/footer') %>
 

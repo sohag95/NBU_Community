@@ -1,53 +1,45 @@
-const groupsCollection = require("../db").db().collection("Groups")
-const sessionBatchesCollection = require("../db").db().collection("sessionBatches")
-const departmentsCollection = require("../db").db().collection("Departments")
+const sourceNotificationCollection = require("../db").db().collection("Source_Notification")
 
 
 let SourceNotifications=function(data){
   this.data=data
 }
+SourceNotifications.createSourceNotificationTable=function(sourceId){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let fieldData={
+        sourceId:sourceId,
+        notifications:[]
+      }
+      await sourceNotificationCollection.insertOne(fieldData)
+      resolve()
+    }catch{
+      console.log("Error on - createSourceNotificationTable")
+      reject()
+    }
+  })
+}
+
+SourceNotifications.getNotifications= function(sourceId){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let notificationData=await sourceNotificationCollection.findOne({sourceId:sourceId})
+      resolve(notificationData.notifications)
+    }catch{
+      console.log("Error on - getNotifications")
+      reject()
+    }
+  })
+}
 
 //---notification sending section starts----
-SourceNotifications.notificationToBatch=function(batchId,notification){
+
+
+SourceNotifications.sentNotificationToSourceId= function(sourceId,notification){
   return new Promise(async (resolve, reject) => {
     try{
-      await sessionBatchesCollection.updateOne(
-        {batchId:batchId},
-        {
-          $push:{
-            notifications:notification
-        }})
-
-      resolve()
-    }catch{
-      console.log("Error on - notificationToBatch")
-      reject()
-    }
-  })
-}
-
-SourceNotifications.notificationToDepartment=function(departmentCode,notification){
-  return new Promise(async (resolve, reject) => {
-    try{
-      await departmentsCollection.updateOne(
-        {departmentCode:departmentCode},
-        {
-          $push:{
-            notifications:notification
-        }})
-      resolve()
-    }catch{
-      console.log("Error on - notificationToDepartment")
-      reject()
-    }
-  })
-}
-
-SourceNotifications.notificationToGroup=function(groupId,notification){
-  return new Promise(async (resolve, reject) => {
-    try{
-      await groupsCollection.updateOne(
-        {groupId:groupId},
+      await sourceNotificationCollection.updateOne(
+        {sourceId:sourceId},
         {
           $push:{
             notifications:notification
@@ -58,18 +50,6 @@ SourceNotifications.notificationToGroup=function(groupId,notification){
       reject()
     }
   })
-}
-
-SourceNotifications.sentNotification=async function(source,sourceId,notification){
-  if(source=="batch"){
-    await SourceNotifications.notificationToBatch(sourceId,notification)
-  }else if(source=="department"){
-    await SourceNotifications.notificationToDepartment(sourceId,notification)
-  }else if(source=="group"){
-    await SourceNotifications.notificationToGroup(sourceId,notification)
-  }else{
-    console.log("pass")
-  }
 }
 //----notification sending section ends-----
 
@@ -91,7 +71,7 @@ SourceNotifications.activityCreated=function(activityId,sourceId,source,isTopicB
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)
       resolve()
     }catch{
       console.log("Error on - activityCreated")
@@ -110,7 +90,7 @@ SourceNotifications.activityDeleted=function(sourceId,source){
       gotoLink:null,
       createdDate:new Date()
     }
-    SourceNotifications.sentNotification(source,sourceId,notification)
+    SourceNotifications.sentNotificationToSourceId(sourceId,notification)
     resolve()
     }catch{
       console.log("Error on - activityDeleted")
@@ -118,6 +98,7 @@ SourceNotifications.activityDeleted=function(sourceId,source){
     }
   })
 }
+
 //done
 SourceNotifications.activityFieldsUpdated=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
@@ -129,7 +110,7 @@ SourceNotifications.activityFieldsUpdated=function(activityId,sourceId,source){
       gotoLink:gotoLink,
       createdDate:new Date()
     }
-    SourceNotifications.sentNotification(source,sourceId,notification)
+    SourceNotifications.sentNotificationToSourceId(sourceId,notification)
       resolve()
     }catch{
       console.log("Error on - activityDeleted")
@@ -149,7 +130,7 @@ SourceNotifications.topicResultPublished=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)        
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
       resolve()
     }catch{
       console.log("Error on - topicResultPublished")
@@ -169,7 +150,7 @@ SourceNotifications.ActivitySubmitted=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)        
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
       resolve()
     }catch{
       console.log("Error on - ActivitySubmitted")
@@ -188,7 +169,7 @@ SourceNotifications.activityReceived=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)        
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
       resolve()
     }catch{
       console.log("Error on - activityReceived")
@@ -207,7 +188,7 @@ SourceNotifications.editorAssigned=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)       
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
       resolve()
     }catch{
       console.log("Error on - editorAssigned")
@@ -226,7 +207,7 @@ SourceNotifications.activityEdited=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)       
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
       resolve()
     }catch{
       console.log("Error on - activityEdited")
@@ -246,7 +227,7 @@ SourceNotifications.activityPublished=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)    
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)    
       resolve()
     }catch{
       console.log("Error on - activityPublished")
@@ -261,12 +242,12 @@ SourceNotifications.activityLiked=function(activityId,sourceId,source){
     try{
       let gotoLink="/activity/"+activityId+"/details"
       let notification={
-        message:"Some one liked one of the activities.",
+        message:"Someone liked one of the activities.",
         gotoText:"See the activity",
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)    
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)    
       resolve()
     }catch{
       console.log("Error on - activityLiked")
@@ -279,14 +260,14 @@ SourceNotifications.activityLiked=function(activityId,sourceId,source){
 SourceNotifications.commentOnActivity=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink=""
+      let gotoLink="/activity/"+activityId+"/details"
       let notification={
-        message:"Someone comment on one of the activities.",
+        message:"Someone commented on one of the activities.",
         gotoText:"See the activity",
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)      
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)      
       resolve()
     }catch{
       console.log("Error on - commentOnActivity")
@@ -306,7 +287,7 @@ SourceNotifications.dislikedActivity=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)       
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
       resolve()
     }catch{
       console.log("Error on - dislikedActivity")
@@ -326,7 +307,7 @@ SourceNotifications.leaderVotingGoingOn=function(poleId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)        
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
       resolve()
     }catch{
       console.log("Error on -leaderVotingGoingOn ")
@@ -346,7 +327,7 @@ SourceNotifications.leaderResultPublished=function(poleId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotification(source,sourceId,notification)       
+      SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
       resolve()
     }catch{
       console.log("Error on -leaderResultPublished ")

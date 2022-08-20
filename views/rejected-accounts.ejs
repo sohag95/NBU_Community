@@ -1,0 +1,46 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+  <div class="col-lg-9 pt-1" >
+    <div class="">
+      <div style="width: 100%;position: relative;">
+        <img class="home-cover-image" src="/images/sponsor-banner.png"/>
+        <div>
+          <img class="home-profile-image" src="/images/sohag.jpg" />
+          <div>
+            <h5 class="bolder text-secondary d-inline"><strong>Sohag Roy</strong></h5>
+            <h5 class="bolder d-inline float-right"><i class="fas fa-user"></i> Admin</h5>
+          </div>  
+         </div>
+      </div> 
+      <hr>
+        
+    </div>
+    <div class="item-container">
+    <h4 class="bolder"><strong>Rejected accounts (<%=rejectedAccounts.length%>)</strong></h4>
+    <%if(!rejectedAccounts.length){%>
+      <div class="btn btn-lg btn-block btn-info">No rejected account available!!</div>
+    <%}else{%>
+      <%rejectedAccounts.forEach((account,index)=>{%>
+        <div class="student-room-container mb-2">
+          <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
+          <strong class="d-block">Registration Number : <i><%=account.regNumber%></i> </strong>
+          <strong class="d-block">User Name : <i><%=account.userName%></i> </strong>
+          <strong class="d-block">Department Name : <%=account.departmentName%></strong>
+          <h6 class="bolder text-warning"><strong>Rejected By : </strong><a href="/student/<%=account.verifiedBy.rejectedBy.regNumber%>/profile"><%=account.verifiedBy.rejectedBy.userName%></a></h6>
+          <p><strong>Reason : </strong><%=account.verifiedBy.message%></p>
+          <a href="/verification/rejected/<%=account.regNumber%>/page" class="btn btn-block btn-sm btn-info">
+            Go to verification page
+          </a>
+        </div>
+      <%})%>
+    <%}%>
+    
+    </div>
+  </div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+</div>
+<%- include('includes/footer') %>

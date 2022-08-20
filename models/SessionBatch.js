@@ -1,6 +1,7 @@
 const Department = require("./Department")
 const IdCreation = require("./IdCreation")
 const OtherOperations = require("./OtherOperations")
+const SourceNotifications = require("./SourceNotifications")
 const sessionBatchesCollection = require("../db").db().collection("sessionBatches")
 
 let SessionBatch=function(data){
@@ -66,6 +67,7 @@ SessionBatch.prototype.createSessionBatch=function(){
       await this.checkBatch()
       if(!this.created){
         await sessionBatchesCollection.insertOne(this.data)
+        await SourceNotifications.createSourceNotificationTable(this.data.batchId)
         resolve()
       }else{
         reject("This batch has been created already!!")

@@ -1,3 +1,4 @@
+const Notification = require("../models/Notification")
 const Student = require("../models/Student")
 
 
@@ -18,9 +19,21 @@ exports.studentMustBeLoggedIn=function(req,res,next){
   }
 }
 
-exports.getStudentHomePage=function(req,res){
-  console.log("Reg number :",req.regNumber)
-  res.render("student-home-page")
+exports.getStudentHomePage=async function(req,res){
+  try{
+    //update notification number
+    let unseenNotifications=await Notification.getUnseenNotificationNumbers(req.regNumber)
+    if(req.session.user.otherData.unseenNotifications!=unseenNotifications){
+      req.session.user.otherData.unseenNotifications=unseenNotifications
+    }
+    //--------------------------
+    console.log("Reg number :",req.regNumber)
+    req.session.save(()=>{
+      res.render("student-home-page")
+    })
+  }catch{
+    res.render("404")
+  }
 }
 
 

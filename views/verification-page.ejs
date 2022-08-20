@@ -36,7 +36,16 @@
       </div>
     </div>
     <hr>
-    <%if(studentData.isVerified){%>
+    <%if(studentData.isRejected){%>
+      <%if(user.accountType=="admin"){%>
+        <form action="/delete/<%=studentData.regNumber%>/account" method="post" class="d-block">
+          <h5 class="text-warning"><strong>This account has been rejected.As you are the admin you have the parmission to delete the account parmanently!!</strong></h5>
+          <button class="btn btn-block btn-md btn-danger">Delete account parmanently</button>
+        </form>
+      <%}else{%>
+        <div class="btn btn-danger btn-lg btn-block">Account has been rejected!!</div>
+      <%}%>
+    <%}else if(studentData.isVerified){%>
       <div class="btn btn-success btn-lg btn-block">Account Verified!!</div>
     <%}else{%>
       <div style="display: flex;flex-wrap: wrap;" class>
@@ -45,7 +54,7 @@
           <p>
             <h5>
               <strong>
-                Me,Sohag Roy as a verifier declaring that all data provided by the user is correct.So I am concedering this account as verified.
+                Me,<%=user.userName%> as a verifier declaring that all data provided by the user is correct.So I am concedering this account as verified.
               </strong>
             </h5>
           </p>
@@ -56,21 +65,36 @@
           </div>
         </div>
       </div>
-      <hr>
-      <div style="display: flex;flex-wrap: wrap;">
-        <div class="col path" style="padding: 1rem;color: #fff;">
-          <p>
-            <h5>
-              <strong>
-                Me,Sohag Roy as a verifier declaring that all data provided by the user is not correct.So I am rejecting this account.
-              </strong>
-            </h5>
-          </p>
-          <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/reject" method="post" class="d-block">
-            <button class="btn btn-block btn-md btn-danger">Rejected</button>
-          </form>
+      <%if(studentData.verificationType=="case3"){%>
+        <hr>
+        <div style="display: flex;flex-wrap: wrap;">
+          <div class="col path" style="padding: 1rem;color: #fff;">
+            <p>
+              <h5>
+                <strong>
+                  Me,<%=user.userName%> as a verifier declaring that all data provided by the user is not correct.So I am rejecting this account.
+                </strong>
+              </h5>
+            </p>
+            <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/reject" method="post" class="d-block">
+              <input name="reason" class="form-control form-control-lg space" type="text" placeholder="Write the reason." required autocomplete="off">
+              <button class="btn btn-block btn-md btn-danger">Rejected</button>
+            </form>
+          </div>
         </div>
-      </div>
+      <%}else{%>
+        <div >
+          <div class="col path" style="padding: 1rem;color: #fff;">
+            <p>
+              <h5>
+                <strong>
+                  Only verification type : case3 accounts can be rejected.If you have find anything wrong about this account ,please do nothing with this account.
+                </strong>
+              </h5>
+            </p>
+          </div>
+        </div>
+      <%}%>
     <%}%>
   </div>
   <div class="col-lg notVisibleOnCollapse" >

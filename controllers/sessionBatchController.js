@@ -2,6 +2,7 @@ const Department = require('../models/Department')
 const Group=require('../models/Group')
 const Activity=require('../models/Activity')
 const SessionBatch=require('../models/SessionBatch')
+const SourceNotifications = require('../models/SourceNotifications')
 
 exports.createNewSessionBatch=async function(req,res){
   try{
@@ -52,6 +53,14 @@ exports.isSessionBatchExists = function (req, res, next) {
 
 exports.getSessionBatchDetailsPage =async function (req, res) {
   try{
+    // get sourceNotifications here
+    let sourceNotifications=await SourceNotifications.getNotifications(req.batchDetails.batchId)
+    let totalNotifications=sourceNotifications.length
+    if(totalNotifications>5){
+      sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
+    }
+    sourceNotifications=sourceNotifications.reverse()
+    //------------------------------
     let batchDetails=req.batchDetails
     let previousActivityData=null
     let checkData={
@@ -108,10 +117,12 @@ exports.getSessionBatchDetailsPage =async function (req, res) {
     console.log("Previous activity data:",previousActivityData)
     console.log("batch Details :",batchDetails)
     console.log("checkData: ",checkData)
+    console.log("Source Notifications:",sourceNotifications)
     res.render('get-batch-details-page',{
       batchDetails:batchDetails,
       previousActivityData:previousActivityData,
       checkData:checkData,
+      sourceNotifications:sourceNotifications
     })
   }catch{
     res.render('404')

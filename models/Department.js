@@ -2,6 +2,7 @@
 const Group = require("./Group")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
+const SourceNotifications = require("./SourceNotifications")
 const departmentsCollection = require("../db").db().collection("Departments")
 
 let Department=function(data,groupId){
@@ -55,6 +56,7 @@ Department.prototype.createDepartment=function(){
     try{
       this.prepareDepartmentDataField()
       await departmentsCollection.insertOne(this.data)
+      await SourceNotifications.createSourceNotificationTable(this.data.departmentCode)
       resolve()
     }catch{
       reject()

@@ -199,7 +199,18 @@
               </div>
               <div class="text-center">
                 <a href="/notifications">
-                  <span><i class="fas fa-bell fa-lg"></i></span>
+                  <span>
+                    <i class="fas fa-bell fa-lg"></i>
+                    <%if(user.otherData.unseenNotifications!=0){%>
+                      <span  class="badge badge-pill badge-success message-icon-badge">
+                        <%if(user.otherData.unseenNotifications<10){%>
+                          <%=user.otherData.unseenNotifications%>
+                        <%}else{%>
+                          9+
+                        <%}%>
+                      </span>
+                    <%}%>
+                  </span>
                   <span class="d-block menu-text" >Notifications</span>
                   </a>
               </div> 
