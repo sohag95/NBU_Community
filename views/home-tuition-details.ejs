@@ -1,0 +1,150 @@
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+  <div class="col-lg-9 pt-1" >
+    <div class="">
+      <div style="width: 100%;position: relative;">
+        <img class="cover-image" style="height: 250px;" src="/images/home-tuition.png" width="1000" height="200"/>
+      </div>
+    </div>
+    <hr>
+    <%if(!tutorDetails.tutorData && isVisitorOwner){%>
+      <%- include('includes/designs/home-tuition-enrolling-form') %>
+    <%}else{%>
+      <!-- section for :  enrolled as home tutor starts-->
+      <%if(isVisitorOwner){%>
+        <div class="item-container text-center">
+          <%if(tutorDetails.tutorData.isRunning){%>
+            <div>
+              <h5 class=" bolder text-primary "><strong>You are enrolled as a home tutor!!</strong></h5>
+              <h4 class="bolder text-warning "><strong>You are willing to teach <span class="bolder"><%=tutorDetails.tutorData.willingToTeach%></span> level students.</strong></h4>
+              <hr>
+              <i class=" d-block text-danger ">[If you are not available for home-tuition,please keep off your home-tutor option.So that your name does not appear on home-tutor searching.]<strong></strong></i>
+              <form action="/stop-as-home-tutor" method="post">
+                <button class="btn btn-secondary btn-sm ">Click here to stop as home-tutor</button>
+              </form>
+              </div> 
+          <%}else{%>
+            <div>
+              <h4 class=" bolder text-primary "><strong>Your home-tutor option is off!!</strong></h4>
+              <hr>
+              <i class=" d-block text-danger ">[If you are available for home-tuition,please keep on your home-tutor option.So that your name appears on home-tutor searching.]<strong></strong></i>
+              <form action="/start-as-home-tutor" method="post">
+                <button class="btn btn-warning btn-lg mt-1"><strong>Click here to start as a home-tutor</strong> </button>
+              </form>
+            </div>
+          <%}%>
+        </div>
+      <%}else{%>
+        <div class="colored-container text-center d-flex">
+          <div class="text-center mr-2" style="position: relative;">
+            <img class="search-batch-image"  src="/images/sohag.jpg" alt="">
+          </div>
+          <div>
+            <h4 class="text-warning"><strong>You can contact with <%=tutorDetails.userName%> on <%=tutorDetails.gender=="male"?"his":"her"%> given <%=tutorDetails.tutorData.contact.type=="phone"?"phone number.":"email id."%></strong></h4>
+            <h5><strong><%=tutorDetails.tutorData.contact.type=="phone"?"Phone Number ":"Email Id "%> : <span><%=tutorDetails.tutorData.contact.id%></span></strong></h5>    
+            <hr>
+            <a href="/student/<%=tutorDetails.regNumber%>/profile">
+              <div class="btn btn-sm btn-info mt-2">Visite <%=tutorDetails.userName%>'s Profile</div>
+            </a>
+        </div>
+        </div>
+      <%}%>
+      
+      <hr>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="item-container mb-2">
+            <strong><p>Personal Info</p></strong>
+            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+            <p><i class="fas fa-home"></i> <strong> Name - </strong><span class="text-capitalize"><%=tutorDetails.userName%></span></p>
+            <p><i class="fas fa-graduation-cap"></i><strong> Department  - </strong><%=tutorDetails.tutorData.departmentName%></p>
+            <%if(!isVisitorOwner){%>
+              <p><i class="fas fa-graduation-cap"></i><strong> Session Batch  - </strong> 20<%=tutorDetails.regNumber.slice(0,2)%>-20<%=tutorDetails.regNumber.slice(2,4)%></p>
+            <%}%>
+            <p><i class="fas fa-graduation-cap"></i><strong> Stream - </strong><span class="text-capitalize"><%=tutorDetails.tutorData.stream%></span></p>
+            <p><i class="fas fa-graduation-cap"></i><strong> Gender - </strong><span class="text-capitalize"><%=tutorDetails.gender%></span></p>
+            <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%=tutorDetails.tutorData.createdDate%></p>    
+         </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="item-container mb-2">
+            <div class="d-flex">
+              <strong class="d-block" style="width: 100%;"><p>Provided Info</p></strong>
+              <%if(isVisitorOwner){%>
+                <span type="button" class="d-block float-right text-primary" ><a href="/edit-tutor-personal-info"><i class="fas fa-edit"></i></a> </span>
+              <%}%>
+            </div>
+            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+            <p><i class="fas fa-home"></i> <strong> Madhyamik Parcentage - </strong><%=tutorDetails.tutorData.gradeParcentage.secondary%>%</p>
+            <p><i class="fas fa-home"></i> <strong> H.S Parcentage - </strong><%=tutorDetails.tutorData.gradeParcentage.higherSecondary%>%</p>
+            <p><i class="fas fa-clock"></i><strong> Graduation Parcentage - </strong><%=tutorDetails.tutorData.gradeParcentage.graduation%>%</p>    
+            <p><i class="fas fa-home"></i> <strong> Is Experienced - </strong><%=tutorDetails.tutorData.isExperienced%></p>
+            <%if(isVisitorOwner){%>
+              <p><i class="fas fa-home"></i> <strong> Contact (<%=tutorDetails.tutorData.contact.type%>) - </strong><%=tutorDetails.tutorData.contact.id%></p>
+            <%}else{%>
+              <p><i class="fas fa-clock"></i><strong> Last Data Edited On - </strong><%=tutorDetails.tutorData.lastEditDate%></p>    
+              <p ><i class="text-danger">[Tutor's given academic parcentage are not verified.Please check before appoint <%=tutorDetails.gender=="male"?"him":"her"%> as a home tutor.]</i></p>
+            <%}%>
+          </div>
+        </div>
+      </div>
+      <hr>
+
+      <div>
+        <div class="col colored-container" >
+          <div class="d-flex">
+            <strong class="d-block" style="width: 100%;"><p><%=isVisitorOwner?"About Self":"Tutor's Say"%> </p></strong>
+            <!-- edit section starts -->
+            <%if(isVisitorOwner){%>
+              <span type="button" class="d-block float-right text-primary" data-toggle="modal" data-target="#exampleModalCenter"><strong class="d-block"><i class="fas fa-edit"></i></strong></span>
+            <%}%>
+          </div>    
+          <!-- Modal -->
+              <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Edit About Yourself</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="/update-about-self" method="post">
+                        <div class="form-group" style="text-align: left;">
+                          <h6 for="about-self-body" class="text-muted mb-1"><strong>Edit about yourself :-</strong></h6>
+                          <textarea  name="aboutSelf" id="about-self-body" class="body-content small-textarea form-control" type="text" placeholder="Write something about yourself."><%=tutorDetails.tutorData.aboutSelf%></textarea>
+                        </div>
+                        <div style="text-align: left;">
+                          <button class="btn btn-success btn-sm ">Submit</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          <!-- edit section ends -->
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">  
+          <p><%=tutorDetails.tutorData.aboutSelf%></p>
+        </div>
+      </div>
+    <%}%>
+    
+   
+      
+  </div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+</div>
+
+
+<!-- new verification  design till upper section -->
+
+<%- include('includes/footer') %>

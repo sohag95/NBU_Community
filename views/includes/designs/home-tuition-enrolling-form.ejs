@@ -1,0 +1,82 @@
+<!-- section for : not enrolled as home tutor starts-->
+<h5 class="bolder text-warning text-center"><strong>You are not enrolled as a home-tutor.If you are interested to become a home-tutor please fill up the belowed form and submit.</strong></h5>
+<hr>
+<div class="item-container mb-2 ">   
+  <h4 class="bolder text-center">Enrolling Home Tuition Form</h4>
+  <form action="/enroll-as-home-tutor" method="POST" id="home-tuition-form">
+      <strong class="text-primary"> Academic related data</strong>
+      <i class="d-block text-warning">[Guardian may check marksheets during appointed.]</i>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="secondaryResult" class="text-muted"><small>Madhyamik Parcentage</small></label>
+            <input name="secondaryParcentage" id="secondaryResult" class="form-control form-control-lg " type="number" placeholder="Enter parcentage" required autocomplete="off" />
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="higherSecondary" class="text-muted"><small>HS Parcentage</small></label>
+            <input name="higherSecondaryParcentage" id="higherSecondary" class="form-control form-control-lg " type="number" placeholder="Enter parcentage" required autocomplete="off" />
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="graduation" class="text-muted"><small>Graduation Parcentage</small></label>
+            <input name="graduationParcentage" id="graduation" class="form-control form-control-lg " type="number" placeholder="Enter parcentage" required autocomplete="off" />
+          </div>
+        </div>
+      </div>
+    
+      <div class="form-group">
+        <label for="isExperienced" class="text-muted mb-1"><small>Are you experienced in home tuition?</small></label>
+        <select name="isExperienced" id="isExperienced" class="form-control form-control-lg"  form="home-tuition-form">
+          <option value="No">No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+
+      <strong class="text-primary mt-1">Tuition related data</strong>
+      <i class="d-block text-warning">[According to your choosen classes,your name will appear on home-tutor searching process.]</i>
+      
+      <div class="form-group">
+        <label for="selectedClass" class="text-muted mb-1"><small>Willing to teach</small></label>
+        <select name="selectedClass" id="selectedClass" class="form-control form-control-lg"  form="home-tuition-form">
+          <option value="1-10">Class 1-10</option>
+          <option value="11-12">Class 11-12</option>
+          <option value="graduation">Graduation</option>
+          <option value="any">Any</option>
+        </select>
+      </div>
+
+      <strong class="text-primary">Contact related data</strong>
+      <i class="d-block text-warning">[Given contact numbers will be publically available.Guardian will contact on given contact number/id.]</i>
+      
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="contactType" class="text-muted mb-1"><small>Select contact type</small></label>
+            <select name="contactType" id="contactType" class="form-control form-control-lg"  form="home-tuition-form">
+              <option value="phone">Phone</option>
+              <option value="email">Email</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="contactId" class="text-muted"><small>Contact number/Id</small></label>
+            <input name="contactId" id="contactId" class="form-control form-control-lg " type="text" placeholder="Enter number/Id" required autocomplete="off" />
+          </div>
+        </div>
+      </div>
+      <strong class="text-primary">Self related data</strong>
+      <div class="form-group">
+        <label for="about-self-body" class="text-muted mb-1"><small>Write about yourself :-</small></label>
+        <textarea  name="aboutSelf" id="about-self-body" class="body-content small-textarea form-control" type="text" placeholder="Write something about yourself."></textarea>
+      </div>
+    <div style="text-align: center;">
+        <button class="btn btn-info btn-lg ">Submit & get enrolled as home-tutor</button>
+    </div>
+  </form>
+  </div>
+<!-- section for : not enrolled as home tutor ends-->
+<hr>

@@ -1,0 +1,147 @@
+<%- include('includes/header') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg-1"></div>
+  <div class="col-lg-10">
+    <h4 class="bolder mt-3"><span class="bolder"><%=tutors.length%></span> <%=tutors.length>1?'tutors':'tutor'%> found for <span class="text-warning"><%=searchedData.class%></span>  level students in <span class="text-info"><%=searchedData.stream%></span></h4> 
+    <h5 style="color: #0f7c90;font-weight: 600;">Get a good teacher, build a great career!!</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-3" >
+        <div class="mb-2">
+          <h5 class="bolder text-primary">Suggessions :</h5>
+        </div>
+          <form action="/search-home-tutor" method="POST">
+            <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+            <input type="hidden" name="selectedStream" value="science">
+            <button class="btn btn-success btn-block mb-1"><i class="fas fa-search"></i> Search for Science Tutor </button>
+          </form>
+          
+          
+        <div class="notVisibleOnCollapse mb-3">
+          <div class="mb-2">
+            <strong class="bolder text-primary">Search tutor in other subjects :</strong>
+          </div>
+          <form action="/search-home-tutor" method="post">
+            <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+            <input type="hidden" name="selectedStream" value="Computer Science">
+            <button class="btn btn-outline-secondary btn-block">Computer Science</button>
+          </form>
+          <form action="/search-home-tutor" method="post">
+            <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+            <input type="hidden" name="selectedStream" value="Physics">
+            <button class="btn btn-outline-secondary btn-block">Physics</button>
+          </form>
+          <form action="/search-home-tutor" method="post">
+            <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+            <input type="hidden" name="selectedStream" value="Chemistry">
+            <button class="btn btn-outline-secondary btn-block">Chemistry</button>
+          </form>
+          <form action="/search-home-tutor" method="post">
+            <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+            <input type="hidden" name="selectedStream" value="Mathematics">
+            <button class="btn btn-outline-secondary btn-block">Mathematics</button>
+          </form>
+          <form action="/search-home-tutor" method="post">
+            <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+            <input type="hidden" name="selectedStream" value="English">
+            <button class="btn btn-outline-secondary btn-block">English</button>
+          </form>
+          </div>
+        <div class="visibleItemsOnCollapse">
+          <div id="accordion">
+            <div class="card">
+              <div class="" id="headingOne">
+                <h5 class="mb-0">
+                  <button class="btn btn-secondary btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Search tutor in other subjects <i class="fas fa-caret-square-down"></i>
+                  </button>
+                </h5>
+              </div>
+          
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body" style="background-color: #f0f2f5;">
+                  <form action="/search-home-tutor" method="post" id="1">
+                    <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+                    <input type="hidden" name="selectedStream" value="Computer Science">
+                    <button class="btn btn-outline-secondary btn-block">Computer Science</button>
+                  </form>
+                  <form action="/search-home-tutor" method="post">
+                    <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+                    <input type="hidden" name="selectedStream" value="Physics">
+                    <button class="btn btn-outline-secondary btn-block">Physics</button>
+                  </form>
+                  <form action="/search-home-tutor" method="post">
+                    <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+                    <input type="hidden" name="selectedStream" value="Chemistry">
+                    <button class="btn btn-outline-secondary btn-block">Chemistry</button>
+                  </form>
+                  <form action="/search-home-tutor" method="post">
+                    <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+                    <input type="hidden" name="selectedStream" value="Mathematics">
+                    <button class="btn btn-outline-secondary btn-block">Mathematics</button>
+                  </form>
+                  <form action="/search-home-tutor" method="post">
+                    <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
+                    <input type="hidden" name="selectedStream" value="English">
+                    <button class="btn btn-outline-secondary btn-block">English</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <div class="col-md-9 mb-2" >
+        <h5><strong class=" bolder text-primary">Results :</strong></h5>
+        <%if(!tutors.length){%>
+          <div class="path text-center" style="padding: 1rem;">
+            <div class="col" style="width: 100%; color: #fff;">
+                <div>
+                  <strong class="text-center">No home-tutor found according to your searched data!!</strong>
+                </div>
+            </div>
+          </div>
+        <%}else{%>
+          <%tutors.forEach((tutor)=>{%>
+            <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #fff;">
+              <div class="text-center" style="position: relative;">
+                <img class="search-batch-image"  src="/images/sohag.jpg" alt="">
+                <div class="batch-no notVisibleOnCollapse">Home-tutor</div>
+              </div>
+                <div>
+                    <div class="ml-2" style="color: #3c3b37;font-weight: 400;">
+                      <span class="d-block" style="color: #3c3b37;font-weight: 700;"><strong>Tutor : </strong> <%=tutor.userName%> <i>(<%=tutor.gender%>)</i>| <strong><%=tutor.departmentName%> | Batch - (20<%=tutor.regNumber.slice(0,2)%>-20<%=tutor.regNumber.slice(2,4)%>)</strong> </span>
+                      <div class="d-block">
+                        <span class="d-block"><strong><i>Madhyamik Parcentage : <%=tutor.gradeParcentage.secondary%>%</i></strong>  </span>
+                        <span class="d-block"><strong><i>H.S. Parcentage : <%=tutor.gradeParcentage.higherSecondary%>%</i></strong></span>
+                        <span class="d-block"><strong><i>Grduation Parcentage : <%=tutor.gradeParcentage.graduation%>%</i></strong> </span>
+                        <i class="text-secondary">Tutor is willing to teach <strong class="text-warning"><%=tutor.willingToTeach%></strong> level students</i>
+                      </div>
+                    </div>
+                    <div class="ml-2" >
+                      <a href="/tutor/<%=tutor.regNumber%>/details">
+                        <div class="btn btn-info btn-sm mr-1">Tutor Details <i class="fas fa-arrow-right"></i></div>
+                      </a>
+                    </div>
+                </div>
+            </div>
+          <%})%>
+        <%}%>
+        
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-1"></div>
+</div>
+
+
+<%- include('includes/footer') %>
+
+
+
+
+
+
+

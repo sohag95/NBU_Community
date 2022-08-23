@@ -75,7 +75,7 @@ OtherOperations.getDepartmentCodesFromGroupId=function(groupId){
     sourceMember=true
   }
  }else if(source=="group"){
-   //i have to check this portion later wheather it works or not
+  //i have to check this portion later wheather it works or not
   let departmentCodes=OtherOperations.getDepartmentCodesFromGroupId(sourceId)
   if(departmentCodes.includes(regNumber.slice(4,9))){
     sourceMember=true
@@ -107,8 +107,6 @@ OtherOperations.getVotingResultData=function(votingDetails,from){
   //     votes:1
   //   }
   // ]
-  
- 
   let voters=votingDetails.voters
   let result=[]
   if(from=="topicResult"){
@@ -163,11 +161,9 @@ OtherOperations.checkIfAllNominationTakerVotedOrNot=function(votingDetails){
       }
     })
 
- 
   return nominatorVoter
 
 }
-
 
 OtherOperations.getActivityLeadersRegNumbers=function(leaders){
   let leadRegNumbers=[]
@@ -184,5 +180,21 @@ OtherOperations.getParticipantsRegNumbers=function(activityParticipants){
   })
   return participantsRegNumbers
 }
+
+OtherOperations.getTutorStream=function(departmentName){
+  let scienceGroup=["Computer Science","Computer Application","Physics","Chemistry","Mathematics"]
+  let artsGroup=["History","English","Bengali","Geography"]
+  let commartsGroup=["Accounting"]
+  if(scienceGroup.includes(departmentName)){
+    return "science"
+  }else if(artsGroup.includes(departmentName)){
+    return "arts"
+  }else if(commartsGroup.includes(departmentName)){
+    return "commarts"
+  }else{
+    return false
+  }
+ }
+
 
  module.exports=OtherOperations

@@ -17,6 +17,7 @@ const votingController=require('./controllers/votingController')
 const checkingController=require('./controllers/checkingController')
 const notificationController=require('./controllers/notificationController')
 const reportController=require('./controllers/reportController')
+const homeTutorController=require('./controllers/homeTutorController')
       
 //####################################
 router.get('/test',userController.test)
@@ -103,7 +104,7 @@ router.post("/video-editing/:id/completed",officialUserController.videoEditorMus
 router.post("/vote/:activityId/:id/topic",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoter,votingController.giveTopicVote)
 router.post("/vote/:activityId/:id/declare-topic-result",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.checkTopicVoteResultDeclarableOrNot,votingController.declareTopicResult)
 router.get("/topic-voting/:id/details",userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.topicVotingDetailsPage)
-//like,dislike,comment routers
+//like,dislike,comment on activity routers
 router.post("/activity/:id/like",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.ifActivityAlreadyLiked,activityController.likeActivity)
 router.post("/activity/:id/dislike",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.ifActivityAlreadyLiked,activityController.dislikeActivity)
 router.post("/activity/:id/comment",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,activityController.commentOnActivity)
@@ -120,6 +121,18 @@ router.post("/leader-voting/:id/accept-as-leader",studentController.studentMustB
 
 //Reporting related router
 router.post("/sent-report",studentController.studentMustBeLoggedIn,reportController.checkReportType,reportController.checkIfAlreadyReported,reportController.sentReport)
+
+//########################
+//Home tuition related routers
+router.get("/tutor/:regNumber/details",userController.ifUserLoggedIn,homeTutorController.checkIfHomeTutorPresent,homeTutorController.getHomeTutorDetailsPage)
+router.post("/enroll-as-home-tutor",studentController.studentMustBeLoggedIn,homeTutorController.checkIfAlreadyEnrolled,homeTutorController.enrollAsHomeTutor)
+router.post("/stop-as-home-tutor",studentController.studentMustBeLoggedIn,homeTutorController.checkIfHomeTutorEnrolled,homeTutorController.stopAsHomeTutor)
+router.post("/start-as-home-tutor",studentController.studentMustBeLoggedIn,homeTutorController.checkIfHomeTutorEnrolled,homeTutorController.startAsHomeTutor)
+router.post("/update-about-self",studentController.studentMustBeLoggedIn,homeTutorController.checkIfHomeTutorEnrolled,homeTutorController.updateAboutSelfInfo)
+router.get("/edit-tutor-personal-info",studentController.studentMustBeLoggedIn,homeTutorController.checkIfHomeTutorEnrolled,homeTutorController.getTutorParsonalInfoEditPage)
+router.post("/update-tutor-personal-info",studentController.studentMustBeLoggedIn,homeTutorController.checkIfHomeTutorEnrolled,homeTutorController.updateTutorParsonalInfo)
+router.get("/search-home-tutor",userController.ifUserLoggedIn,homeTutorController.getTutorSearchPage)
+router.post("/search-home-tutor",homeTutorController.searchHomeTutor)
 
 //Logging out router
 router.post("/loggingOut", userController.loggingOut)

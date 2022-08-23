@@ -59,11 +59,9 @@
         </div>
       </a>
         <hr>
-        <a href="">
-          <div class="side-item">
-              <form action="/loggingOut" method="POST" class="d-inline">
-                <button class="btn  btn-primary"><i class="fas fa-sign-out-alt fa-lg"></i> Sign Out </button>
-              </form>
+        <a href="/tutor/<%=user.regNumber%>/details">
+          <div class="btn btn-secondary btn-block mt-2">
+            <%=user.otherData.isHomeTutor?"Handle Home Tuition Details":"Enroll as home tutor"%>
           </div>
         </a>
         <hr>

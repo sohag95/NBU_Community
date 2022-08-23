@@ -49,7 +49,8 @@ exports.createNewAccount = function (req, res) {
         isVerified:false,
         groupId:student.data.groupId,
         verifiedBy:student.data.verifiedBy,
-        emailNotSet:true
+        emailNotSet:true,
+        isHomeTutor:false
       }
       console.log("Other data :",otherData)
       req.flash("success", "Successfully created your account.Welcome to NBU community!!")

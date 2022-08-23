@@ -116,6 +116,7 @@ let Student=function(regData,batchData,communityController){
       isVerified:false,
       verifiedBy:verifiedBy,
       isXstudent:false,
+      isHomeTutor:false,
       createdDate:new Date(),
       creditPoints:0
     }
@@ -294,7 +295,8 @@ Student.prototype.studentLogIn = function () {
             this.data.otherData={
               isVerified:true,
               groupId:attemptedUser.groupId,
-              isXstudent:attemptedUser.isXstudent
+              isXstudent:attemptedUser.isXstudent,
+              isHomeTutor:attemptedUser.isHomeTutor
             }
           }
           if(!attemptedUser.email){
@@ -331,6 +333,38 @@ Student.prototype.checkEmailData=function(){
     }
   }
 
+}
+
+Student.markAsHomeTutor = function (regNumber) {
+  return new Promise((resolve, reject) => {
+    try{
+      studentsCollection.findOneAndUpdate({regNumber:regNumber},{
+          $set:{
+            "isHomeTutor":true
+          }
+        })
+        resolve()
+        
+    }catch{
+      reject("Sorry there is some problem.")
+    }
+  })
+}
+
+Student.markAsNotHomeTutor = function (regNumber) {
+  return new Promise((resolve, reject) => {
+    try{
+      studentsCollection.findOneAndUpdate({regNumber:regNumber},{
+          $set:{
+            "isHomeTutor":false
+          }
+        })
+        resolve()
+        
+    }catch{
+      reject("Sorry there is some problem.")
+    }
+  })
 }
 
 Student.prototype.setEmailId = function (regNumber) {
