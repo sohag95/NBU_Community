@@ -489,6 +489,62 @@ OfficialUsers.addPublishedActivityIdOnActivityStorage=function(id){
   })
 }
 
+
+//campus groups related functions
+
+OfficialUsers.addCampusGroupIdOnOfficialAllGroupsStorage=function(id,type){
+  return new Promise(async(resolve, reject) => {
+    try {
+      let field=type+".allGroups"
+      await officialUsersCollection.updateOne(
+        { dataType: "campusGroups" },
+        {
+          $push: {
+            [field]: id
+          }
+        }
+      )
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
+OfficialUsers.getAllCampusGroupData=function(){
+  return new Promise(async(resolve, reject) => {
+    try {
+      let allGroups=await officialUsersCollection.findOne({ dataType: "campusGroups" })
+      console.log("All groups data:",allGroups)
+      resolve(allGroups)
+    } catch {
+      reject()
+    }
+  })
+}
+
+OfficialUsers.getSameTypeCampusGroupIds=function(groupType){
+  return new Promise(async(resolve, reject) => {
+    try {
+      let groupData
+      let allGroups=await officialUsersCollection.findOne({ dataType: "campusGroups" })
+      if(groupType=="research"){
+        groupData=allGroups.research
+      }else if(groupType=="business"){
+        groupData=allGroups.business
+      }else if(groupType=="social_Work"){
+        groupData=allGroups.social_Work
+      }else if(groupType=="skill_Development"){
+        groupData=allGroups.skill_Development
+      }else{
+        groupData=allGroups.cultural
+      }
+      resolve(groupData)
+    } catch {
+      reject()
+    }
+  })
+}
 module.exports=OfficialUsers
 
     

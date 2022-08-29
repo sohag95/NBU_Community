@@ -312,8 +312,137 @@ Notification.creditAfterTopicVoteToVoter=function(regNumber,creditPoints){
     }
   })
 }
-
+//done
+Notification.creditToCampusGroupMember=function(regNumber,creditPoints){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let notification={
+        message:"Congratulations!! Credit points - "+creditPoints+" added. As you are a new member of a campus group.",
+        gotoText:null,
+        gotoLink:null,
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToOneUser(regNumber,notification)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+//done
+Notification.deductCreditToLeavingGroupMember=function(regNumber,creditPoints,groupId,from){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let gotoText="Go to the group details"
+      let gotoLink="/campus-group/"+groupId+"/details"
+      let message="Sorry !! Credit points : ("+creditPoints+") added. As you leave one of your campus groups membership."
+      if(from=="creator"){
+        gotoText=null
+        gotoLink=null
+        message="Sorry !! Credit points : ("+creditPoints+") added. As you have deleted one of your created campus group."
+      }
+      let notification={
+        message:message,
+        gotoText:gotoText,
+        gotoLink:gotoLink,
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToOneUser(regNumber,notification)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 //-----------Credit notification ends------
+
+//-----------campus Groups notification ends------
+Notification.campusGroupRequestComeToAdmins=function(regNumbers,groupId){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let notification={
+        message:" New membership request received on campus group.As you are admin,you can accept or reject the request.Check it now.",
+        gotoText:"Go to the group details",
+        gotoLink:"/campus-group/"+groupId+"/details",
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+//done
+Notification.acceptedCampusGroupRequest=function(regNumber,groupId){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let notification={
+        message:"Congratulations!! Your campus group membership request has accepted.Let start the group work.",
+        gotoText:"Go to the group details",
+        gotoLink:"/campus-group/"+groupId+"/details",
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToOneUser(regNumber,notification)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+//done
+Notification.rejectedCampusGroupRequest=function(regNumber,groupId){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let notification={
+        message:"Sorry!! Your campus group membership request has rejected.",
+        gotoText:"Go to the group details",
+        gotoLink:"/campus-group/"+groupId+"/details",
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToOneUser(regNumber,notification)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+//done
+Notification.newCampusGroupAdmin=function(regNumber,groupId){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let notification={
+        message:"Congratulations!! Your are added as an admin on one of your campus groups.Now you also can handle the group data.",
+        gotoText:"Go to the group details",
+        gotoLink:"/campus-group/"+groupId+"/details",
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToOneUser(regNumber,notification)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Notification.newCampusGroupAdmin=function(regNumbers,groupId,leavingAccount){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let notification={
+        message:leavingAccount.userName+" has leaved from one of campus groups you are angagged with.",
+        gotoText:"Go to the group details",
+        gotoLink:"/campus-group/"+groupId+"/details",
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+//-----------campus Groups notification ends------
 
 Notification.yearChangingToAllBatchMembers=function(regNumbers,newYear){
   return new Promise(async (resolve, reject) => {

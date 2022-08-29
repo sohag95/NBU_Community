@@ -116,33 +116,58 @@ StudentDataHandle.addVotingPoleIdOnVoterAccount= function(regNumber,poleId){
 })
 }
 
-
-
-
-
-//*********************--NOTICE--**********************/
-
-//Belowed Functionality has not created yet
-StudentDataHandle.addActivityGroupIdOnMemberAccount=async function(){
- //member regNumber
- return new Promise(async (resolve, reject) => { 
-  try{
-    await studentDataCollection.updateOne(
-      {regNumber:regNumber},
-      {
-        $push:{
-          activityGroupIds:poleId
-        }
-      })
-  resolve()
-  }catch{
-    console.log(" error on addActivityGroupIdOnMemberAccount")
-    reject("There is some problem.")
-  }
-})
+StudentDataHandle.getStudentOtherDataByRegNumber= function(regNumber){
+  return new Promise(async (resolve, reject) => { 
+   try{
+     let otherData=await studentDataCollection.findOne({regNumber:regNumber})
+     resolve(otherData)
+   }catch{
+     console.log(" error on getStudentOtherDataByRegNumber")
+     reject("There is some problem.")
+   }
+ })
 }
 
-StudentDataHandle.removeeActivityGroupIdFromMemberAccount= function(regNumber,poleId){
+
+//Campus groups related functions
+StudentDataHandle.addCampusGroupIdOnGroupMamberAccount= function(groupId,regNumber){
+  //member regNumber
+  return new Promise(async (resolve, reject) => { 
+   try{
+     await studentDataCollection.updateOne(
+       {regNumber:regNumber},
+       {
+         $push:{
+           campusGroupIds:groupId
+         }
+       })
+     resolve()
+   }catch{
+     console.log(" error on addCampusGroupIdOnGroupMamberAccount")
+     reject("There is some problem.")
+   }
+ })
+ }
+
+ StudentDataHandle.removeCampusGroupIdFromGroupMamberAccount= function(groupId,regNumber){
+  //member regNumber
+  return new Promise(async (resolve, reject) => { 
+   try{
+     await studentDataCollection.updateOne(
+       {regNumber:regNumber},
+       {
+         $pull:{
+           campusGroupIds:groupId
+         }
+       })
+     resolve()
+   }catch{
+     console.log(" error on removeCampusGroupIdFromGroupMamberAccount")
+     reject("There is some problem.")
+   }
+ })
+ }
+StudentDataHandle.removeCampusGroupIdFromMemberAccount= function(groupId,regNumber){
  //member regNumber
  return new Promise(async (resolve, reject) => { 
   try{
@@ -150,7 +175,7 @@ StudentDataHandle.removeeActivityGroupIdFromMemberAccount= function(regNumber,po
       {regNumber:regNumber},
       {
         $pull:{
-          activityGroupIds:poleId
+          campusGroupIds:groupId
         }
       })
     resolve()
@@ -160,5 +185,6 @@ StudentDataHandle.removeeActivityGroupIdFromMemberAccount= function(regNumber,po
   }
 })
 }
+
 
 module.exports=StudentDataHandle

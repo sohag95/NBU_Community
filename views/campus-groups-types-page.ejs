@@ -1,0 +1,95 @@
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+  <div class="col-lg-7 pt-1" >
+    <h4 class="bolder text-center mt-2"><strong>All Campus Group Types</strong></h4>
+      
+    <div class="row">
+      <div class="col-sm-6 mt-2 " >
+        <a href="/campus-groups/type/business" style="text-decoration: none;" >
+          <div class="item-container bolder" style="color: #fff; background-color:#2a4bd5;">
+            <h5 class="text-center" style="padding: 1.75rem;"><strong>Business Groups</strong></h5>
+            <hr>
+            <div class="row text-center ">
+              <div class="col-sm-4"><strong>Total : <%=allCampusGroups.business.total%></strong> </div>
+              <div class="col-sm-4"><strong>Running : <%=allCampusGroups.business.total-allCampusGroups.business.completed%></strong> </div>
+              <div class="col-sm-4"><strong>Completed : <%=allCampusGroups.business.completed%></strong> </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-sm-6 mt-2 " >
+        <a href="/campus-groups/type/research" style="text-decoration: none;" >
+          <div class="item-container bolder" style="color: #fff; background-color:#D52AA0 ;">
+            <h5 class="text-center" style="padding: 1.75rem;"><strong>Research Groups</strong></h5>
+            <hr>
+            <div class="row text-center ">
+              <div class="col-sm-4"><strong>Total : <%=allCampusGroups.research.total%></strong> </div>
+              <div class="col-sm-4"><strong>Running : <%=allCampusGroups.research.total -allCampusGroups.research.completed%></strong> </div>
+              <div class="col-sm-4"><strong>Completed : <%=allCampusGroups.research.completed%></strong> </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-sm-6 mt-2 " >
+        <a href="/campus-groups/type/social_Work" style="text-decoration: none;" >
+          <div class="item-container bolder" style="color: #fff; background-color:#D5B42A ;">
+            <h5 class="text-center" style="padding: 1.75rem;"><strong>Social Work Groups</strong></h5>
+            <hr>
+            <div class="row text-center ">
+              <div class="col-sm-4"><strong>Total : <%=allCampusGroups.social_Work.total%></strong> </div>
+              <div class="col-sm-4"><strong>Running : <%=allCampusGroups.social_Work.total-allCampusGroups.social_Work.completed%></strong> </div>
+              <div class="col-sm-4"><strong>Completed : <%=allCampusGroups.social_Work.completed%></strong> </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-sm-6 mt-2 " >
+        <a href="/campus-groups/type/cultural" style="text-decoration: none;" >
+          <div class="item-container bolder" style="color: #fff; background-color:#2AD55F ;">
+            <h5 class="text-center" style="padding: 1.75rem;"><strong>Cultural Groups</strong></h5>
+            <hr>
+            <div class="row text-center ">
+              <div class="col-sm-4"><strong>Total : <%=allCampusGroups.cultural.total%></strong> </div>
+              <div class="col-sm-4"><strong>Running : <%=allCampusGroups.cultural.total-allCampusGroups.cultural.completed%></strong> </div>
+              <div class="col-sm-4"><strong>Completed : <%=allCampusGroups.cultural.completed%></strong> </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      
+    </div>
+    <div class="row ">
+      <div class="col-3"></div>
+      <div class="col-sm-6 mt-2 " >
+        <a href="/campus-groups/type/skill_Development" style="text-decoration: none;" >
+          <div class="item-container bolder" style="color: #fff; background-color:#5F2AD5 ;">
+            <h5 class="text-center" style="padding: 1.75rem;"><strong>Skill Development Groups</strong></h5>
+            <hr>
+            <div class="row text-center ">
+              <div class="col-sm-4"><strong>Total : <%=allCampusGroups.skill_Development.total%></strong> </div>
+              <div class="col-sm-4"><strong>Running : <%=allCampusGroups.skill_Development.total-allCampusGroups.skill_Development.completed%></strong> </div>
+              <div class="col-sm-4"><strong>Completed : <%=allCampusGroups.skill_Development.completed%></strong> </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-3"></div>
+    </div>
+    <%if(user && user.accountType=="student"){%>
+      <hr>
+      <div class="path">
+        <a href="/create-campus-groups-form">
+          <div class="btn btn-warning btn-block btn-lg"><strong>Create new campus group</strong> </div>
+        </a>
+      </div>
+    <%}%>
+  </div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+
+</div>
+
+  <%- include('includes/footer') %>

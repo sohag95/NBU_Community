@@ -130,9 +130,9 @@ exports.getExtraDataToCreateActivity=function(req,res,next){
 
 exports.createNewActivity=function(req,res){
   let activity=new Activity(req.body,req.creatorData,req.neededData)
-  console.log("body data :",req.body)
-  console.log("Creator data:",req.creatorData)
-  console.log("Needed data :",req.neededData)
+  // console.log("body data :",req.body)
+  // console.log("Creator data:",req.creatorData)
+  // console.log("Needed data :",req.neededData)
   
   //free the space
   req.detailsData=undefined

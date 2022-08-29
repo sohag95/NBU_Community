@@ -126,4 +126,45 @@ AddCreditPoints.creditToActivityLeaders=function(regNumbers){
   })
 }
 
+
+AddCreditPoints.addCreditPointToCampusGroupMember=function(regNumber){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let points=5
+      
+      await studentsCollection.updateOne(
+        {regNumber:regNumber},
+        {
+          $inc:{
+            creditPoints:points
+        }})
+        await Notification.creditToCampusGroupMember(regNumber,points)
+      resolve()
+    }catch{
+      console.log("error on addCreditPointToCampusGroupMember")
+      reject()
+    }
+  })
+}
+
+AddCreditPoints.deductCreditPointFromGroupLeavingAccount=function(regNumber,groupId,from){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let points=-5
+      
+      await studentsCollection.updateOne(
+        {regNumber:regNumber},
+        {
+          $inc:{
+            creditPoints:points
+        }
+      })
+      await Notification.deductCreditToLeavingGroupMember(regNumber,points,groupId,from)
+      resolve()
+    }catch{
+      console.log("error on deductCreditPointFromGroupLeavingAccount")
+      reject()
+    }
+  })
+}
 module.exports=AddCreditPoints

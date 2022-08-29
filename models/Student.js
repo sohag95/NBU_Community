@@ -140,7 +140,7 @@ let Student=function(regData,batchData,communityController){
       },
       nominationTakenPoles:[],
       voteGivenPoles:[],
-      activityGroupIds:[]
+      campusGroupIds:[]
     }
    }catch{
     this.errors.push("Sorry,there is some problem!")
@@ -295,6 +295,7 @@ Student.prototype.studentLogIn = function () {
             this.data.otherData={
               isVerified:true,
               groupId:attemptedUser.groupId,
+              departmentName:attemptedUser.departmentName,
               isXstudent:attemptedUser.isXstudent,
               isHomeTutor:attemptedUser.isHomeTutor
             }

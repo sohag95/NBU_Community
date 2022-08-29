@@ -8,8 +8,9 @@ exports.test =async function (req, res) {
   //await StudentDataHandle.addVotingPoleIdOnVoterAccount("2122COMSC0001","123")
   //await StudentDataHandle.addActivityIdOnAllParticipantsAccount(["2122COMSC0001","2122COMSC0004","2122COMSC0003"],"123456")
   //await Notification.accountVerifiedToAccountHolder("2122COMSC0001")
-  let allMembers=await GetAllMembers.getAllSourceMembers("2COMSCCOMAP","group")
-   
+  //let allMembers=await GetAllMembers.getAllSourceMembers("2COMSCCOMAP","group")
+  
+    
   res.render('test-page')
   }catch{
     req.flash("errors", "There is some problem.")
