@@ -19,7 +19,7 @@
     </div>
 
     <div class=" mt-2 mb-2" >
-      <div class=" path text-secondary" style="display: flex;    flex-wrap: wrap;    padding: 1.4rem">
+      <div class=" path text-secondary" style=" padding: 1.4rem">
         <!-- activity board starts here -->
         <%let gotoText=null%>
         <%let gotoLink=null%>  
@@ -67,8 +67,8 @@
                 <%}else{%>
                   <%gotoText="Check activity status"%>
                   <h6  class="d-block bolder text-primary mb-0 text-center"><strong>Activity Short Details </strong> </h6>
-                  <strong class="d-block"><span class="text-primary">Topic :</span> Social Work</strong>
-                  <strong class="d-block"><span class="text-primary">Title :</span> We are going to help poor people.</strong>
+                  <strong class="d-block"><span class="text-primary">Topic :</span> <%=batchDetails.presentActivity.topic%></strong>
+                  <strong class="d-block"><span class="text-primary">Title :</span> <%=batchDetails.presentActivity.title%></strong>
                 <%}%> 
                 <!--Activity related informations ends-->
               <%}else{%>
@@ -134,7 +134,7 @@
         <!-- source notification part ends here -->
         <!-- daysOut will be true if present leader selected before 15 days -->
         <!-- NOT COMPLETED -->
-        <%let daysOut=true%>
+        <!-- <%let daysOut=true%>
         <%if(checkData.isBatchLeader && !batchDetails.isVoteGoingOn && !batchDetails.presentActivity && daysOut){%>
             <hr>
             <div class="member-container mt-2">
@@ -151,7 +151,7 @@
                   </div> 
                 </div>
             </div>
-            <%}%>
+            <%}%> -->
             <!-- Leader section ends -->
       </div>
     </div>

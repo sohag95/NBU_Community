@@ -13,7 +13,7 @@ exports.getAllNotifications=async function(req,res){
   console.log("session",req.session.user)
   req.session.save(()=>{
     res.render("notifications-page",{
-      notifications:notificationData.notifications,
+      notifications:notificationData.notifications.reverse(),
       unseenNotifications:notificationData.unseenNotificationNumber
     })
   })

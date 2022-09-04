@@ -511,6 +511,25 @@ OfficialUsers.addCampusGroupIdOnOfficialAllGroupsStorage=function(id,type){
   })
 }
 
+OfficialUsers.removeCampusGroupIdFromOfficialAllGroupsStorage=function(id,type){
+  return new Promise(async(resolve, reject) => {
+    try {
+      let field=type+".allGroups"
+      await officialUsersCollection.updateOne(
+        { dataType: "campusGroups" },
+        {
+          $pull: {
+            [field]: id
+          }
+        }
+      )
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
 OfficialUsers.getAllCampusGroupData=function(){
   return new Promise(async(resolve, reject) => {
     try {

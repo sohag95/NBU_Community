@@ -420,12 +420,13 @@ Notification.newCampusGroupAdmin=function(regNumber,groupId){
       await Notification.sentNotificationToOneUser(regNumber,notification)
       resolve()
     }catch{
+      console.log("I am from ")
       reject()
     }
   })
 }
 
-Notification.newCampusGroupAdmin=function(regNumbers,groupId,leavingAccount){
+Notification.leaveMessageToAllOtherMembers=function(regNumbers,groupId,leavingAccount){
   return new Promise(async (resolve, reject) => {
     try{
       let notification={

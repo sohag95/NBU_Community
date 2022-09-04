@@ -13,19 +13,172 @@
             <strong>
               <span class="text-primary d-block" > Group Type : <span class="text-capitalize"><%=campusGroupDetails.groupType%></span></span>
               <span class="text-primary d-block"> Group Name : <%=campusGroupDetails.groupName%></span>
+              <span class="text-primary d-block"> Expected Members : <%=campusGroupDetails.expectedMembers%>
+                <%if(campusGroupDetails.allMembers.length==campusGroupDetails.expectedMembers){%>
+                  <span class="text-success">(Full)</span></span>
+                <%}else{%>
+                  <span class="text-warning">(Not Full)</span>
+                <%}%>   
+                <%if(checkData.allAdmins.includes(user.regNumber)){%>
+                  <span type="button" class=" text-secondary" data-toggle="modal" data-target="#expectedMembers"><strong class="d-block"><i class="fas fa-edit"></i></strong></span>
+                  <!-- Modal -->
+                  <div class="modal fade" id="expectedMembers" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Update Expected Member Number</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="/campus-group/<%=campusGroupDetails._id%>/change-expected-members" method="post">
+                            <div class="form-group" style="text-align: left;">
+                              <h6 for="expectedMembers" class="text-muted mb-1"><strong>Update Expected Number of Members :-</strong></h6>
+                              <input  name="expectedMembers" value="<%=campusGroupDetails.expectedMembers%>" id="expectedMembers" class="body-content small-textarea form-control" type="number" placeholder="Give new expected number of group member.">
+                            </div>
+                            <div style="text-align: left;">
+                              <button class="btn btn-success btn-sm ">Submit</button>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- edit section ends -->
+                <%}%>
             </strong>
           </h5>  
         </div>
       </div>  
     </div>
     <hr>
+    <%if(campusGroupDetails.createdBy.regNumber==user.regNumber && campusGroupDetails.allMembers.length==1){%>
+      <div class="colored-container text-center">
+        <h5 class="text-warning"><strong>As a creator you can delete the group.You can delete the group when you are only the member of the group!!</strong> </h5>
+        <hr>
+        <form action="/campus-group/<%=campusGroupDetails._id%>/delete-group" method="post">
+          <button class="btn btn-danger ">Delete The Group</button>
+        </form>
+      </div>
+      <hr>
+    <%}%>
     <div class="colored-container">
-      <h5><strong>Aim of the group :</strong></h5>
+      <div class="d-flex">
+        <h5 style="width: 100%;"><strong>Aim of the group :</strong></h5>
+        <%if(checkData.isCampusGroupAdmin){%>
+          <span type="button" class="d-block float-right text-primary" data-toggle="modal" data-target="#exampleModalCenter"><strong class="d-block"><i class="fas fa-edit"></i></strong></span>
+        <%}%>
+      </div>
+      <%if(checkData.isCampusGroupAdmin){%>
+       <!-- Modal -->
+       <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Edit Aim Of Group</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="/campus-group/<%=campusGroupDetails._id%>/set-group-aim" method="post">
+                <div class="form-group" style="text-align: left;">
+                  <h6 for="group-aim-body" class="text-muted mb-1"><strong>Edit Aim of The Group :-</strong></h6>
+                  <textarea  name="groupAim" id="group-aim-body" class="body-content small-textarea form-control" type="text" placeholder="Write something about yourself."><%=campusGroupDetails.aimOfTheGroup.aim%></textarea>
+                </div>
+                <div style="text-align: left;">
+                  <button class="btn btn-success btn-sm ">Submit</button>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- edit section ends -->
+      <%}%>
       <hr style="margin-bottom: .85rem;margin-top: 0rem;">
       <p><strong><%=campusGroupDetails.aimOfTheGroup.aim%></strong></p>
-    </div>
-    <hr>
+      <%if(campusGroupDetails.aimOfTheGroup.edited){%>
+        <span class="d-block"><span class="float-right">Edited By - <a href="/student/<%=campusGroupDetails.aimOfTheGroup.edited.regNumber%>/profile"><%=campusGroupDetails.aimOfTheGroup.edited.editBy.userName%> </a> on <%=campusGroupDetails.aimOfTheGroup.edited.editDate%></span> </span>
+      <%}%>
+      </div>
 
+    <%if(checkData.isUserLoggedIn && (checkData.isCampusGroupAdmin || !checkData.isCampusGroupMember)){%>
+    <hr>
+    <div class="item-container path">
+      <%if(checkData.isCampusGroupAdmin){%>
+        <strong><h5>New Membersip Requests (<%=campusGroupDetails.memberRequests.length%>)</h5></strong>
+        <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+        <%if(!campusGroupDetails.memberRequests.length){%>
+          <div class="btn btn-block btn-info btn-lg">No membership request received!!</div>  
+        <%}else{%>
+          <%campusGroupDetails.memberRequests.forEach((member)=>{%>
+            <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #fff;">
+              <div class="text-center" style="position: relative;">
+                <img class="search-batch-image"  src="/images/sohag.jpg" alt="">
+              </div>
+              <div class="ml-2" style="color: #3c3b37; width: 100%;">
+                <span class="d-block" style="color: #3c3b37;font-weight: 700;"><strong>Name : </strong> <a href="/student/<%=member.regNumber%>/profile"><%=member.userName%></a> | <%=member.departmentName%> | Batch : (20<%=member.regNumber.slice(0,2)%>-20<%=member.regNumber.slice(2,4)%>)</span>
+                <i class="d-block">Requested On : <%=member.requestedDate%></i>
+                <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+                <h6 class="bolder"><strong>Personal Aim : </strong>
+                <%=member.aim%>
+                </h6>
+                <hr style="margin-bottom: .5rem;margin-top: 0rem;">
+                <div style="display: flex; flex-wrap: wrap;">
+                  <div class="col-6">
+                    <form action="/campus-group/<%=campusGroupDetails._id%>/accept-membership-request" method="post">
+                      <input type="hidden" name="regNumber" value="<%=member.regNumber%>">
+                      <button class="btn btn-block btn-warning">Accept</button>
+                    </form>
+                  </div>
+                  <div class="col-6">
+                    <form action="/campus-group/<%=campusGroupDetails._id%>/reject-membership-request" method="post">
+                      <input type="hidden" name="regNumber" value="<%=member.regNumber%>">
+                      <button class="btn btn-block btn-danger">Reject</button>
+                    </form>
+                  </div>
+                </div>
+              </div>              
+            </div> 
+          <%})%>
+        <%}%>
+      <%}else if(!checkData.isCampusGroupMember && !checkData.isSentRequest){%>
+      <div id="accordion">
+        <div class="card">
+          <div class="btn btn-block btn-warning" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <h5 class="mb-0">
+             <strong>Sent Memberhip Request</strong> 
+            </h5>
+          </div>
+      
+          <div id="collapseOne" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="student-container">
+              <form action="/campus-group/<%=campusGroupDetails._id%>/sent-membership-request" class="m-2" method="post">
+                <div class="form-group">
+                  <label for="aim" class="text-muted mb-1"><small>Your Aim As a Member :-</small></label>
+                  <input  name="aim" id="aim" class="form-control form-control-lg " type="text" placeholder="Write your aim as group member." required autocomplete="off">
+                </div>
+                <button class="bnt btn-info btn-block">Submit & sent request</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%}else{%>
+        <div class="btn btn-block btn-lg btn-info"><strong> You send membership request on this group.</strong></div>
+      <%}%>
+    </div>
+    
+    <%}%>
+    <hr>
     <h5 class="text-primary text-center"><strong >Campus Group Details</strong></h5>
     <hr>
 
@@ -50,19 +203,43 @@
       </div>
 
       <div class="col-md-8" >
-        <h5 class="bolder ">Active Members :</h5>
-        <%campusGroupDetails.allMembers.forEach((member)=>{%>
+        <h5 class="bolder ">Active Members : (<%=campusGroupDetails.allMembers.length%>/<%=campusGroupDetails.expectedMembers%>)</h5>
+        <%campusGroupDetails.allMembers.forEach((member,index)=>{%>
           <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #fff;">
             <div class="text-center" style="position: relative;">
               <img class="search-batch-image"  src="/images/sohag.jpg" alt="">
             </div>
-            <div class="ml-2" style="color: #3c3b37;font-weight: 400;">
-              <span class="d-block" style="color: #3c3b37;font-weight: 700;"><strong>Name : </strong> <%=member.userName%> | <strong><%=member.departmentName%> | Batch - (20<%=member.regNumber.slice(0,2)%>-20<%=member.regNumber.slice(2,4)%>)</strong> </span>
-              <%if(member.addedBy=="creator"){%>
-                <i>(Group Creator)</i>
-              <%}else{%>
-                <i><strong>Added By - </strong><%=member.addedBy.regNumber%></i>
-              <%}%>
+            <div class="ml-2" style="color: #3c3b37;font-weight: 400; width: 100%;">
+              <div class="d-flex">
+                <div style="width: 100%;">
+                  <span class="d-block" style="color: #3c3b37;font-weight: 700;"><strong>Name : </strong> <%=member.userName%> | <strong><%=member.departmentName%> | Batch - (20<%=member.regNumber.slice(0,2)%>-20<%=member.regNumber.slice(2,4)%>)</strong> </span>
+                  <%if(member.addedBy=="creator"){%>
+                    <i>(Group Creator)</i>
+                  <%}else{%>
+                    <i><strong>Added By - </strong><a href="/student/<%=member.addedBy.regNumber%>/profile"><%=member.addedBy.userName%></a></i>
+                  <%}%>
+                </div>
+                <p style="margin-right: 8px;" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <strong><i class="fas fa-ellipsis-h"></i></strong>
+                </p>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <%if(campusGroupDetails.createdBy.regNumber==user.regNumber){%>
+                    <%if(!checkData.allAdmins.includes(member.regNumber)){%>
+                      <form action="/campus-group/<%=campusGroupDetails._id%>/add-admin" class="m-2" method="post">
+                        <input type="hidden" name="regNumber" value="<%=member.regNumber%>">
+                        <button class="btn btn-warning btn-block">Make as Admin</button>
+                      </form>
+                    <%}%>
+                  <%}%>
+                  <%if(member.regNumber==user.regNumber && !(campusGroupDetails.createdBy.regNumber==user.regNumber)){%>
+                    <form action="/campus-group/<%=campusGroupDetails._id%>/leave-group" class="m-2" method="post">
+                      <button class="btn btn-danger btn-block">Leave Group</button>
+                    </form>
+                  <%}%>
+                  
+                </div>
+              </div>
+              
               
               <hr style="margin-bottom: .25rem;margin-top: 0rem;">
               <h6 class="bolder"><strong>Personal Aim : </strong>
@@ -71,12 +248,44 @@
               <%}else{%>
                 [Parsonal aim is not given]
               <%}%>
+              <%if(checkData.memberIndexNumber==index){%>
+                <span type="button" class=" text-primary" data-toggle="modal" data-target="#changeSelfAim"><strong ><i class="fas fa-edit"></i></strong></span>
+              <%}%>
               </h6>
             </div>              
           </div>
         <%})%>
       </div>
-    
+    <%if(checkData.isCampusGroupMember){%>
+    <!-- Modal -->
+    <div class="modal fade" id="changeSelfAim" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Edit Personal Aim</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/campus-group/<%=campusGroupDetails._id%>/set-individual-aim" method="post">
+              <div class="form-group" style="text-align: left;">
+                <h6 for="about-self-body" class="text-muted mb-1"><strong>Edit Your Aim :-</strong></h6>
+                <textarea  name="individualAim" id="about-self-body" class="body-content small-textarea form-control" type="text" placeholder="Write something about yourself."><%=campusGroupDetails.allMembers[checkData.memberIndexNumber].aim%></textarea>
+              </div>
+              <div style="text-align: left;">
+                <button class="btn btn-success btn-sm ">Submit</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- edit section ends -->
+    <%}%>
     </div>
     <hr>
     <div class="item-container mb-2">

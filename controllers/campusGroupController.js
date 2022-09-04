@@ -158,20 +158,29 @@ exports.campusGroupDetails=async function(req,res){
     isCampusGroupAdmin:false,
     isCampusGroupMember:false,
     memberIndexNumber:null,
+    isSentRequest:false,
+    allAdmins:[]
   }
   if(checkData.isUserLoggedIn){
     req.campusGroupDetails.admins.forEach((admin)=>{
       if(req.regNumber==admin.regNumber){
         checkData.isCampusGroupAdmin=true
       }
+      checkData.allAdmins.push(admin.regNumber)
     })
     req.campusGroupDetails.allMembers.forEach((member,index)=>{
       if(member.regNumber==req.regNumber){
         checkData.isCampusGroupMember=true
-        memberIndexNumber=index
+        checkData.memberIndexNumber=index
+      }
+    })
+    req.campusGroupDetails.memberRequests.forEach((member)=>{
+      if(member.regNumber==req.regNumber){
+        checkData.isSentRequest=true
       }
     })
   }
+  console.log("Group Details :",req.campusGroupDetails)
   res.render("campus-group-details-page",{
     checkData:checkData,
     campusGroupDetails:req.campusGroupDetails
@@ -214,7 +223,7 @@ exports.sentMembershipRequest= function(req,res){
   let memberData={
     regNumber:req.regNumber,
     userName:req.userName,
-    departmentName:req.departmentName,
+    departmentName:req.otherData.departmentName,
     aim:req.body.aim,
     requestedDate:new Date()
   }
@@ -250,7 +259,7 @@ exports.ifRequestSent= function(req,res,next){
     newMembershipRequestArray:[],
     newMemberData:null
   }
-  req.campusGroupDetails.membersRequest.forEach((member)=>{
+  req.campusGroupDetails.memberRequests.forEach((member)=>{
     if(member.regNumber==req.body.regNumber){
       req.requestData.newMemberData=member
     }else{
@@ -270,6 +279,7 @@ exports.acceptMembershipRequest= function(req,res){
     regNumber:req.requestData.newMemberData.regNumber,
     userName:req.requestData.newMemberData.userName,
     departmentName:req.requestData.newMemberData.departmentName,
+    aim:req.requestData.newMemberData.aim,
     joiningDate:new Date(),
     addedBy:{
       regNumber:req.regNumber,
@@ -361,7 +371,7 @@ exports.checkIfCreatorMemberAndAdminOrNot= function(req,res,next){
       isMember=true
       let data={
         regNumber:member.regNumber,
-        userName:member.usreName
+        userName:member.userName
       }
       req.newData.leavingAccount=data
     }else{
@@ -402,12 +412,14 @@ exports.leaveCampusGroup = function(req,res){
 
 exports.ifCampusGroupMember= function(req,res,next){
   req.memberIndex=null
+  let isMember=false
   req.campusGroupDetails.allMembers.forEach((member,index)=>{
     if(member.regNumber==req.regNumber){
       req.memberIndex=index
+      isMember=true
     }
   })
-  if(req.memberIndex){
+  if(isMember){
     next()
   }else{
     req.flash("errors", "You are not a member of this group!!")
@@ -454,7 +466,7 @@ exports.checkIfGroupDeletable= function(req,res,next){
 }
 
 exports.deleteCampusGroup = function(req,res){
-  CampusGroup.deleteCampusGroup(req.params.id,req.regNumber).then(()=>{
+  CampusGroup.deleteCampusGroup(req.params.id,req.regNumber,req.campusGroupDetails.groupType).then(()=>{
     req.flash("success", "Group deleted successfully!!")
     res.redirect("/campus-groups")
   }).catch((e)=>{

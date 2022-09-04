@@ -188,7 +188,7 @@ CampusGroup.sentMembershipRequest=function(groupId,memberData,adminsRegNumbers){
     try{
       await campusGroupCollection.findOneAndUpdate({_id:new ObjectId(groupId)},{
         $push:{
-          membersRequest:memberData
+          memberRequests:memberData
         }
       })
       await Notification.campusGroupRequestComeToAdmins(adminsRegNumbers,groupId)
@@ -208,7 +208,7 @@ CampusGroup.acceptMembershipRequest=function(groupId,newMemberData,newMembership
           allMembers:newMemberData
         },
         $set:{
-          membersRequest:newMembershipRequestArray
+          memberRequests:newMembershipRequestArray
         }
       })
       //add the group id on members account
@@ -231,7 +231,7 @@ CampusGroup.rejectMembershipRequest=function(groupId,newMembershipRequestArray,r
     try{
       await campusGroupCollection.findOneAndUpdate({_id:new ObjectId(groupId)},{
         $set:{
-          membersRequest:newMembershipRequestArray
+          memberRequests:newMembershipRequestArray
         }
       })
       //sent notification as member added on new group
@@ -335,10 +335,12 @@ CampusGroup.setCampusGroupAim=function(groupId,groupAim,editorData){
 }
 
 
-CampusGroup.deleteCampusGroup=function(groupId,creatorRegNumber){
+CampusGroup.deleteCampusGroup=function(groupId,creatorRegNumber,groupType){
   return new Promise(async (resolve, reject) => { 
     try{
       await campusGroupCollection.deleteOne({_id:new ObjectId(groupId)})
+      await OfficialUsers.removeCampusGroupIdFromOfficialAllGroupsStorage(new ObjectId(groupId),groupType)
+          
       //Remove group id from leaving account holder data
       await StudentDataHandle.removeCampusGroupIdFromGroupMamberAccount(new ObjectId(groupId),creatorRegNumber)
        //deduct credit point from leaving account

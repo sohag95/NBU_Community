@@ -22,11 +22,13 @@ exports.getDepartmentDetailsPage = function (req, res) {
       isDepartmentLeader:false,
       isPresentLeader:false,
       isPreviousLeader:false,
-      isXstudent:req.session.user.otherData.isXstudent
+      isXstudent:null
     }
 
     if(checkData.isUserLoggedIn){
       
+      checkData.isXstudent=req.session.user.otherData.isXstudent
+
       departmentDetails.allLeaders.forEach((leader)=>{
         if(leader.regNumber==req.regNumber){
           checkData.isDepartmentLeader=true
