@@ -411,23 +411,23 @@ exports.videoEditingCompletedByEditor=function(req,res){
  })
 }
 
-//this function will be changed completely.Cover photo will be uploaded on AWS bucket later
-exports.uploadVideoCoverPhoto=function(req,res){
-  if(req.body.videoCoverPhoto){
-    let link="/images/sponsor-mid-banner.png"
-    Activity.uploadVideoCoverPhoto(req.activityDetails._id,link).then(()=>{
-      req.activityDetails=undefined
-      req.flash("success", "Video cover photo successfully updated!!")
-      res.redirect(`/activity/${req.params.id}/details`)
-    }).catch((e)=>{
-      req.flash("errors", e)
-      res.redirect(`/activity/${req.params.id}/details`)
-    })
-  }else{
-    req.flash("errors", "You should give a photo link.")
-    res.redirect(`/activity/${req.params.id}/details`)
-  }
-}
+//this function will be changed completely.Cover photo will be uploaded on AWS bucket later->added
+// exports.uploadVideoCoverPhoto=function(req,res){
+//   if(req.body.videoCoverPhoto){
+//     let link="/images/sponsor-mid-banner.png"
+//     Activity.uploadVideoCoverPhoto(req.activityDetails._id,link).then(()=>{
+//       req.activityDetails=undefined
+//       req.flash("success", "Video cover photo successfully updated!!")
+//       res.redirect(`/activity/${req.params.id}/details`)
+//     }).catch((e)=>{
+//       req.flash("errors", e)
+//       res.redirect(`/activity/${req.params.id}/details`)
+//     })
+//   }else{
+//     req.flash("errors", "You should give a photo link.")
+//     res.redirect(`/activity/${req.params.id}/details`)
+//   }
+// }
 
 exports.publishActivity=function(req,res){
   let activity=new Activity(req.body)

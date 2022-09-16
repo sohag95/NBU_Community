@@ -11,6 +11,16 @@ exports.isGroupExists = function (req, res, next) {
   })
 }
 
+exports.ifPresentGroupLeader = function (req, res, next) {
+  if(req.regNumber==req.groupDetails.presentLeader.regNumber || req.regNumber==req.groupDetails.previousLeader.regNumber){
+    next()
+  }else{
+    req.flash("errors", "Only present leaders can change group banner!!")
+    req.session.save(function () {
+      res.redirect(`/group/${req.params.groupId}/details`)
+    })
+  }
+}
 
 exports.getGroupDetailsPage = function (req, res) {
   try{

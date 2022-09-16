@@ -608,7 +608,7 @@ label.star:before {
  }
 
 
- /* banner css */
+ /*  css */
  .banner{
    width: 100%;
    height: auto;
@@ -1217,3 +1217,4 @@ div.feedbackButton{
   border-radius: 4px;
   color: #FFF;
  }
+ 

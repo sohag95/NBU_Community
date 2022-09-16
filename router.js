@@ -19,9 +19,24 @@ const notificationController=require('./controllers/notificationController')
 const reportController=require('./controllers/reportController')
 const homeTutorController=require('./controllers/homeTutorController')
 const campusGroupController=require('./controllers/campusGroupController')
+const awsS3BucketController=require('./controllers/awsS3BucketController')
       
+const multer=require("multer")
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
+
+
 //####################################
 router.get('/test',userController.test)
+
+//####################################
+router.post("/photo-upload",upload.single('image'),awsS3BucketController.uploadPhoto)
+//Fetch images from AWS bucket
+//from=profile,cover,batch-banner,department-banner,group-banner,campusGroup-banner,activity-banner
+//size=small,medium,large
+//key=profile+regNumber,cover+regNumber,batchId,departmentCode,groupId,_id,_id
+router.get('/image/:from/:size/:key',awsS3BucketController.getPhoto)
+
 //####################################
 //user log-in 
 router.post("/loggingIn",  userController.loggingIn)
@@ -31,6 +46,10 @@ router.get("/all-departments",  userController.allDepartments)
 
 //Searching student by userName or regNumber 
 router.post("/search-student",userController.searchStudent)
+
+//Image upload related routers
+router.post("/upload-profile-photo",upload.single('image'),studentController.studentMustBeLoggedIn,awsS3BucketController.uploadProfilePhoto)
+router.post("/upload-cover-photo",upload.single('image'),studentController.studentMustBeLoggedIn,awsS3BucketController.uploadCoverPhoto)
 
 //########################
 //user related routes
@@ -74,16 +93,19 @@ router.get("/source/:from/:id/notifications",checkingController.ifSourcePresent,
 //########################
 //sessionBatch related routers
 router.get("/batch/:batchId/details",userController.ifUserLoggedIn,sessionBatchController.isSessionBatchExists,sessionBatchController.getSessionBatchDetailsPage)
+router.post("/upload-batch-banner/:batchId",upload.single('image'),studentController.studentMustBeLoggedIn,sessionBatchController.isSessionBatchExists,sessionBatchController.ifPresentBatchLeader,awsS3BucketController.uploadBatchBannerPhoto)
 
 //########################
 //department related routers
 router.get("/department/:departmentCode/details",userController.ifUserLoggedIn,departmentController.isDepartmentExists,departmentController.getDepartmentDetailsPage)
 router.get("/department/:departmentCode/previous-details",userController.ifUserLoggedIn,departmentController.isDepartmentExists,departmentController.getDepartmentPreviousDetailsPage)
+router.post("/upload-department-banner/:departmentCode",upload.single('image'),studentController.studentMustBeLoggedIn,departmentController.isDepartmentExists,departmentController.ifPresentDepartmentLeader,awsS3BucketController.uploadDepartmentBannerPhoto)
 
 //########################
 //group related routers
 router.get("/group/:groupId/details",userController.ifUserLoggedIn,groupController.isGroupExists,groupController.getGroupDetailsPage)
 router.get("/group/:groupId/previous-details",userController.ifUserLoggedIn,groupController.isGroupExists,groupController.getGroupPreviousDetailsPage)
+router.post("/upload-group-banner/:groupId",upload.single('image'),studentController.studentMustBeLoggedIn,groupController.isGroupExists,groupController.ifPresentGroupLeader,awsS3BucketController.uploadGroupBannerPhoto)
 
 //########################
 //Post controller related router
@@ -108,7 +130,7 @@ router.post("/activity/:id/received",officialUserController.postControllerMustBe
 router.get("/activity/:id/video-editor",officialUserController.postControllerMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkRightPostControllerOrNot,videoEditorController.getAvailableVideoEditors)
 router.post("/assign/:id/video-editor",officialUserController.postControllerMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkRightPostControllerOrNot,activityController.assignVideoEditor)//should have middlewire as videoEditorController.ifEditorExists=with regNumber and is user videoEditor
 router.post("/activity/:id/publish",officialUserController.postControllerMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkRightPostControllerOrNot,activityController.publishActivity)
-router.post("/activity/:id/upload-cover-photo",officialUserController.postControllerMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkRightPostControllerOrNot,activityController.uploadVideoCoverPhoto)
+router.post("/activity/:id/upload-cover-photo",upload.single('image'),officialUserController.postControllerMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkRightPostControllerOrNot,awsS3BucketController.uploadActivityCoverPhoto)
 //videoEditor related routers
 router.post("/accept/:id/video-editing",officialUserController.videoEditorMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkRightVideoEditorOrNot,activityController.acceptVideoEditingByEditor)
 router.post("/video-editing/:id/completed",officialUserController.videoEditorMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkRightVideoEditorOrNot,activityController.videoEditingCompletedByEditor)
@@ -154,7 +176,6 @@ router.post("/create-campus-group",studentController.studentMustBeLoggedIn,campu
 router.get("/campus-groups/type/:groupType",userController.ifUserLoggedIn,campusGroupController.ifValidCampusGroupType,campusGroupController.allSameTypeGroupsPage)
 router.get("/campus-groups/type/:groupType/:status",userController.ifUserLoggedIn,campusGroupController.ifValidCampusGroupType,campusGroupController.ifValidStatus,campusGroupController.allGroupsInSameStatusPage)
 router.get("/campus-group/:id/details",userController.ifUserLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.campusGroupDetails)
-
 router.post("/campus-group/:id/set-individual-aim",studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.ifCampusGroupMember,campusGroupController.setIndividualAim)
 router.post("/campus-group/:id/set-group-aim",studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.checkIfUserAdmin,campusGroupController.setCampusGroupAim)
 router.post("/campus-group/:id/sent-membership-request",studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.checkIfUserExitGroupLimit,campusGroupController.ifGroupMemberFull,campusGroupController.checkIfUserAlreadyMemberOrSentRequest,campusGroupController.sentMembershipRequest)
@@ -163,6 +184,7 @@ router.post("/campus-group/:id/reject-membership-request",studentController.stud
 router.post("/campus-group/:id/add-admin",studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.checkIfUserGroupCreator,campusGroupController.checkIfAlreadyAdminOrMemberOrNot,campusGroupController.addNewAdmin)
 router.post("/campus-group/:id/leave-group",studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.checkIfCreatorMemberAndAdminOrNot,campusGroupController.leaveCampusGroup)
 router.post("/campus-group/:id/change-expected-members",studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.checkIfUserAdmin,campusGroupController.checkNewExpectedMemberValue,campusGroupController.updateMemberValue)
+router.post("/campus-group/:id/upload-banner",upload.single('image'),studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.checkIfUserAdmin,awsS3BucketController.uploadCampusGroupBannerPhoto)
 //--------------------------------
 router.post("/campus-group/:id/delete-group",studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.checkIfUserGroupCreator,campusGroupController.checkIfGroupDeletable,campusGroupController.deleteCampusGroup)
 //Logging out router

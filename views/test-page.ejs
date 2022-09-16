@@ -7,9 +7,13 @@
   <div class="col-lg-7 pt-1  pb-2" >
     <div class="">
       <div style="width: 100%;position: relative;">
-        <img class="home-cover-image" src="/images/sponsor-banner.png"/>
+        <img class="home-cover-image" src="/image/profile/large/checkImg"/>
         <div>
-          <img class="home-profile-image" src="/images/sohag.jpg" />
+          <picture>
+            <source srcset="image/profile/medium/checkImg" media="(min-width:1200px)">
+            <source srcset="image/profile/medium/sohag" media="(min-width:760px)">
+            <img class="home-profile-image" src="image/profile/medium/checkMid" alt="">
+          </picture>
           <div>
             <h5 class="bolder text-secondary d-inline"><strong>Sohag Roy</strong></h5>
             <h5 class="text-info d-inline float-right"><i class="fas fa-user"></i> Go to Profile</h5>
@@ -18,6 +22,45 @@
       </div> 
     <hr>  
     </div>
+    <hr>
+      <h5 class="bolder text-primary"><strong>Edit Your Profile</strong></h5>
+      <div style="background-color: #fff;width: 100%;border-radius: 5px;margin-bottom: 1rem;">
+        <strong class="bolder m-2">Upload Photo</strong>
+        <form class="m-2" action="/photo-upload" method="POST" id="fileUpload-form1" enctype="multipart/form-data">
+          <label class="text-center" for="FormControlFile1">Choose a photo</label> 
+          <div class="input-group post-form-container" style="margin-bottom: 2px;">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Upload</span>
+            </div>
+            <div class="custom-file">
+              <input type="file" name="image" class="custom-file-input" required id="inputGroupFile01">
+              <label class="custom-file-label" for="inputGroupFile01"></label>
+            </div>
+          </div>
+          <button type="submit" class=" btn btn-sm btn-secondary btn-block">Submit</button>
+        </form>
+      </div>
+      <hr>
+      <div class=" student-room-container" >
+        <div class="d-flex align-items-center">
+          <div >
+            <img class="avatar-small"  src="/image/profile/small/checkImg" alt="">
+          </div>
+          <div class="ml-2">
+            <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
+            <span class="d-block"><strong >Phone : </strong>1234567898</span>
+          </div>
+        </div>
+      </div>
+      <div class="member-container align-items-center">
+        <img class="member-avatar"  src="/image/profile/small/checkMid" alt="">
+        <div class="name-container">
+          <strong class="d-block ml-2" style="width: 100%;"><a href=""></a></strong>
+        </div>
+        <a class="d-block" href="">
+          <div class="btn btn-warning btn-sm mr-1">Verify Account</div>
+        </a>
+      </div>
     <hr>
     <h5 class="bolder">Reportings :</h5>
     <form action="/sent-report" method="post">

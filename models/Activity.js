@@ -104,7 +104,7 @@ Activity.prototype.getActivityData=async function(){
         instagram:null,
         linkedIn:null
       },
-      videoCoverPhoto:null,
+      //videoCoverPhoto:null,no need this field,cover photo key is the _id of the activity
       topic:null,
       title:null,
       shortDetails:null,
@@ -519,21 +519,21 @@ Activity.videoEditingCompletedByEditor=function(id,neededData){
   })
 }
 
-//this function will be changed completely.photo should uploaded on AWS bucket
-Activity.uploadVideoCoverPhoto=function(id,link){
-  return new Promise(async (resolve, reject) => { 
-    try{
-      await activityCollection.updateOne({_id:id},{
-        $set:{
-          "videoCoverPhoto":link,
-        }
-      })
-      resolve()
-    }catch{
-      reject("There is some problem.")
-    }
-  })
-}
+//this function will be changed completely.photo should uploaded on AWS bucket->Added
+// Activity.uploadVideoCoverPhoto=function(id,link){
+//   return new Promise(async (resolve, reject) => { 
+//     try{
+//       await activityCollection.updateOne({_id:id},{
+//         $set:{
+//           "videoCoverPhoto":link,
+//         }
+//       })
+//       resolve()
+//     }catch{
+//       reject("There is some problem.")
+//     }
+//   })
+// }
 
 Activity.prototype.cleanUpLinkData=function(){
   let videoLinks={

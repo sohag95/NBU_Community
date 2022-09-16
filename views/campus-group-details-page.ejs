@@ -7,7 +7,43 @@
   <div class="col-lg-9 pt-1" >
     <div class="">
       <div style="width: 100%;position: relative;">
-        <img class="department-batch-group-cover-image" src="/images/campus-group.jpg" />
+        <div>
+          <img class="department-batch-group-cover-image" src="/image/campusGroup-banner/large/<%=campusGroupDetails._id%>" />
+          <%if(checkData.allAdmins.includes(user.regNumber)){%>
+          <div style="position: absolute;right: 10px;top: 10px;">
+            <h3 type="button" class="text-info" data-toggle="modal" data-target="#bannerPicUploadCenter"><i class="fas fa-camera-retro"></i></h3>
+            <!-- Modal -->
+            <div class="modal fade" id="bannerPicUploadCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Upload Banner Picture</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/campus-group/<%=campusGroupDetails._id%>/upload-banner" method="post" enctype="multipart/form-data">
+                      <div class="form-group text-left">
+                        <label class="form-label" for="customFile">Choose Campus-group Banner Photo (jpeg/png)</label>
+                        <input type="file" name="image" class="form-control" id="customFile" />
+                      </div>
+                      <div style="text-align: left;">
+                        <button class="btn btn-success btn-sm ">Upload</button>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ----------model ends------- -->
+          </div>
+          <%}%>
+        </div>
+        
         <div class="text-center">
           <h5>
             <strong>
@@ -191,7 +227,7 @@
             <%campusGroupDetails.admins.forEach((admin)=>{%>
               <div class="d-flex align-items-center student-room-container" >
                 <div>
-                  <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                  <img class="avatar-small"  src="/image/profile/small/profile-<%=admin.regNumber%>" alt="">
                 </div>
                 <div class="ml-2">
                   <span class="d-block"><strong >Name : </strong><%=admin.userName%></span>
@@ -207,7 +243,7 @@
         <%campusGroupDetails.allMembers.forEach((member,index)=>{%>
           <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #fff;">
             <div class="text-center" style="position: relative;">
-              <img class="search-batch-image"  src="/images/sohag.jpg" alt="">
+              <img class="search-batch-image"  src="/image/profile/medium/profile-<%=member.regNumber%>" alt="">
             </div>
             <div class="ml-2" style="color: #3c3b37;font-weight: 400; width: 100%;">
               <div class="d-flex">
@@ -301,7 +337,7 @@
         <div class="col-lg-12">
           <p><strong>Group Creator :</strong></p>
           <div class="member-container">
-            <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+            <img class="member-avatar"  src="/image/profile/medium/profile-<%=campusGroupDetails.createdBy.regNumber%>" alt="">
             <div class="name-container">
               <strong class="d-block ml-2" style="width: 100%;"><a href="#"><%=campusGroupDetails.createdBy.userName%></a> | Department - <%=campusGroupDetails.createdBy.departmentName%></strong>
               <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>

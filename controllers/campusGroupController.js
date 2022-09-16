@@ -249,7 +249,7 @@ exports.checkIfUserAdmin= function(req,res,next){
   if(isAdmin){
     next()
   }else{
-    req.flash("errors", "Only admin can accept the request!!")
+    req.flash("errors", "Only admin perform this action!!")
     res.redirect(`/campus-group/${req.params.id}/details`)
   }
 }

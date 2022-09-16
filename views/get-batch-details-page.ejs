@@ -6,7 +6,42 @@
   <div class="col-lg-9 pt-1" >
     <div class="">
       <div style="width: 100%;position: relative;">
-        <img class="department-batch-group-cover-image" src="/images/department-banner/BNGLI.jpg" />
+        <div>
+          <img class="department-batch-group-cover-image" src="/image/batch-banner/large/<%=batchDetails.batchId%>" />
+          <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
+          <div style="position: absolute;right: 10px;top: 10px;">
+            <h3 type="button" class="text-info" data-toggle="modal" data-target="#bannerPicUploadCenter"><i class="fas fa-camera-retro"></i></h3>
+            <!-- Modal -->
+            <div class="modal fade" id="bannerPicUploadCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Upload Cover Picture</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/upload-batch-banner/<%=batchDetails.batchId%>" method="post" enctype="multipart/form-data">
+                      <div class="form-group text-left">
+                        <label class="form-label" for="customFile">Choose Batch Banner Photo (jpeg/png)</label>
+                        <input type="file" name="image" class="form-control" id="customFile" />
+                      </div>
+                      <div style="text-align: left;">
+                        <button class="btn btn-success btn-sm ">Upload</button>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ----------model ends------- -->
+          </div>
+          <%}%>
+        </div>
         <div class="text-center">
           <h5>
             <strong>
@@ -165,7 +200,7 @@
             <%if(batchDetails.newMemberRequests.length==1){%>
               <div class="col">
                 <div class="member-container align-items-center">
-                  <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                  <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.newMemberRequests[0].regNumber%>" alt="">
                   <div class="name-container">
                     <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.newMemberRequests[0].regNumber%>/profile"><%=batchDetails.newMemberRequests[0].userName%></a></strong>
                     <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
@@ -181,7 +216,7 @@
                 <div class="col-md-6 left-member-container" >
                   <%for(let i=0;i<middleIndex;i++){%>
                     <div class="member-container align-items-center">
-                      <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.newMemberRequests[0].regNumber%>">
                       <div class="name-container">
                         <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.newMemberRequests[i].regNumber%>/profile"><%=batchDetails.newMemberRequests[i].userName%></a></strong>
                       </div>
@@ -194,7 +229,7 @@
                 <div class="col-md-6 right-member-container" >
                   <%for(let j=middleIndex;j<batchDetails.newMemberRequests.length;j++){%>
                     <div class="member-container align-items-center">
-                      <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.newMemberRequests[0].regNumber%>" alt="">
                       <div class="name-container">
                         <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.newMemberRequests[j].regNumber%>/profile"><%=batchDetails.newMemberRequests[j].userName%></a></strong>
                       </div>
@@ -225,7 +260,7 @@
               <div class=" student-room-container" >
                 <div class="d-flex align-items-center">
                   <div >
-                    <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                    <img class="avatar-small"  src="/image/profile/small/profile-<%=batchDetails.presentLeader.regNumber%>" alt="">
                   </div>
                   <div class="ml-2">
                     <span class="d-block"><strong >Name : </strong><%=batchDetails.presentLeader.userName%></span>
@@ -248,7 +283,7 @@
               <div class=" student-room-container" >
                 <div class="d-flex align-items-center">
                   <div >
-                    <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                    <img class="avatar-small"  src="/image/profile/small/profile-<%=batchDetails.previousLeader.regNumber%>" alt="">
                   </div>
                   <div class="ml-2">
                     <span class="d-block"><strong >Name : </strong><%=batchDetails.previousLeader.userName%></span>
@@ -277,7 +312,7 @@
               <%batchDetails.allLeaders.forEach((leader)=>{%>
                 <div class="d-flex align-items-center student-room-container" >
                   <div >
-                    <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                    <img class="avatar-small"  src="/image/profile/small/profile-<%=leader.regNumber%>" alt="">
                   </div>
                   <div class="ml-2">
                     <span class="d-block"><strong >Name : </strong><%=leader.userName%></span>
@@ -317,7 +352,7 @@
           <%if(batchDetails.allMembers.length==1){%>
             <div class="col">
               <div class="member-container">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allMembers[0].regNumber%>" alt="">
                 <div class="name-container">
                   <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[0].regNumber%>/profile"><%=batchDetails.allMembers[0].userName%></a></strong>
                   <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
@@ -330,7 +365,7 @@
               <div class="col-md-6 left-member-container" >
                 <%for(let i=0;i<middle;i++){%>
                   <div class="member-container">
-                    <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allMembers[i].regNumber%>" alt="">
                     <div class="name-container">
                       <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[i].regNumber%>/profile"><%=batchDetails.allMembers[i].userName%></a></strong>
                       <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
@@ -341,7 +376,7 @@
               <div class="col-md-6 right-member-container" >
                 <%for(let j=middle;j<batchDetails.allMembers.length;j++){%>
                 <div class="member-container">
-                  <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                  <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allMembers[j].regNumber%>" alt="">
                   <div class="name-container">
                     <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[j].regNumber%>/profile"><%=batchDetails.allMembers[j].userName%></a></strong>
                     <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>

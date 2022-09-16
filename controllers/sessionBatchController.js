@@ -49,6 +49,16 @@ exports.isSessionBatchExists = function (req, res, next) {
   })
 }
 
+exports.ifPresentBatchLeader = function (req, res, next) {
+  if(req.regNumber==req.batchDetails.presentLeader.regNumber || req.regNumber==req.batchDetails.previousLeader.regNumber){
+    next()
+  }else{
+    req.flash("errors", "Only present leaders can change batch banner!!")
+    req.session.save(function () {
+      res.redirect(`/batch/${req.params.batchId}/details`)
+    })
+  }
+}
 
 
 exports.getSessionBatchDetailsPage =async function (req, res) {

@@ -4,7 +4,7 @@ const session=require('express-session')
 const MongoStore=require('connect-mongo')
 const flash=require('connect-flash')
 const app=express()
-const fileUpload = require("express-fileupload")
+
 
 let sessionOptions=session({
   secret:"hello there",
@@ -16,7 +16,8 @@ let sessionOptions=session({
 
 app.use(sessionOptions)
 app.use(flash())
-app.use(fileUpload())
+
+
 
 app.use(function (req, res, next) {
 

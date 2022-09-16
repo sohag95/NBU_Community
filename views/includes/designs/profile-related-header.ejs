@@ -4,13 +4,84 @@
   <div class="col-lg-9 pt-1" >
     <div class="">
       <div style="width: 100%;position: relative;">
-        <img class="cover-image" src="/images/sponsor-banner.png" width="1000" height="250"/>
-        <div class="text-center">
-          <img class="profile-image" src="/images/sohag.jpg" />
+        <div>
+          <img class="cover-image" src="/image/cover/large/cover-<%=profileInfo.regNumber%>" width="1000" height="250"/>
+          <%if(checkData.isProfileOwner){%>
+          <div style="position: absolute;right: 10px;top: 10px;">
+            <h3 type="button" class="text-info" data-toggle="modal" data-target="#coverPicUploadCenter"><i class="fas fa-camera-retro"></i></h3>
+            <!-- Modal -->
+            <div class="modal fade" id="coverPicUploadCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Upload Cover Picture</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/upload-cover-photo" method="post" enctype="multipart/form-data">
+                      <div class="form-group text-left">
+                        <label class="form-label" for="customFile">Choose Cover Photo (jpeg/png)</label>
+                        <input type="file" name="image" class="form-control" id="customFile" />
+                      </div>
+                      <div style="text-align: left;">
+                        <button class="btn btn-success btn-sm ">Upload</button>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ----------model ends------- -->
+          </div>
+          <%}%>
+        </div>
+        <div class="text-center" >
+          <div style="position: relative;display: inline;">
+            <img class="profile-image" src="/image/profile/medium/profile-<%=profileInfo.regNumber%>" />
+            <%if(checkData.isProfileOwner){%>
+            <div style="position: absolute;right: 10px;top: 10px;">
+              <h5 type="button" class="text-info" data-toggle="modal" data-target="#profilePicUploadCenter"><i class="fas fa-camera-retro"></i></h5>
+              <!-- Modal -->
+              <div class="modal fade" id="profilePicUploadCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Upload Profile Picture</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="/upload-profile-photo" method="post" enctype="multipart/form-data">
+                        <div class="form-group text-left">
+                          <label class="form-label" for="customFile">Choose Profile Photo (jpeg/png)</label>
+                          <input type="file" name="image" class="form-control" id="customFile" />
+                        </div>
+                        <div style="text-align: left;">
+                          <button class="btn btn-success btn-sm ">Upload</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ----------model ends------- -->
+            </div>
+            <%}%>
+          </div>
+          
           <h5><strong>
             <%=profileInfo.userName%>
               <%if(profileInfo.isVerified){%>
-                <span class="text-primary" > <i class="fas fa-check-circle"></i></span>
+                <span class="text-primary" > <i class="fas fa-check-circle"></i> </span>
               <%}else{%>
                 <span class="text-danger"> <i class="fas fa-times-circle"></i></span>
               <%}%>
@@ -50,6 +121,7 @@
             </span>
             
         </div>
+        
       </div>  
       <hr>
     </div>

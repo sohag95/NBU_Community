@@ -12,6 +12,17 @@ exports.isDepartmentExists = function (req, res, next) {
   })
 }
 
+exports.ifPresentDepartmentLeader = function (req, res, next) {
+  if(req.regNumber==req.departmentDetails.presentLeader.regNumber || req.regNumber==req.departmentDetails.previousLeader.regNumber){
+    next()
+  }else{
+    req.flash("errors", "Only present leaders can change department banner!!")
+    req.session.save(function () {
+      res.redirect(`/department/${req.params.departmentCode}/details`)
+    })
+  }
+}
+
 exports.getDepartmentDetailsPage = function (req, res) {
   try{
     let departmentDetails=req.departmentDetails
