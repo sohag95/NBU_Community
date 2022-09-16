@@ -1,5 +1,6 @@
 const GetAllMembers = require('../models/GetAllMembers')
 const OfficialUser=require('../models/OfficialUsers')
+const SentEmail = require('../models/SentEmail')
 const Student = require('../models/Student')
 
 
@@ -9,8 +10,11 @@ exports.test =async function (req, res) {
   //await StudentDataHandle.addActivityIdOnAllParticipantsAccount(["2122COMSC0001","2122COMSC0004","2122COMSC0003"],"123456")
   //await Notification.accountVerifiedToAccountHolder("2122COMSC0001")
   //let allMembers=await GetAllMembers.getAllSourceMembers("2COMSCCOMAP","group")
-  
-    
+  //let sentEmail=new SentEmail()
+  //let emailId="roysohag95@gmail.com"
+  //let emailIds=["roysohag95@gmail.com","troy61125@gmail.com"]
+  //await sentEmail.mailAsAccountVerified(emailId)
+  //await sentEmail.mailAsActivityCreated(emailIds)
   res.render('test-page')
   }catch{
     req.flash("errors", "There is some problem.")

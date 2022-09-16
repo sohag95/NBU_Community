@@ -63,7 +63,7 @@ export default class Search {
         return `<a href="/student/${student.regNumber}/profile" class="list-group-item list-group-item-action">
         <div class="d-flex align-items-center student-room-container" >
               <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                <img class="avatar-small"  src="/image/profile/small/profile-${student.regNumber}" alt="">
               </div>
               <div class="ml-2">
                 <span class="d-block"><strong>${student.userName}</strong><i> (session : ${student.sessionYear})</i> </span>

@@ -94,7 +94,7 @@
                         <% activityDetails.comments.forEach(function(comment) { %>
                           <div class="text-muted small list-group-item">
                               <a href="/student/<%=comment.regNumber%>/profile">
-                                <img class="avatar-tiny" src="/images/sohag.jpg">
+                                <img class="avatar-tiny" src="/image/profile/small/profile-<%=comment.regNumber%>">
                                 <strong><a href="/student/<%=comment.regNumber%>/profile"> <%=comment.userName %></a> </strong>
                               </a>
                             <div >
@@ -111,7 +111,7 @@
             <!-- comment section -->
               <div style="display: flex;">
                 <div class="text-center">
-                  <img class="avatar-small" style="top:1px ;margin-left: 0rem;margin-right: 2px;" src="/images/sohag.jpg" alt="">
+                  <img class="avatar-small" style="top:1px ;margin-left: 0rem;margin-right: 2px;" src="/image/profile/small/profile-<%=user.regNumber%>" alt="">
                 </div>
                 <div class="post-form-container" style="padding: 4px;">
                   <form action="/activity/<%= activityDetails._id %>/comment" method="post" style="display: flex;">
@@ -161,7 +161,7 @@
             <a href="/student/<%=participant.regNumber%>/profile">
               <div class="student-room-container" style="display: flex;">
                 <div >
-                  <img class="avatar-small"  src="/images/sohag.jpg" alt="">
+                  <img class="avatar-small"  src="/image/profile/small/profile-<%=participant.regNumber%>" alt="">
                 </div>
                 <strong class="ml-4"><%=participant.userName%></strong>
               </div>
@@ -214,7 +214,7 @@
             <div class="col-lg-6">
               <p><strong>Main Lead :</strong></p>
               <div class="member-container">
-                <img class="member-avatar" src="/images/sohag.jpg" alt="">
+                <img class="member-avatar" src="/image/profile/medium/profile-<%=activityDetails.leaders.mainLead.regNumber%>" alt="">
                 <div class="name-container">
                   <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=activityDetails.leaders.mainLead.regNumber%>/profile"><%=activityDetails.leaders.mainLead.userName%></a></strong>
                   <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
@@ -224,7 +224,7 @@
             <div class="col-lg-6">
               <p><strong>Assistant Lead :</strong></p>
               <div class="member-container">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                <img class="member-avatar"  src="/image/profile/medium/profile-<%=activityDetails.leaders.assistantLead.regNumber%>" alt="">
                 <div class="name-container">
                   <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=activityDetails.leaders.assistantLead.regNumber%>/profile"><%=activityDetails.leaders.assistantLead.userName%></a></strong>
                   <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
@@ -235,7 +235,7 @@
             <div class="col-lg-6">
               <p><strong>Last Activity Handler :(last updation - <%= activityDetails.activityHandler.lastDate.getMonth() + 1 %>/<%= activityDetails.activityHandler.lastDate.getDate() %>/<%= activityDetails.activityHandler.lastDate.getFullYear() %>)</strong></p>
               <div class="member-container">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                <img class="member-avatar"  src="/image/profile/medium/profile-<%=activityDetails.activityHandler.handler.regNumber%>" alt="">
                 <div class="name-container">
                   <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=activityDetails.activityHandler.handler.regNumber%>"><%=activityDetails.activityHandler.handler.userName%></a></strong>
                   <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
@@ -245,7 +245,7 @@
             <div class="col-lg-6">
               <p><strong>Video Editor :</strong></p>
               <div class="member-container">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                <img class="member-avatar"  src="/image/profile/medium/profile-<%=activityDetails.videoEditorDetails.regNumber%>" alt="">
                 <div class="name-container">
                   <strong class="d-block ml-2" style="width: 100%;"><a href="#"><%=activityDetails.videoEditorDetails.userName%></a></strong>
                   <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>

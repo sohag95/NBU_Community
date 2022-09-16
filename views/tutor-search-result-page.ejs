@@ -11,9 +11,7 @@
         <div class="mb-2">
           <h5 class="bolder text-primary">Suggessions :</h5>
         </div>
-          <form action="/search-home-tutor" method="POST">
-            <input type="hidden" name="selectedClass" value="<%=searchedData.class%>">
-            <input type="hidden" name="selectedStream" value="science">
+          <form action="/search-home-tutor" method="get">
             <button class="btn btn-success btn-block mb-1"><i class="fas fa-search"></i> Search for Science Tutor </button>
           </form>
           
@@ -107,7 +105,7 @@
           <%tutors.forEach((tutor)=>{%>
             <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #fff;">
               <div class="text-center" style="position: relative;">
-                <img class="search-batch-image"  src="/images/sohag.jpg" alt="">
+                <img class="search-batch-image "  src="/image/profile/medium/profile-<%=tutor.regNumber%>" alt="">
                 <div class="batch-no notVisibleOnCollapse">Home-tutor</div>
               </div>
                 <div>

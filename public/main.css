@@ -858,11 +858,10 @@ label.star:before {
 /* Search result banner pages css */
 .search-batch-image{
   width: 250px;
-  height: auto;
-  object-fit: cover;
+  height: 155px;
   border-radius: 3px;
-  opacity: .8;
 }
+
 
 @media (max-width: 720.98px) {
   .search-batch-image{
@@ -1217,4 +1216,5 @@ div.feedbackButton{
   border-radius: 4px;
   color: #FFF;
  }
+ 
  
