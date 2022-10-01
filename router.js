@@ -69,8 +69,8 @@ router.get('/societyController-home',officialUserController.societyControllerMus
 
 //########################
 //Student related router
+//unused router|router.post("/setEmailId",studentController.studentMustBeLoggedIn,studentController.setEmailId)
 router.post("/createNewAccount",multipleOperationController.checkAccountPosition,studentController.createNewAccount)
-router.post("/setEmailId",studentController.studentMustBeLoggedIn,studentController.setEmailId)
 router.get('/student-home',studentController.studentMustBeLoggedIn,studentController.getStudentHomePage)
 router.get("/student/:regNumber/profile",userController.ifUserLoggedIn,studentController.ifProfileUserExists,studentController.getProfileOtherData,studentController.getProfilePage)
 

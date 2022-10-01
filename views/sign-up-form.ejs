@@ -57,10 +57,23 @@
           </div>
 
           <hr>
-          <div class="form-group">
-            <label for="phone-register" class="text-muted"><small>Phone Number</small></label>
-            <input name="phone" id="phone-register" class="form-control form-control-lg " type="text" placeholder="Phone number" required autocomplete="off" />
+          <strong class="text-primary"> Authentication related data</strong>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="email-register" class="text-muted"><small>Email Id <span class="text-danger">(Log In Purpose)</span></small></label>
+                <input name="email" id="email-register" class="form-control form-control-lg " type="email" placeholder="Email Id" required autocomplete="off" />
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="phone-register" class="text-muted"><small>Phone Number <span class="text-warning">(Verification Purpose)</span></small></label>
+                <input name="phone" id="phone-register" class="form-control form-control-lg " type="number" placeholder="Phone Number" required autocomplete="off" />
+              </div>
+            </div>
           </div>
+          
           <div class="form-group">
             <label for="password-register" class="text-muted"><small>Password </small></label>
             <input name="password" required id="password-register" class="form-control form-control-lg " type="password" placeholder="New password" autocomplete="off" />
@@ -80,3 +93,4 @@
 </div>
 
   <%- include('includes/footer') %>
+

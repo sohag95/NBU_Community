@@ -96,14 +96,16 @@ exports.checkStudentAccount=async function(req,res,next){
           createdDate:studentData.createdDate,
           isRejected:false
         }
+        req.verification=studentData.verification
         if(req.studentData.verificationType=="rejected"){
           req.studentData.isRejected=true
         }
+        next()
       }else{
-        req.flash("errors", "Student account deleted or you may nodified data!!")
+        req.flash("errors", "Student account deleted or you may modified data!!")
         req.session.save(() => res.render("404"))
       }
-      next()
+      
   }catch{
     req.flash("errors", "Sorry,there is some problem.Try again later.")
     req.session.save(() => res.redirect("/"))
@@ -134,6 +136,7 @@ exports.checkifAlreadyRejected=function(req,res,next){
 }
 
 exports.getVerificationPage=function(req,res){
+  console.log("Student data:",req.studentData)
   res.render("verification-page",{
     studentData:req.studentData
   })
@@ -150,16 +153,24 @@ exports.accountVerified=function(req,res){
     departmentName:req.studentData.departmentName,
     isVerified:req.studentData.isVerified,
     verificationType:req.studentData.verificationType,
-    phone:req.studentData.phone
+    phone:req.studentData.phone,
+    email:req.studentData.email
   }
-  let verification=new Verification(studentData,verifierData)
-  verification.verifyStudentAccount().then(()=>{
-    req.flash("success", "Account is verified successfully.")
+  let verificationCode=req.body.verificationCode
+  console.log("code :",req.verification.code," match :",verificationCode)
+  if(verificationCode==String(req.verification.code)){
+    let verification=new Verification(studentData,verifierData)
+    verification.verifyStudentAccount().then(()=>{
+      req.flash("success", "Account is verified successfully.")
+      req.session.save(() => res.redirect(`/verification/${studentData.verificationType}/${studentData.regNumber}/page`))
+    }).catch((e)=>{
+      req.flash("errors", "Error occured somewhare. "+e)
+      req.session.save(() => res.redirect(`/verification/${studentData.verificationType}/${studentData.regNumber}/page`))
+    })
+  }else{
+    req.flash("errors", "Sorry!!Verification code has not matched!!")
     req.session.save(() => res.redirect(`/verification/${studentData.verificationType}/${studentData.regNumber}/page`))
-  }).catch((e)=>{
-    req.flash("errors", "Error occured somewhare. "+e)
-    req.session.save(() => res.redirect(`/verification/${studentData.verificationType}/${studentData.regNumber}/page`))
-  })
+  }
 }
 
 

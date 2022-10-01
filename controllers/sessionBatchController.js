@@ -79,10 +79,12 @@ exports.getSessionBatchDetailsPage =async function (req, res) {
       isBatchLeader:false,
       isPresentLeader:false,
       isPreviousLeader:false,
-      isXstudent:req.session.user.otherData.isXstudent
+      isXstudent:null
     }
     
     if(checkData.isUserLoggedIn){
+      checkData.isXstudent=req.session.user.otherData.isXstudent
+      
       batchDetails.allLeaders.forEach((leader)=>{
         if(leader.regNumber==req.regNumber){
           checkData.isBatchLeader=true

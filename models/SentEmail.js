@@ -21,7 +21,8 @@ SentEmail.prototype.sentEmailToSingleAccount=function(emailId){
   return new Promise(async (resolve, reject) => {
     try{
       this.mailOptions.to=emailId
-      await this.transporter.sendMail(this.mailOptions)
+      let info=await this.transporter.sendMail(this.mailOptions)
+      console.log("Sending email info :",info)
       resolve()
     }catch{
       console.log("This code ran.")
@@ -45,11 +46,54 @@ SentEmail.prototype.sentEmailToMultipleAccount=function(emailIds){
   })
 }
 
-SentEmail.prototype.mailAsAccountVerified=function(emailId){
+SentEmail.prototype.mailAsAccountCreated=function(emailId,verificationCode,regNumber,password){
   return new Promise(async (resolve, reject) => {
     try{
-      let message="CONGRATULATIONS!!!Your account has been verified.Now you are an activie member of NBU Community."
-      this.mailOptions.subject="NBU Account Verified!!!",
+      let message=`  
+      <div>
+        <h3>Congratulatons!!Your NBU Community account has been created.</h3>
+        <hr>
+        <h3>Your Verification Code Is : ${verificationCode}</h3>
+        <p style="color:red">(You have to provide 'THE CODE' to verifier to verify your account)</p>
+        <hr>
+        <p>You will be considered as a community member after verification of your account.Please wait for your verification.Your account will be verified sooner.</p>
+        <hr>
+        <p><strong>Your Registration Number is : ${regNumber}</strong></p>
+        <p><strong>Your Password is : ${password}</strong></p>
+        <hr>
+        <p><strong>Thanking You</strong></p>
+        <p><strong>Behalf of NBU Community</strong></p>
+        <p><strong>-Sohag Roy (Community Controller)</strong></p>
+      </div>`
+      //let message="Sorry i am using random email id to learn sending email through node application."
+      this.mailOptions.subject="test",
+      this.mailOptions.html=message
+      await this.sentEmailToSingleAccount(emailId)
+      resolve()
+    }catch{
+      console.log("This code ran.")
+      reject()
+    }
+  })
+}
+
+
+SentEmail.prototype.mailAsAccountVerified=function(emailId,verifierData){
+  return new Promise(async (resolve, reject) => {
+    try{
+      
+      let message=`  
+      <div>
+        <h3>CONGRATULATIONS!!!Your account has been verified.Now you are an activie member of NBU Community.</h3>
+        <hr>
+        <h3>Your account verified by :</h3>
+        <p><strong>Verifier : ${verifierData.verifierType}</strong></p>
+        <p><strong>Name : ${verifierData.userName}</strong></p>
+        <p><strong>Verification Date : ${verifierData.verificationDate}</strong></p>
+        <hr>
+        <h3>Welcome to NBU Community!!</h3>
+      </div>`
+      this.mailOptions.subject="NBU Community Account Verified!!!",
       this.mailOptions.html=message
       await this.sentEmailToSingleAccount(emailId)
       resolve()

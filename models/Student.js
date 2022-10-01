@@ -9,6 +9,7 @@ const Department = require("./Department")
 const OfficialUsers = require("./OfficialUsers")
 const validator = require("validator")
 const Notification = require("./Notification")
+const SentEmail = require("./SentEmail")
 
 let Student=function(regData,batchData,communityController){
   this.data=regData
@@ -26,14 +27,15 @@ let Student=function(regData,batchData,communityController){
     if (typeof this.data.userName != "string") {
       this.data.userName = ""
     }
-    if (typeof this.data.phone != "string") {
-      this.data.phone = ""
-    }
+    
     if (typeof this.data.gender != "string") {
       this.data.gender = ""
     }
     if (typeof this.data.departmentCode != "string") {
       this.data.departmentCode = ""
+    }
+    if (typeof this.data.email != "string") {
+      this.data.email = ""
     }
     if (typeof this.data.phone != "string") {
       this.data.phone = ""
@@ -49,7 +51,7 @@ let Student=function(regData,batchData,communityController){
     if(!this.batchData.batchLeader && !this.batchData.departmentLeader){
       verifiedBy={
         verificationType:"case1",
-        message:"You are one of the first candidates,so you can become batch leader,department leader as well as group member.",
+        message:"You are one of the first candidates,so you can become batch leader as well as a department leader.",
         verifiers:[
           {
             type:"Community controller",
@@ -64,13 +66,13 @@ let Student=function(regData,batchData,communityController){
     if(!this.batchData.batchLeader && this.batchData.departmentLeader){
       verifiedBy={
         verificationType:"case2",
-        message:"You are one of the first candidates in your batch,so you can become batch leader.",
+        message:"You are one of the first candidates of your batch,so you can become default batch leader.",
         verifiers:[
           {
             type:"Department Leader",
             regNumber:this.batchData.departmentLeader.regNumber,
             userName:this.batchData.departmentLeader.userName,
-            phone:"7468987072"
+            phone:this.batchData.departmentLeader.phone
           },
           {
             type:"Community controller",
@@ -85,13 +87,13 @@ let Student=function(regData,batchData,communityController){
     if(this.batchData.batchLeader && this.batchData.departmentLeader){
       verifiedBy={
         verificationType:"case3",
-        message:"After your verification you would consider as batch student.",
+        message:"After verification of your accounty, you would consider as a batch student.",
         verifiers:[
           {
             type:"Present Batch Leader",
             regNumber:this.batchData.batchLeader.regNumber,
             userName:this.batchData.batchLeader.userName,
-            phone:"7468987072"
+            phone:this.batchData.batchLeader.phone,
           },
           {
             type:"Community controller",
@@ -103,6 +105,10 @@ let Student=function(regData,batchData,communityController){
       }
       this.case="case3"
     }
+
+    //this code will be used during verification of a user account
+    let verificationCode = Math.floor(1000 + Math.random() * 9000);
+
     this.data={
       regNumber:regNumber,
       userName:this.data.userName,
@@ -110,15 +116,18 @@ let Student=function(regData,batchData,communityController){
       groupId:this.batchData.groupId,
       sessionYear:this.data.sessionYear,
       gender:this.data.gender,
-      email:null,
       phone:this.data.phone,
+      email:this.data.email.toLowerCase(),
       password:this.data.password,
       isVerified:false,
       verifiedBy:verifiedBy,
       isXstudent:false,
       isHomeTutor:false,
       createdDate:new Date(),
-      creditPoints:0
+      creditPoints:0,
+      verification:{//this data will be used for verification as well as reset password
+        code:verificationCode
+      }
     }
     //for users notification storage
     this.notification={
@@ -155,6 +164,9 @@ let Student=function(regData,batchData,communityController){
         if (this.data.phone == "") {
           this.errors.push("You must provide your phone number.")
         }
+        if (this.data.email == "") {
+          this.errors.push("You must provide your Email Id.")
+        }
         if (this.data.gender == "") {
           this.errors.push("You must select your gender.")
         }
@@ -181,6 +193,8 @@ let Student=function(regData,batchData,communityController){
           this.errors.push("Your phone number should contain 10 digits.")
         }
         
+        if (!validator.isEmail(this.data.email)) {this.errors.push("You must provide a valid email address.")}
+
         // if (this.data.password!=this.data.rePassword) {
         //   this.errors.push("Your confirmation password did not match.")
         // }
@@ -188,7 +202,13 @@ let Student=function(regData,batchData,communityController){
         if (this.data.phone.length == 10) {
           let phoneNumberExists = await studentsCollection.findOne({phone:this.data.phone})
           if (phoneNumberExists) {
-            this.errors.push("Sorry,your phone number has already been registered.")
+            this.errors.push("Sorry,your phone number has already been used.")
+          }
+        }
+        if (validator.isEmail(this.data.email)) {
+          let emailExists = await studentsCollection.findOne({email:this.data.email})
+          if (emailExists) {
+            if (emailExists) {this.errors.push("Given email Id has already been used.")}
           }
         }
         resolve()
@@ -214,36 +234,44 @@ Student.prototype.createNewAccount=function(){
       // Step #2: Only if there are no validation errors
       // then save the user data into a database
       if (!this.errors.length) {
-        // hash user password
-        let salt = bcrypt.genSaltSync(10)
-        this.data.password = bcrypt.hashSync(this.data.password, salt)
-        await studentsCollection.insertOne(this.data)
-        await notificationCollection.insertOne(this.notification)
-        await studentDataCollection.insertOne(this.studentData)
-        
-        //student's needed data to store request array
-        let studentData={
-          regNumber:this.data.regNumber,
-          userName:this.data.userName,
-          phone:this.data.phone,
-          createdDate:new Date()
-        }
-        if(this.case=="case3"){
-          //sent request when batch leader is set
-          await SessionBatch.sentNewStudentRequestOnBatch(this.batchData.batchId,studentData)
-        }else if(this.case=="case2" || this.case=="case1"){
-          //sent request when batch leader is not set but department leader is not set
-          //sent request when no leader is set
-          //In both cases request will go to the department...
-          //-if department leader is set then the students account 
-          //-will be verified by the department leader otherwise by the community controller
-          //regNumber(As:2122COMSC0001) contains sessionYear=2021-2022+departmentCode=COMSCS+batchId=2122COMSC
+        //sent confirmation message on email id
+        //if could not sent email then show error message as not valid email id
+        //if sent,show confirmation message to user
+
+        let sentEmail=new SentEmail()
+        sentEmail.mailAsAccountCreated(this.data.email,this.data.verification.code,this.data.regNumber,this.data.password).then(async()=>{
+          // hash user password
+          let salt = bcrypt.genSaltSync(10)
+          this.data.password = bcrypt.hashSync(this.data.password, salt)
+          await studentsCollection.insertOne(this.data)
+          await notificationCollection.insertOne(this.notification)
+          await studentDataCollection.insertOne(this.studentData)
           
-          await Department.sentNewStudentRequestOnDepartment(this.batchData.batchId.slice(4,9),studentData)
-        }
-        await OfficialUsers.increaseRegSerialNumber()
-        
-        resolve()
+          //student's needed data to store request array
+          let studentData={
+            regNumber:this.data.regNumber,
+            userName:this.data.userName,
+            phone:this.data.phone,
+            createdDate:new Date()
+          }
+          if(this.case=="case3"){
+            //sent request when batch leader is set
+            await SessionBatch.sentNewStudentRequestOnBatch(this.batchData.batchId,studentData)
+          }else if(this.case=="case2" || this.case=="case1"){
+            //sent request when batch leader is not set but department leader is not set
+            //sent request when no leader is set
+            //In both cases request will go to the department...
+            //-if department leader is set then the students account 
+            //-will be verified by the department leader otherwise by the community controller
+            //regNumber(As:2122COMSC0001) contains sessionYear=2021-2022+departmentCode=COMSCS+batchId=2122COMSC
+            
+            await Department.sentNewStudentRequestOnDepartment(this.batchData.batchId.slice(4,9),studentData)
+          }
+          await OfficialUsers.increaseRegSerialNumber()
+          resolve()
+        }).catch(()=>{
+          reject("We could not able to sent confirmation message on your email id.Please enter valid email id or try again later.")
+        })
       } else {
         reject(this.errors)
       }
@@ -300,9 +328,9 @@ Student.prototype.studentLogIn = function () {
               isHomeTutor:attemptedUser.isHomeTutor
             }
           }
-          if(!attemptedUser.email){
-            this.data.otherData.emailNotSet=true
-          }
+          // if(!attemptedUser.email){
+          //   this.data.otherData.emailNotSet=true
+          // }
           //get unseen notification number
           let unseenNotifications=await Notification.getUnseenNotificationNumbers(this.data.regNumber)
           this.data.otherData.unseenNotifications=unseenNotifications
@@ -318,23 +346,24 @@ Student.prototype.studentLogIn = function () {
   })
 }
 
-Student.prototype.checkEmailData=function(){
-  if (typeof this.data.email != "string") {
-    this.data.email=""
-  }
-  if(this.data.from!="setNow" && this.data.from!="setLater" && this.data.from!="update"){
-    this.errors.push("Data manipulation ditected!")
-  }
-  if(this.data.from=="setLater"){
-    this.data.email=="Not_Given"
-  }
-  if(this.data.from=="setNow" || this.data.from=="update"){
-    if (!validator.isEmail(this.data.email)) {
-      this.errors.push("You must provide a valid email address.")
-    }
-  }
+//not used
+// Student.prototype.checkEmailData=function(){
+//   if (typeof this.data.email != "string") {
+//     this.data.email=""
+//   }
+//   if(this.data.from!="setNow" && this.data.from!="setLater" && this.data.from!="update"){
+//     this.errors.push("Data manipulation ditected!")
+//   }
+//   if(this.data.from=="setLater"){
+//     this.data.email=="Not_Given"
+//   }
+//   if(this.data.from=="setNow" || this.data.from=="update"){
+//     if (!validator.isEmail(this.data.email)) {
+//       this.errors.push("You must provide a valid email address.")
+//     }
+//   }
 
-}
+// }
 
 Student.markAsHomeTutor = function (regNumber) {
   return new Promise((resolve, reject) => {
@@ -368,25 +397,26 @@ Student.markAsNotHomeTutor = function (regNumber) {
   })
 }
 
-Student.prototype.setEmailId = function (regNumber) {
-  return new Promise((resolve, reject) => {
-    try{
-      this.checkEmailData()
-      if(!this.errors.length){
-        studentsCollection.findOneAndUpdate({regNumber:regNumber},{
-          $set:{
-            "email":this.data.email
-          }
-        })
-        resolve()
-      }else{
-        reject(this.errors)
-      }  
-    }catch{
-      reject("Sorry there is some problem.")
-    }
-  })
-}
+//not used
+// Student.prototype.setEmailId = function (regNumber) {
+//   return new Promise((resolve, reject) => {
+//     try{
+//       this.checkEmailData()
+//       if(!this.errors.length){
+//         studentsCollection.findOneAndUpdate({regNumber:regNumber},{
+//           $set:{
+//             "email":this.data.email
+//           }
+//         })
+//         resolve()
+//       }else{
+//         reject(this.errors)
+//       }  
+//     }catch{
+//       reject("Sorry there is some problem.")
+//     }
+//   })
+// }
 
 
 Student.getStudentDataByRegNumber = function (regNumber) {

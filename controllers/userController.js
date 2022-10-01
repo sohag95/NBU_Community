@@ -99,7 +99,8 @@ exports.loggingIn = function (req, res) {
         societyController
         .NBUCommunityControllerLogIn()
         .then(function(result) {
-          req.session.user = {regNumber: societyController.data.regNumber, userName: societyController.data.userName,accountType:"societyController"}
+          let otherData={}
+          req.session.user = {regNumber: societyController.data.regNumber, userName: societyController.data.userName,otherData:otherData,accountType:"societyController"}
           req.session.save(function() {
             res.redirect('/societyController-home')
           })

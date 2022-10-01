@@ -4,6 +4,7 @@ const SessionBatch = require("./SessionBatch")
 const Group = require("./Group")
 const Notification = require("./Notification")
 const OfficialUsers = require("./OfficialUsers")
+const SentEmail = require("./SentEmail")
 
 const studentsCollection = require("../db").db().collection("Students")
 const departmentsCollection = require("../db").db().collection("Departments")
@@ -31,7 +32,7 @@ Verification.prototype.validateData=function(){
     userName:this.studentData.userName,
     phone:this.studentData.phone,
     createdDate:new Date(),
-    gole:"Making thecommunity batter.",
+    gole:"Making the community batter.",
     votingPoleId:"auto"
   }
   console.log("User Data :",this.studentData)
@@ -48,6 +49,8 @@ Verification.prototype.markAsVerfiedAccount=function(){
         }
       })
       await Notification.accountVerifiedToAccountHolder(this.studentData.regNumber)
+      let sentEmail=new SentEmail()
+      await sentEmail.mailAsAccountVerified(this.studentData.email,this.verifierData)
       resolve()
     }catch{
       reject()
@@ -103,6 +106,8 @@ Verification.prototype.getRemainingRequestsData=function(newBatchMemberRequests)
 Verification.prototype.updateRemainAccountsVerificationMessage=function(){
   return new Promise(async (resolve, reject) => { 
     try{
+      let communityController=await OfficialUsers.getCommunityControllerData()
+      
       //have to work on this page
       //have to collect community controller details
       let verifiedBy={
@@ -115,11 +120,11 @@ Verification.prototype.updateRemainAccountsVerificationMessage=function(){
             userName:this.studentData.userName,
             phone:this.studentData.phone
           },
-          {//i have to work on this part
+          {
             type:"Community controller",
-            regNumber:"not given",
-            userName:"Pranab Sinha",
-            phone:"7468987072"//get current community controller phone number
+            regNumber:communityController.regNumber,
+            userName:communityController.userName,
+            phone:communityController.phone
           }
         ]
       }

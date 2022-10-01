@@ -49,11 +49,9 @@ exports.createNewAccount = function (req, res) {
         isVerified:false,
         groupId:student.data.groupId,
         verifiedBy:student.data.verifiedBy,
-        emailNotSet:true,
         isHomeTutor:false
       }
-      console.log("Other data :",otherData)
-      req.flash("success", "Successfully created your account.Welcome to NBU community!!")
+      req.flash("success", "Successfully created your account.Your verification code has been sent to your Email Id.")
       req.session.user = { regNumber: student.data.regNumber, userName: student.data.userName,otherData:otherData, accountType:"student" }
       req.session.save(function () {
         res.redirect("/student-home")
@@ -68,32 +66,33 @@ exports.createNewAccount = function (req, res) {
 }
 
 
-exports.setEmailId = function (req, res) {
-  let student = new Student(req.body)
-  student
-    .setEmailId(req.regNumber)
-    .then(() => {
-      let flashMessage
-      if(req.body.from=="setNow"){
-        flashMessage="Email Id set successfully."
-      }else if(req.body.from=="setLater"){
-        flashMessage="Thank you for your responce."
-      }else if(req.body.from=="update"){
-        flashMessage="Email-Id updated successfully."
-      }
-      req.flash("success", flashMessage)
-      req.session.user.otherData.emailNotSet = false
-      req.session.save(function () {
-        res.redirect("/student-home")
-      })
-    })
-    .catch(regErrors => {
-        req.flash("errors", regErrors)
-      req.session.save(function () {
-        res.redirect("/student-home")
-      })
-    })
-}
+//this function used to take email id.Now we are taking email id during sign upas must given.
+// exports.setEmailId = function (req, res) {
+//   let student = new Student(req.body)
+//   student
+//     .setEmailId(req.regNumber)
+//     .then(() => {
+//       let flashMessage
+//       if(req.body.from=="setNow"){
+//         flashMessage="Email Id set successfully."
+//       }else if(req.body.from=="setLater"){
+//         flashMessage="Thank you for your responce."
+//       }else if(req.body.from=="update"){
+//         flashMessage="Email-Id updated successfully."
+//       }
+//       req.flash("success", flashMessage)
+//       req.session.user.otherData.emailNotSet = false
+//       req.session.save(function () {
+//         res.redirect("/student-home")
+//       })
+//     })
+//     .catch(regErrors => {
+//         req.flash("errors", regErrors)
+//       req.session.save(function () {
+//         res.redirect("/student-home")
+//       })
+//     })
+// }
 
 exports.ifProfileUserExists=async function(req,res,next){
   try{

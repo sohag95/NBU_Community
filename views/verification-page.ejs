@@ -20,7 +20,7 @@
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
           <p><i class="fas fa-home"></i> <strong> Name - </strong> <span class="text-capitalize"><%=studentData.userName%></span></p>
           <p><i class="fas fa-graduation-cap"></i><strong> Phone No - </strong><%=studentData.phone%></p>
-          <p><i class="fas fa-graduation-cap"></i><strong> Gmail Id - </strong><%=studentData.email%> (Optional)</p>
+          <p><i class="fas fa-graduation-cap"></i><strong> Gmail Id - </strong><%=studentData.email%></p>
           <p><i class="fas fa-male"></i><strong> Gender - </strong> <%=studentData.gender%></p> 
         </div>
       </div>
@@ -30,7 +30,7 @@
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
           <p><i class="fas fa-home"></i> <strong> Reg No - </strong> <%=studentData.regNumber%></p>
           <p><i class="fas fa-home"></i> <strong> Department - </strong> <%=studentData.departmentName%></p>
-          <p><i class="fas fa-home"></i> <strong> Session - </strong> <%=studentData.departmentName%></p>
+          <p><i class="fas fa-home"></i> <strong> Session - </strong> <%=studentData.sessionYear%></p>
           <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%=studentData.createdDate%></p>    
         </div>
       </div>
@@ -59,9 +59,30 @@
             </h5>
           </p>
           <div class="d-block">
-            <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/accept" method="post" >
-              <button class="btn btn-block btn-md btn-success">Verified</button>
-            </form>
+            <div id="accordion">
+              <div class="card">
+                <div class="card-header" id="headingOne">
+                  <h5 class="mb-0">
+                    <div class="btn btn-block btn-info text-center" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                     <strong> Verify Account</strong>
+                    </div>
+                  </h5>
+                </div>
+            
+                <div id="collapseOne" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                  <div class="card-body">
+                    <h6><strong class="text-warning">[Get the verification code from the account holder and put it on the belowed field.Verification code is send to <%=studentData.gender=="male"?"his":"her"%> gmail id.]</strong></h6>
+                    <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/accept" method="post" >
+                      <div class="form-group">
+                        <label for="verificationCode-register" class="text-muted"><small>Verification Code </small></label>
+                        <input name="verificationCode" id="verificationCode-register" class="form-control form-control-lg " type="number" placeholder="Enter verification code." required autocomplete="off" />
+                      </div>
+                      <button class="btn btn-block btn-md btn-success">Submit Verification Code</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -76,10 +97,33 @@
                 </strong>
               </h5>
             </p>
-            <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/reject" method="post" class="d-block">
-              <input name="reason" class="form-control form-control-lg space" type="text" placeholder="Write the reason." required autocomplete="off">
-              <button class="btn btn-block btn-md btn-danger">Rejected</button>
-            </form>
+
+
+           
+
+            <div id="accordion">
+              <div class="card">
+                <div class="card-header" id="headingOne">
+                  <h5 class="mb-0">
+                    <div class="btn btn-block btn-danger text-center" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                     <strong> Reject Account</strong>
+                    </div>
+                  </h5>
+                </div>
+            
+                <div id="collapseTwo" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                  <div class="card-body">
+                    <form action="/verification/<%=studentData.verificationType%>/<%=studentData.regNumber%>/reject" method="post" class="d-block">
+                      <div class="form-group">
+                        <label for="reason" class="text-muted"><small>Rejection Reason </small></label>
+                        <input name="reason" id="reason" class="form-control form-control-lg " type="text" placeholder="Give the reason." required autocomplete="off" />
+                      </div>
+                      <button class="btn btn-block btn-md btn-danger">Rejected</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       <%}else{%>
