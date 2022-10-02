@@ -126,7 +126,12 @@ let Student=function(regData,batchData,communityController){
       createdDate:new Date(),
       creditPoints:0,
       verification:{//this data will be used for verification as well as reset password
-        code:verificationCode
+        code:verificationCode,//to verify new account
+        resetPassword:{
+          OTP:null,
+          validationTime:null,
+          isUsed:null
+        }
       }
     }
     //for users notification storage
@@ -474,6 +479,52 @@ Student.getStudentOtherDataByRegNumber = function (regNumber) {
   })
 }
 
+Student.ifEmailIdRegistered = function (email) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      if (!validator.isEmail(email)) {
+        reject("Invalid email id.")
+      }
+      let data=await studentsCollection.findOne({email:email})
+      if(data){
+        resolve(data.verification)
+      }else{
+        reject("Email id is not registered!!")
+      }
+    }catch{
+      reject("There is some problem!!Try again later.")
+    }
+  })
+}
+
+Student.sentResetPasswordNewOTP = function (email) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      let OTP = Math.floor(100000 + Math.random() * 900000);
+      let twentyMinutesLater = new Date();
+      twentyMinutesLater.setMinutes(twentyMinutesLater.getMinutes() + 20);
+      let OTPDetails={
+        OTP:OTP,
+        validationTime:twentyMinutesLater,
+        isUsed:false
+      }
+      //store otpDetails on database
+      await studentsCollection.updateOne({email:email},{
+        $set:{
+          "verification.resetPassword":OTPDetails
+        }
+      })
+      //Sent otp to email Id
+      let sentEmail=new SentEmail()
+      await sentEmail.sentResetPasswordOTPDetails(email,OTPDetails)
+      
+      resolve(email)
+    }catch{
+      reject("There is some problem!!Try again later.")
+    }
+  })
+}
+
 Student.updateVerificationMessage = function (regNumber,verifiedBy) {
   return new Promise(async(resolve, reject) => {
     try{
@@ -489,6 +540,24 @@ Student.updateVerificationMessage = function (regNumber,verifiedBy) {
   })
 }
 
+Student.setNewPassword = function (email,newPassword) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      let salt = bcrypt.genSaltSync(10)
+      let password = bcrypt.hashSync(newPassword, salt)
+
+      await studentsCollection.updateOne({email:email},{
+        $set:{
+          password:password,
+          "verification.resetPassword.isUsed":true
+        }
+      })
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 
 Student.searchStudent = function(searchTerm) {
   return new Promise(async (resolve, reject) => {

@@ -104,6 +104,32 @@ SentEmail.prototype.mailAsAccountVerified=function(emailId,verifierData){
   })
 }
 
+SentEmail.prototype.sentResetPasswordOTPDetails=function(emailId,OTPDetails){
+  return new Promise(async (resolve, reject) => {
+    try{
+      
+      let message=`  
+      <div>
+        <h3>Request for reset password received!! </h3>
+        <hr>
+        <h3>Your OTP Details :</h3>
+        <p><strong>Your OTP is: ${OTPDetails.OTP}</strong></p>
+        <p><strong>Validation Time : ${OTPDetails.validationTime}</strong></p>
+        <hr>
+        <h3>Do not share your OTP with anyone.Please inform ,if you didn't request to reset password!!</h3>
+      </div>`
+      this.mailOptions.subject="OTP for reset NBU Community Account's Password!!!",
+      this.mailOptions.html=message
+      await this.sentEmailToSingleAccount(emailId)
+      resolve()
+    }catch{
+      console.log("This code ran.")
+      reject()
+    }
+  })
+}
+
+
 SentEmail.prototype.mailAsActivityCreated=function(emailIds){
   return new Promise(async (resolve, reject) => {
     try{

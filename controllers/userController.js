@@ -15,6 +15,16 @@ exports.test =async function (req, res) {
   //let emailIds=["roysohag95@gmail.com","troy61125@gmail.com"]
   //await sentEmail.mailAsAccountVerified(emailId)
   //await sentEmail.mailAsActivityCreated(emailIds)
+  var twentyMinutesLater = new Date();
+  let prev=twentyMinutesLater
+  twentyMinutesLater.setMinutes(twentyMinutesLater.getMinutes() + 20);
+  let after=twentyMinutesLater
+  if(prev>after){
+    console.log("Prev date :",prev)
+  }else{
+    //this will execute all the time
+    console.log("After date :",twentyMinutesLater)
+  }
   res.render('test-page')
   }catch{
     req.flash("errors", "There is some problem.")
@@ -41,6 +51,15 @@ exports.ifUserLoggedIn = function (req, res,next) {
     req.isUserLoggedIn=true
   }
   next()
+}
+
+exports.userMustNotLoggedIn = function (req, res,next) {
+  if(!req.session.user){
+    next()
+  }else{
+    req.flash("errors", "You are already logged In.")
+    req.session.save(() => res.redirect("/"))
+  }
 }
 
 exports.getLogInForm = function (req, res) {
@@ -216,3 +235,5 @@ exports.searchStudent=function(req,res){
     res.json([])
   })
 }
+
+

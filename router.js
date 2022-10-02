@@ -20,6 +20,7 @@ const reportController=require('./controllers/reportController')
 const homeTutorController=require('./controllers/homeTutorController')
 const campusGroupController=require('./controllers/campusGroupController')
 const awsS3BucketController=require('./controllers/awsS3BucketController')
+const forgotPasswordController=require('./controllers/forgotPasswordController')
       
 const multer=require("multer")
 const storage = multer.memoryStorage()
@@ -56,6 +57,11 @@ router.post("/upload-cover-photo",upload.single('image'),studentController.stude
 router.get('/',userController.guestHomePage)
 router.get('/log-in',userController.getLogInForm)
 router.get('/sign-up-form',userController.getSignUpForm)
+router.get('/forgot-password-form',forgotPasswordController.getForgotPasswordForm)
+router.get('/reset-password-form/:email',userController.userMustNotLoggedIn,forgotPasswordController.getVerifiedDataByEmailId,forgotPasswordController.getResetPasswordForm)
+router.post('/sent-new-otp',userController.userMustNotLoggedIn,forgotPasswordController.ifEmailIdRegistered,forgotPasswordController.sentNewOTP)
+router.post('/reset-password-otp-received',userController.userMustNotLoggedIn,forgotPasswordController.goToResetPasswordForm)
+router.post('/reset-password',userController.userMustNotLoggedIn,forgotPasswordController.ifEmailIdRegistered,forgotPasswordController.checkNewPasswordData,forgotPasswordController.checkOTPData,forgotPasswordController.setNewPassword)
 
 //########################
 //verification related routers
