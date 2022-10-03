@@ -1,4 +1,6 @@
+const Activity = require('../models/Activity')
 const department=require('../models/Department')
+const SourceNotifications = require('../models/SourceNotifications')
 
 
 
@@ -23,9 +25,19 @@ exports.ifPresentDepartmentLeader = function (req, res, next) {
   }
 }
 
-exports.getDepartmentDetailsPage = function (req, res) {
+exports.getDepartmentDetailsPage =async function (req, res) {
   try{
+    // get sourceNotifications here
+    let sourceNotifications=await SourceNotifications.getNotifications(req.departmentDetails.departmentCode)
+    let totalNotifications=sourceNotifications.length
+    if(totalNotifications>5){
+      sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
+      
+    }
+    sourceNotifications=sourceNotifications.reverse()
+    //------------------------------
     let departmentDetails=req.departmentDetails
+    let previousActivityData=null
     let checkData={
       isUserLoggedIn:req.isUserLoggedIn,
       isDepartmentMember:false,
@@ -73,12 +85,30 @@ exports.getDepartmentDetailsPage = function (req, res) {
       }
     
     }
+    if(departmentDetails.previousActivity){
+      let activityDetails=await Activity.getActivityDetailsById(departmentDetails.previousActivity)
+      previousActivityData={
+        _id:activityDetails._id,
+        activityType:activityDetails.activityType,
+        sourceName:activityDetails.sourceName,
+        activitySourceId:activityDetails.activitySourceId,
+        topic:activityDetails.topic,
+        title:activityDetails.title,
+        videoCoverPhoto:activityDetails.videoCoverPhoto,
+        likes:activityDetails.likes.length,
+        comments:activityDetails.comments.length,
+        activityDate:activityDetails.activityDates.activityDate,
+        publishedDate:activityDetails.activityDates.publishedDate,
+      }
+    }
 
     console.log("Department Details :",departmentDetails)
     console.log("Check data :",checkData)
     res.render('get-department-details-page',{
       departmentDetails:departmentDetails,
-      checkData:checkData
+      checkData:checkData,
+      sourceNotifications:sourceNotifications,
+      previousActivityData:previousActivityData
     })
   }catch{
     res.render('404')

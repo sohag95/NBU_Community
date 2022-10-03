@@ -46,8 +46,9 @@ Department.prototype.prepareDepartmentDataField=function(){
     previosActivity:null,
     completedActivities:[],
     departmentNotifications:[],
-    coverPhoto:null,
-    newBatchMemberRequests:[]
+    newBatchMemberRequests:[],
+    isVoteGoingOn:false,
+    leaderVotingData:null,
   }
 }
 

@@ -75,6 +75,7 @@
         </div>
         <div class="col-lg-6">
           <p><strong>Assistant Lead :</strong></p>
+          <%if(votingDetails.leaders.assistantLead){%>
           <div class="member-container">
             <img class="member-avatar"  src="/image/profile/medium/profile-<%=votingDetails.leaders.assistantLead.regNumber%>" alt="">
             <div class="name-container">
@@ -82,6 +83,9 @@
               <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
             </div>
           </div>
+          <%}else{%>
+            <div class="btn btn-block btn-info">No assistant leader!!</div>
+          <%}%>
         </div>
         <hr>
         <div class="col-6">
