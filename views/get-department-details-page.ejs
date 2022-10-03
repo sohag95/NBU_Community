@@ -48,7 +48,8 @@
                 <strong>
                   <span class="text-primary" > Department : <%=departmentDetails.departmentName%></span>
                 </strong>
-              </h5>  
+              </h5> 
+              <a class="text-warning" href="/group/<%=departmentDetails.groupId%>/details"><strong>( Go to group page )</strong> </a> 
             </div>
           </div>  
           <hr>
@@ -315,7 +316,7 @@
               </div>
     
               <div class="item-container mb-2 allLeadersContainer" >
-                <strong><h5 class="bolder">All Leaders (<%=departmentDetails.allLeaders.length%>)</h5></strong>
+                <strong><h5 class="bolder">All Present Leaders (<%=departmentDetails.allLeaders.length%>)</h5></strong>
                 <hr style="margin-bottom: .55rem;margin-top: 0rem;">
                 <%if(!departmentDetails.allLeaders.length){%>
                   <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>

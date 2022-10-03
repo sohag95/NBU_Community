@@ -1,4 +1,6 @@
+const Activity = require('../models/Activity')
 const group=require('../models/Group')
+const SourceNotifications = require('../models/SourceNotifications')
 
 
 exports.isGroupExists = function (req, res, next) {
@@ -22,9 +24,20 @@ exports.ifPresentGroupLeader = function (req, res, next) {
   }
 }
 
-exports.getGroupDetailsPage = function (req, res) {
+exports.getGroupDetailsPage =async function (req, res) {
   try{
+
+     // get sourceNotifications here
+     let sourceNotifications=await SourceNotifications.getNotifications(req.groupDetails.groupId)
+     let totalNotifications=sourceNotifications.length
+     if(totalNotifications>5){
+       sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
+       sourceNotifications=sourceNotifications.reverse()
+     }
+     
+     //------------------------------
     let groupDetails=req.groupDetails
+    let previousActivityData=null
     let checkData={
       isUserLoggedIn:req.isUserLoggedIn,
       isGroupMember:false,
@@ -32,17 +45,18 @@ exports.getGroupDetailsPage = function (req, res) {
       isGroupLeader:false,
       isPresentLeader:false,
       isPreviousLeader:false,
-      isXstudent:req.session.user.otherData.isXstudent
+      isXstudent:false
     }
 
     if(checkData.isUserLoggedIn){
+      isXstudent=req.session.user.otherData.isXstudent
       groupDetails.allLeaders.forEach((leader)=>{
         if(leader.regNumber==req.regNumber){
           checkData.isGroupLeader=true
         }
       })
 
-      groupDetails.allMembers.forEach((member)=>{
+      groupDetails.allPresentMembers.forEach((member)=>{
         if(member.regNumber==req.regNumber){
           checkData.isGroupMember=true
         }
@@ -67,12 +81,30 @@ exports.getGroupDetailsPage = function (req, res) {
       }
     
     }
+    if(groupDetails.previousActivity){
+      let activityDetails=await Activity.getActivityDetailsById(groupDetails.previousActivity)
+      previousActivityData={
+        _id:activityDetails._id,
+        activityType:activityDetails.activityType,
+        sourceName:activityDetails.sourceName,
+        activitySourceId:activityDetails.activitySourceId,
+        topic:activityDetails.topic,
+        title:activityDetails.title,
+        videoCoverPhoto:activityDetails.videoCoverPhoto,
+        likes:activityDetails.likes.length,
+        comments:activityDetails.comments.length,
+        activityDate:activityDetails.activityDates.activityDate,
+        publishedDate:activityDetails.activityDates.publishedDate,
+      }
+    }
 
     console.log("group details :",groupDetails)
     console.log("checkData:",checkData)
     res.render('get-group-details-page',{
       groupDetails:groupDetails,
-      checkData:checkData
+      checkData:checkData,
+      sourceNotifications:sourceNotifications,
+      previousActivityData:previousActivityData
     })
   }catch{
     res.render('404')

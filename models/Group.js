@@ -14,7 +14,7 @@ Group.prototype.prepareGroupDataField=function(){
     presentDepartments:this.data.presentDepartments,
     presentLeader:null,
     previousLeader:null,
-    allMembers:[],
+    allPresentMembers:[],//"present" added later may occure some error,i have to fix that
     allLeaders:[],
     presentActivity:null,
     previosActivity:null,

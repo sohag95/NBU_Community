@@ -32,9 +32,9 @@ exports.getDepartmentDetailsPage =async function (req, res) {
     let totalNotifications=sourceNotifications.length
     if(totalNotifications>5){
       sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
-      
+      sourceNotifications=sourceNotifications.reverse()
     }
-    sourceNotifications=sourceNotifications.reverse()
+    
     //------------------------------
     let departmentDetails=req.departmentDetails
     let previousActivityData=null

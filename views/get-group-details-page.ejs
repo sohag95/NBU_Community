@@ -8,31 +8,196 @@
   <div class="col-lg-9 pt-1" >
     <div class="">
       <div style="width: 100%;position: relative;">
-        <img class="department-batch-group-cover-image" src="/images/sponsor-banner2.png" width="1000" height="250"/>
+        <div>
+          <img class="department-batch-group-cover-image" src="/image/group-banner/large/<%=groupDetails.groupId%>" width="1000" height="250"/>
+          <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
+            <div style="position: absolute;right: 10px;top: 10px;">
+              <h3 type="button" class="text-info" data-toggle="modal" data-target="#bannerPicUploadCenter"><i class="fas fa-camera-retro"></i></h3>
+              <!-- Modal -->
+              <div class="modal fade" id="bannerPicUploadCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Upload Cover Picture</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="/upload-group-banner/<%=groupDetails.groupId%>" method="post" enctype="multipart/form-data">
+                        <div class="form-group text-left">
+                          <label class="form-label" for="customFile">Choose Department Banner Photo (jpeg/png)</label>
+                          <input type="file" name="image" class="form-control" id="customFile" />
+                        </div>
+                        <div style="text-align: left;">
+                          <button class="btn btn-success btn-sm ">Upload</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ----------model ends------- -->
+            </div>
+            <%}%>
+          </div>
         <div class="text-center">
           <h5>
             <strong>
-              <span class="text-primary" > Group Name : Arts Group</span>
+              <span class="text-primary" > Group Name : <%=groupDetails.groupName%></span>
             </strong>
           </h5>  
         </div>
       </div>  
       <hr>
           <div class="d-flex justify-content-center">
-            <a href="/batch"><span class="button">Bengali</span></a>
-            <a href=""><span class="button">English</span></a>
-            <a href=""><span class="button">Nepali</span></a>
+            <%groupDetails.presentDepartments.forEach((department)=>{%>
+              <a href="/department/<%=department.departmentCode%>/details"><span class="button"><%=department.departmentName%></span></a>
+            <%})%>
           </div>
           <hr>
     </div>
 
     <div class=" mt-2 mb-2" >
-      <div class="path text-center" style="padding: 1rem;">
-          <div class="col" style="width: 100%;">
-            this section will contain present activities of the portal
+      <div class=" path text-secondary" style=" padding: 1.4rem">
+        <!-- activity board starts here -->
+        <%let gotoText=null%>
+        <%let gotoLink=null%>  
+        <div style="display: flex;    flex-wrap: wrap;">
+          <div class="col-lg-6">
+            <strong style="color:#fff;"><h5>Activity Board :</h5></strong>
+            <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+            <div class="member-container d-block" style="height:8rem ;max-height:8rem ;overflow-y: scroll;">
+              <!-- activity details contsiner starts | Voting board + Activity Board-->
+              <%if(groupDetails.isVoteGoingOn){%>
+              <!--Voting related informations starts--> 
+                <%gotoLink="/leader-voting/"+groupDetails.leaderVotingData.votingPoleId+"/details"%>
+                <h5 class="bolder text-warning text-center"><strong>Leader Voting is Going On</strong></h5>
+                <hr style="margin-bottom: .2rem;margin-top: 0rem;">
+                <%if(groupDetails.leaderVotingData.votingDates.resultDate){%>
+                  <%gotoText="See the voting result"%> 
+                  <h6 class="bolder text-warning text-center" style="margin-bottom:0px"><strong>Result has published !!</strong></h6>
+                  <%if(groupDetails.leaderVotingData.wonLeader.regNumber==user.regNumber){%>
+                    <strong  class="d-block text-info text-center">Congrats!! You have won the election.Accept yourself as a leader.</strong>
+                  <%}else{%>
+                    <strong  class="d-block text-info text-center">New Leader will be added when he/she will accept himself/herself as a new leader.</strong>  
+                  <%}%>
+                  <strong  class="d-block text-primary">Won Leader : <span class="text-secondary">Sohag Roy</span></strong> 
+                  <strong  class="d-block text-primary">Result Date : <span class="text-secondary">12/12/2022</span></strong>
+                  <hr>
+                <%}%>
+                <strong  class="d-block text-primary">Pole Created Date : <span class="text-secondary">12/12/2022</span> </strong> 
+                <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary">12/12/2022</span></strong>
+                <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary">12/12/2022</span></strong>
+              <!--Voting related informations ends-->
+              <%}else if(groupDetails.presentActivity){%>
+                <%gotoLink="/activity/"+groupDetails.presentActivity.activityId+"/details"%>
+                <!--Activity related informations starts-->  
+                <h5 class="bolder text-warning text-center"><strong>Department Activity is Going On</strong></h5>
+                <hr style="margin-bottom: .2rem;margin-top: 0rem;">
+                <%if(groupDetails.presentActivity.isTopicByVote && !groupDetails.presentActivity.isVoteCompleted){%>
+                  <h6 class="bolder text-warning text-center" style="margin-bottom:0px"><strong>Topic voting is going on!!</strong></h6>
+                  <%if(checkData.isGroupMember){%>
+                    <%gotoText="Give topic vote"%>
+                    <strong  class="d-block text-info text-center">Topic for next activity is going to be selected by voting.Please give your vote.</strong>
+                  <%}else{%>
+                    <%gotoText="Go to topic voting page"%>
+                    <strong  class="d-block text-info text-center">Topic selection for next activity is going on.</strong> 
+                  <%}%>    
+                <%}else{%>
+                  <%gotoText="Check activity status"%>
+                  <h6  class="d-block bolder text-primary mb-0 text-center"><strong>Activity Short Details </strong> </h6>
+                  <strong class="d-block"><span class="text-primary">Topic :</span> <%=groupDetails.presentActivity.topic%></strong>
+                  <strong class="d-block"><span class="text-primary">Title :</span> <%=groupDetails.presentActivity.title%></strong>
+                <%}%> 
+                <!--Activity related informations ends-->
+              <%}else{%>
+                <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
+                  <%gotoText="Create new activity"%>
+                  <%gotoLink="/activity/group/"+groupDetails.groupId+"/create"%>
+                  <h6  class="d-block bolder text-warning mb-0 text-center"><strong>No Activity available!! </strong> </h6>
+                  <strong  class="d-block text-info text-center">As a present leader you should create an activity.Do some creative activity on your leadership.</strong>
+                <%}else{%>
+                  <%if(checkData.isGroupMember){%>
+                    <h6  class="d-block bolder text-warning mb-0 text-center"><strong>No Activity available!! </strong> </h6>
+                    <div class="d-block text-info text-center">Contact with the present leader to create new activity!!</div>
+                  <%}else{%>
+                    <div class="d-block text-info text-center">There is no activity going on.</div>
+                  <%}%>
+                <%}%>
+              <%}%> 
+              <!-- activity details contsiner ends -->
+            </div>
+            <!-- activity goto link starts -->
+            <%if(gotoLink){%>
+              <a href="<%=gotoLink%>" class="btn btn-block btn-primary"><%=gotoText%> <i class="fas fa-arrow-right"></i></a>
+            <%}else{%>
+              <div class="btn btn-block btn-primary disabled">No activity available!!</div>
+            <%}%>
+            <!-- activity goto link ends -->
           </div>
+          <!-- Activity board ends here -->
+          <!-- source notification part starts here -->
+          <div class="col-lg-6">
+            <strong style="color:#fff;"><h5>Notification Board : <%= sourceNotifications.length==5 ? "(last-5)":""%></h5></strong>
+            <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+            <div class="member-container d-block" style="height:8rem ;overflow-y: scroll;">
+              <%if(!sourceNotifications.length){%>
+                <div class="btn btn-block btn-info">No notification available!!</div>
+              <%}else{%>
+              <%sourceNotifications.forEach((notification)=>{%>
+                <div class="notification-container mb-1 not-viewed">
+                  <div style="display: flex;width: 100%;">
+                      <div class="row"  style="width: 100%;">
+                        <div class="col"  style="width: 100%;">
+                          <div style="width: 100%;">
+                            <strong class="bolder"><%=notification.message%></strong>  
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <%if(notification.gotoText){%>
+                    <hr style="padding: 0;margin: 0;">
+                    <div class="ml-1" >
+                      <a class="d-inline bolder text-primary mr-3" href="<%=notification.gotoLink%>"> <%=notification.gotoText%></a>
+                      <strong class="float-right"><i>12/12/12</i></strong> 
+                    </div>
+                  <%}%>
+                </div>
+              <%})%>
+              <%}%>
+            </div>
+            <a href="/source/group/<%=groupDetails.groupId%>/notifications" class="btn btn-block btn-info">See all notifications <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <!-- source notification part ends here -->
+        <!-- daysOut will be true if present leader selected before 15 days -->
+        <!-- NOT COMPLETED -->
+        <!-- <%let daysOut=true%>
+        <%if(checkData.isBatchLeader && !groupDetails.isVoteGoingOn && !groupDetails.presentActivity && daysOut){%>
+            <hr>
+            <div class="member-container mt-2">
+                <div>
+                  <h5 class="bolder text-primary"><strong>New Leader Selection voting pole creation:</strong></h5>
+                  <h6 class="bolder text-warning"><strong>Present leader activation date : </strong><%=groupDetails.presentLeader.createdDate%></h6>
+                  <h6 class="bolder text-danger">[This section will only work/shown after 15 days of present leader selection.Main leader can create voting pole in case he/she is not interested to lead activity]</h6>
+                  <div class="container">
+                    <div class="" style="width: 100%;">
+                      <form action="/create/batch/<%=groupDetails.batchId%>/leader-voting-pole" method="post">
+                        <button class="btn  btn-info btn-sm btn-block">Create New Leader Selection Pole</button>
+                      </form>
+                    </div>
+                  </div> 
+                </div>
+            </div>
+            <%}%> -->
+            <!-- Leader section ends -->
       </div>
     </div>
+
     <hr>
     <h5 class="text-primary text-center"><strong >Group Details</strong></h5>
     <hr>
@@ -41,109 +206,92 @@
         <div class="">
           <div class="item-container mb-2">
             <strong><h5 class="bolder">Present Leaders</h5></strong>
-            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
             <strong class="d-block text-info">Main Lead :</strong>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <strong class="d-block text-info">Assistant Lead :</strong>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
+                <%if(groupDetails.presentLeader){%>
+                  <div class=" student-room-container" >
+                    <div class="d-flex align-items-center">
+                      <div >
+                        <img class="avatar-small"  src="/image/profile/small/profile-<%=groupDetails.presentLeader.regNumber%>" alt="">
+                      </div>
+                      <div class="ml-2">
+                        <span class="d-block"><strong >Name : </strong><%=groupDetails.presentLeader.userName%></span>
+                        <span class="d-block"><strong >Department : </strong><%=groupDetails.presentLeader.departmentName%></span>
+                        <span class="d-block"><strong >Phone : </strong><%=groupDetails.presentLeader.phone%></span>
+                      </div>
+                    </div>
+                    <%if(groupDetails.presentLeader.votingPoleId){%>
+                    <a  href="/leader-voting/<%=groupDetails.presentLeader.votingPoleId%>/details">
+                      <i class="text-info">Go to voting details...</i>
+                    </a>
+                    <%}else{%>
+                      <i class="text-warning">(Default Leader)</i>
+                    <%}%>
+                  </div>
+                <%}else{%>
+                  <div class="btn btn-lg btn-block btn-info">Leader not available!!</div>
+                <%}%>
+                <strong class="d-block text-info">Assistant Lead :</strong>
+                <%if(groupDetails.previousLeader){%>
+                  <div class=" student-room-container" >
+                    <div class="d-flex align-items-center">
+                      <div >
+                        <img class="avatar-small"  src="/image/profile/small/profile-<%=groupDetails.previousLeader.regNumber%>" alt="">
+                      </div>
+                      <div class="ml-2">
+                        <span class="d-block"><strong >Name : </strong><%=groupDetails.previousLeader.userName%></span>
+                        <span class="d-block"><strong >Department : </strong><%=groupDetails.presentLeader.department%></span>
+                        <span class="d-block"><strong >Phone : </strong><%=groupDetails.previousLeader.phone%></span>
+                      </div>
+                    </div>
+                    <%if(groupDetails.previousLeader.votingPoleId){%>
+                      <a  href="/leader-voting/<%=groupDetails.previousLeader.votingPoleId%>/details">
+                        <i class="text-info">Go to voting details...</i>
+                      </a>
+                      <%}else{%>
+                        <i class="text-warning">(Default Leader)</i>
+                      <%}%>
+                  </div>
+                <%}else{%>
+                  <div class="btn btn-lg btn-block btn-info">Leader not available!!</div>
+                <%}%>
           </div>
 
           <div class="item-container mb-2 allLeadersContainer" >
-            <strong><h5 class="bolder">All Present Leaders (3)</h5></strong>
+            <strong><h5 class="bolder">All Present Leaders (<%=groupDetails.allLeaders.length%>)</h5></strong>
             <hr style="margin-bottom: .55rem;margin-top: 0rem;">
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center student-room-container" >
-              <div >
-                <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-              </div>
-              <div class="ml-2">
-                <span class="d-block"><strong >Name : </strong>Sohag Roy</span>
-                <span class="d-block"><strong >Phone : </strong>7468987072</span>
-              </div>
-            </div>
+            <%if(!groupDetails.allLeaders.length){%>
+              <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>
+            <%}else{%>
+              <%groupDetails.allLeaders.forEach((leader)=>{%>
+                <div class="d-flex align-items-center student-room-container" >
+                  <div >
+                    <img class="avatar-small"  src="/image/profile/small/profile-<%=leader.regNumber%>" alt="">
+                  </div>
+                  <div class="ml-2">
+                    <span class="d-block"><strong >Name : </strong><%=leader.userName%></span>
+                    <span class="d-block"><strong >Department : </strong><%=leader.departmentName%></span>
+                  </div>
+                </div>
+              <%})%>
+            <%}%>
           </div>
-          <a href="/group/2COMSCCOMAP/previous-details">
+          <a href="/group/<%=groupDetails.groupId%>/previous-details">
             <div class="btn btn-block btn-info btn-sm">
               Group's previous details ->
             </div>
           </a>
-
         </div>
+
         <hr>
       </div>
       <div class="col-md-8" >
         <h5 class="bolder text-center">Last Activity</h5>
         <div class=" mb-2">
-          <%- include('includes/activity-banner-structure') %>
+          <%if(previousActivityData){%>
+            <%- include('includes/previous-activity-banner') %>
+          <%}else{%>
+            <%- include('includes/no-previous-activity-banner') %>
+          <%}%>
         </div>
         <hr>
         <div class="btn btn-block btn-secondary btn-md">See all activities -></div>
@@ -151,279 +299,58 @@
     </div>
 
     <hr>
-      <div class="item-container">
-        <strong><h5 class="bolder">All Present Members (30)</h5></strong>
-        <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-            
-        <div style="display: flex;    flex-wrap: wrap;">
-          <div class="col-md-6 left-member-container" >
-              <div class="member-container">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                  <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+        <div class="item-container">
+          <strong><h5 class="bolder">All Present Members (<%=groupDetails.allPresentMembers.length%>)</h5></strong>
+            <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+            <%if(!groupDetails.allPresentMembers.length){%>
+              <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
+            <%}else{%>  
+              <%if(groupDetails.allPresentMembers.length==1){%>
+                <div class="col">
+                  <div class="member-container">
+                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allPresentMembers[0].regNumber%>" alt="">
+                    <div class="name-container">
+                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allPresentMembers[0].regNumber%>/profile"><%=groupDetails.allPresentMembers[0].userName%></a> | <span class="text-secondary"> Dept : <%=groupDetails.allPresentMembers[0].departmentName%></span></strong>
+                      <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="member-container">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                  <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+              <%}else{%>
+                <%let middle=parseInt(groupDetails.allPresentMembers.length/2)%>
+                <div style="display: flex;    flex-wrap: wrap;">
+                  <div class="col-md-6 left-member-container" >
+                    <%for(let i=0;i<middle;i++){%>
+                      <div class="member-container">
+                        <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allPresentMembers[i].regNumber%>" alt="">
+                        <div class="name-container">
+                          <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allPresentMembers[i].regNumber%>/profile"><%=groupDetails.allPresentMembers[i].userName%></a> | <span class="text-secondary">Dept : <%=groupDetails.allPresentMembers[i].departmentName%></span></strong>
+                          <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                        </div>
+                      </div>
+                    <%}%>
+                  </div>
+                  <div class="col-md-6 right-member-container" >
+                    <%for(let j=middle;j<groupDetails.allPresentMembers.length;j++){%>
+                    <div class="member-container">
+                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allPresentMembers[j].regNumber%>" alt="">
+                      <div class="name-container">
+                        <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allPresentMembers[j].regNumber%>/profile"><%=groupDetails.allPresentMembers[j].userName%></a> | <span class="text-secondary">Dept : <%=groupDetails.allPresentMembers[j].departmentName%></span></strong>
+                        <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                      </div>
+                    </div>
+                    <%}%>
+                  </div>
                 </div>
-              </div>
-          </div>
-          <div class="col-md-6 right-member-container" >
-            <div class="member-container ">
-              <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-              <div class="name-container">
-                <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Akash Goshwami</a></strong>
-                <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
-              </div>
-            </div>
-            <div class="member-container">
-              <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-              <div class="name-container">
-                <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <hr>  
+              <%}%>
+            <%}%>
+        </div> 
   </div>
   <div class="col-lg notVisibleOnCollapse" >
   </div>
 </div>
-<hr>
 
 
 <!-- New design from upper section -->
-
-<div style="display: flex;flex-wrap: wrap;">
-  <div class="col-lg"></div>
-  <div class="col-lg-7">
-
-    <h5 class="bolder text-primary pt-1 text-center"><strong>Group details</strong></h5>
-    <div class="single-batch-container">
-      <div class="single-batch-data pb-4">
-        <div style="position: relative;">
-          <img class="single-batch-image"  src="/images/sponsor-banner.png" alt="">
-          <div class="text-success text-center"><strong>GROUP NAME : <%=groupDetails.groupName%></strong></div>
-        </div>
-        <hr>
-            <div class="container">
-              <h5><strong>Present departments :</strong></h5>
-              <ul class="list-group">
-                <%groupDetails.presentDepartments.forEach((department)=>{%>
-                  <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                    <div>
-                      <span class="d-block"><strong>Departmet Name : </strong><%=department.departmentName%></span>
-                      <span class="d-block"><strong>Course Duration : </strong><%=department.courseDuration%> Years</span>  
-                    </div>
-                    <div>
-                      <a href="/department/<%=department.departmentCode%>/details"  class="btn btn-primary btn-sm">Department Details</a>
-                    </div>
-                  </li>
-                <%})%>
-              </ul>
-            </div>
-        <hr>
-        <h4 class="text-center text-success"><strong>Leader Board</strong> </h4>
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>Activities :</strong></h5>
-          <div class="container">
-            <%if(!groupDetails.presentActivity){%>
-              <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
-              <a href="/activity/batch/<%=groupDetails.groupId%>/create" class="btn btn-block btn-primary btn-lg">
-                Create New Group Activity
-              </a>
-              <%}else{%>
-                <div class="btn btn-info btn-sm btn-block mr-1">There is no present activity!</div>
-              <%}%>
-            <%}else{%>
-              <div class="student-room-container" >
-                <%if(groupDetails.presentActivity.isTopicByVote && !groupDetails.presentActivity.isVoteCompleted){%>
-                  <div style="width: 100%;">
-                    <strong  class="d-block text-info text-center">Topic for next activity is going to be selected by voting.Please give your vote.</strong>
-                  </div>
-                <%}else{%>
-                  <div style="width: 100%;">
-                    <strong  class="d-block text-info">Running activity -</strong>
-                    <strong class="d-block">Topic : <%=groupDetails.presentActivity.topic%></strong>
-                    <strong class="d-block">Title : <%=groupDetails.presentActivity.title%></strong>
-                  </div>  
-                <%}%>  
-                <a href="/activity/<%=groupDetails.presentActivity.activityId%>/details">
-                  <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
-                </a>    
-              </div>
-            <%}%>
-          </div>
-          <hr>
-          <div class="container">
-            <%if(!groupDetails.previousActivity){%>
-              <div class="btn btn-info btn-lg btn-block mr-1">There is no previous activity!</div>
-            <%}else{%>
-              <div class="student-room-container" >
-                  <div style="width: 100%;">
-                    <strong  class="d-block text-info">Previous activity -</strong>
-                    <strong class="d-block">Topic : <%=groupDetails.previousActivity.topic%></strong>
-                    <strong class="d-block">Title : <%=groupDetails.previousActivity.title%></strong>
-                    <strong class="d-block">Activity Date : <i>12/12/12</i></strong>
-                    <strong class="d-block">Published Date : <i>12/12/12</i></strong>
-                  </div>  
-                  <a href="/activity/<%=groupDetails.previousActivity._id%>/details">
-                    <div class="btn btn-success btn-sm btn-block mr-1">Go to activity details</div>
-                  </a>    
-              </div>
-            <%}%>
-          </div>
-        </div>
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>Present Leader :</strong></h5>
-          <%if(groupDetails.presentLeader){%>
-            <div class="student-room-container" style="display: flex;width: 100%;">
-              <div class="mr-2" >
-                <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-              </div>
-              <div class="row"  style="width: 100%;">
-                <div class="col-sm-6"  style="width: 100%;display: flex;">
-                  <div style="width: 100%;">
-                    <strong class="d-block">Name : <%=groupDetails.presentLeader.userName%></strong>
-                    <strong class="d-block">Phone Number : <%=groupDetails.presentLeader.phone%></strong>
-                  </div>
-                </div>
-                <div class="col-sm-6 " style="margin: auto;">
-                  <div class="float-btn" style="display: flex;">
-                    <a href="/student/<%=groupDetails.presentLeader.regNumber%>/profile">
-                      <%if(checkData.isPresentLeader){%>
-                        <div class="btn btn-warning btn-sm mr-1">Your profile</div>
-                      <%}else{%>
-                        <div class="btn btn-primary btn-sm mr-1">View profile</div>
-                      <%}%>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <%}else{%>
-            <div class="btn btn-lg btn-block btn-info">There is no present leader available!!</div>
-          <%}%>
-        </div>
-      
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>Previous Leader :</strong></h5>
-          <%if(groupDetails.previousLeader){%>
-            <div class="student-room-container" style="display: flex;width: 100%;">
-              <div class="mr-2" >
-                <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-              </div>
-              <div class="row"  style="width: 100%;">
-                <div class="col-sm-6"  style="width: 100%;display: flex;">
-                  <div style="width: 100%;">
-                    <strong class="d-block">Name : <%=groupDetails.previousLeader.userName%></strong>
-                    <strong class="d-block">Phone :  <%=groupDetails.previousLeader.phone%></strong>
-                  </div>
-                </div>
-                <div class="col-sm-6 " style="margin: auto;">
-                  <div class="float-btn" style="display: flex;">
-                    <a href="/student/<%=groupDetails.previousLeader.regNumber%>/profile">
-                      <%if(checkData.isPreviousLeader){%>
-                        <div class="btn btn-warning btn-sm mr-1">Your profile</div>
-                      <%}else{%>
-                        <div class="btn btn-primary btn-sm mr-1">View profile</div>
-                      <%}%>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <%}else{%>
-              <div class="btn btn-lg btn-block btn-info">There is no previous leader available!!</div>
-            <%}%>
-        </div>
-
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>All Leaders :</strong></h5>
-          <%if(!groupDetails.allLeaders.length){%>
-            <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>
-          <%}else{%>
-            <%groupDetails.allLeaders.forEach((leader)=>{%>
-              <div class="student-room-container" style="display: flex;width: 100%;">
-                <div class="mr-2" >
-                  <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-                </div>
-                <div class="row"  style="width: 100%;">
-                  <div class="col-sm-6"  style="width: 100%;display: flex;">
-                    <div style="width: 100%;">
-                      <strong class="d-block">Name : <%=leader.userName%></strong>
-                      <%if(checkData.isBatchMember){%>
-                        <strong class="d-block">Phone : <%=leader.phone%></strong>
-                      <%}%>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 " style="margin: auto;">
-                    <div class="float-btn" style="display: flex;">
-                      <a href="/student/<%=leader.regNumber%>/profile">
-                        <%if(user.regNumber==leader.regNumber){%>
-                          <div class="btn btn-warning btn-sm mr-1">Your profile</div>
-                        <%}else{%>
-                          <div class="btn btn-primary btn-sm mr-1">View profile</div>
-                        <%}%>
-                      </a>
-                    </div>
-                  </div>
-                </div>              
-              </div>
-            <%})%>
-          <%}%>
-        </div>
-        <hr>
-        <div class="ml-2 mr-2 mb-1">
-          <h5><strong>All Group Members :</strong></h5>
-          <%if(!groupDetails.allMembers.length){%>
-            <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>
-          <%}else{%>
-            <%groupDetails.allMembers.forEach((member)=>{%>
-              <div class="student-room-container" style="display: flex;width: 100%;">
-                <div class="mr-2" >
-                  <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-                </div>
-                <div class="row"  style="width: 100%;">
-                  <div class="col-sm-6"  style="width: 100%;display: flex;">
-                    <div style="width: 100%;">
-                      <strong class="d-block">Name : <%=member.userName%></strong>
-                      <strong class="d-block">Department : <%=member.departmentName%></strong>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 " style="margin: auto;">
-                    <div class="float-btn" style="display: flex;">
-                      <a href="/student/<%=member.regNumber%>/profile">
-                        <%if(user.regNumber==member.regNumber){%>
-                          <div class="btn btn-warning btn-sm mr-1">Your profile</div>
-                        <%}else{%>
-                          <div class="btn btn-primary btn-sm mr-1">View profile</div>
-                        <%}%>
-                      </a>
-                    </div>
-                  </div>
-                </div>              
-              </div>
-            <%})%>
-          <%}%>
-        </div>
-        <hr>
-        </div>
-      </div>
-
-    </div>
-  <div class="col-lg"></div>
-</div>
 
 
 
