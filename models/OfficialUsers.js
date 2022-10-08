@@ -41,6 +41,16 @@ OfficialUsers.prototype.adminLogIn=function(){
   })
 }
 
+OfficialUsers.getAdminData=function(){
+  return new Promise(async(resolve, reject) => {
+    try {
+      let adminData=await officialUsersCollection.findOne({ dataType: "adminAuthData" })
+      resolve(adminData)
+    } catch {
+      reject()
+    }
+  })
+}
 
 OfficialUsers.addRejectedAccountOnAdminAccount=function(regNumber){
   return new Promise(async(resolve, reject) => {

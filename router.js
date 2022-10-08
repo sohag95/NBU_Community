@@ -81,15 +81,19 @@ router.get('/student-home',studentController.studentMustBeLoggedIn,studentContro
 router.get("/student/:regNumber/profile",userController.ifUserLoggedIn,studentController.ifProfileUserExists,studentController.getProfileOtherData,studentController.getProfilePage)
 
 //########################
+router.post("/setup-starting-data",  officialUserController.adminMustBeLoggedIn,adminController.setUpStartingData)
 //Admin related routers
 router.get('/admin-home',officialUserController.adminMustBeLoggedIn,adminController.adminHome)
+router.get('/add-new-session-batch',officialUserController.adminMustBeLoggedIn,adminController.addNewSessionBatchPage)
+router.get('/handle-rejected-accounts',officialUserController.adminMustBeLoggedIn,adminController.getRejectedAccounts)
+router.get('/add-department-and-create-group',officialUserController.adminMustBeLoggedIn,adminController.addDepartmentAndCreateGroup)
+router.get('/handle-official-user-data',officialUserController.adminMustBeLoggedIn,adminController.handleOfficialUserData)
 router.post("/addDepartment",  officialUserController.adminMustBeLoggedIn,adminController.addDepartment)
 router.post("/addNewGroup",  officialUserController.adminMustBeLoggedIn,adminController.addNewGroup)
 router.post("/addNewSessionBatch",  officialUserController.adminMustBeLoggedIn,sessionBatchController.createNewSessionBatch)
 router.post("/addNewSessionYear",  officialUserController.adminMustBeLoggedIn,adminController.addNewSessionYear)
 router.post("/setPresentSessionYear",  officialUserController.adminMustBeLoggedIn,adminController.setPresentSessionYear)
 router.post("/delete/:regNumber/account",  officialUserController.adminMustBeLoggedIn,adminController.deleteAccount)
-router.get('/rejected-accounts',officialUserController.adminMustBeLoggedIn,adminController.getRejectedAccounts)
 
 //########################
 //-----SOURCE related routers----

@@ -1,0 +1,95 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<%- include('includes/admin-header') %> 
+<div class="item-container">
+    <div id="accordion">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+              <div class="btn btn-block btn-warning text-center" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+               <strong> Change session Year</strong>
+              </div>
+            </h5>
+          </div>
+      
+          <div id="collapseTwo" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <div class="row colored-container">
+                    <div class="col-sm-6 mt-2 " >
+                        <h4 class="bolder text-white text-center"><strong>Add new session year</strong></h4>
+                        <form action="/addNewSessionYear" method="POST" id="addSession-form">
+                            <div class="form-group">
+                              <label for="newSession" class="text-muted"><small>New Session</small></label>
+                              <input name="newSession" id="newSession" class="form-control form-control-lg " type="text" placeholder="Enter new session." required autocomplete="off" />
+                            </div>
+                            <button class="btn btn-primary btn-block">Submit new session-year</button>
+                        </form>
+                    </div>
+                    <div class="col-sm-6 mt-2 " >
+                        <h4 class="bolder text-white text-center"><strong>Set Present Session-Year</strong></h4>
+                        <form action="/setPresentSessionYear" method="POST" id="setSession-form">
+                        <div class="form-group">
+                            <label for="sessionYear" class="text-muted mb-1"><small>Set present session year</small></label>
+                            <select id="sessionYear" class="form-control form-control-lg" name="sessionYear" form="setSession-form">
+                            <option class="text-center" value="">-----Select Session Year-----</option>
+                            <%user.otherData.allSessionYears.forEach((session)=>{%>
+                                <option value="<%=session%>"><%=session%></option>
+                            <%})%>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary btn-block">Set Present-Session</button>
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    <hr>
+    
+    <div class="container">
+        <h2 class="bolder text-center">All Groups(<%=allGroups.length%>)</h2>
+        <h4 class="text-info text-center"><strong>Batch Details For Session Year : <span class="text-success"><%=user.otherData.presentSession%></span></strong></h4>
+
+        <hr>
+        <%if(!allGroups.length){%>
+            <div class="btn btn-primary btn-block">No group available!!</div>
+        <%}else{%>
+            <%allGroups.forEach((group)=>{%>
+            <div class="colored-container pt-2">
+                <p class="text-center"><strong>Group name : <%=group.groupName%></strong></p>
+                <a href="/group/<%=group.groupId%>/details" >Go to group details page</a>
+                <div class="card">
+                <ul class="list-group">
+                    <%group.presentDepartments.forEach((department)=>{%>
+                    <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                        <span class="item-text"><strong>Departmet Name : </strong><%=department.departmentName%></span>
+                        <span class="item-text"><strong>Code : </strong><%=department.departmentCode%></span>
+                        <div>
+                        <a href="/department/<%=department.departmentCode%>/details"  class="btn btn-primary btn-sm">Details</a>
+                        <%if(department.allBatchYears.includes(user.otherData.presentSession)){%>
+                        <a href=""  class="btn btn-success btn-sm">Session Added</a>  
+                        <%}else{%>
+                        <form class="flex" action="/addNewSessionBatch" method="post"> 
+                            <input type="hidden" value="<%=group.groupId%>" name="groupId">
+                            <input type="hidden" value="<%=department.departmentCode%>" name="departmentCode">
+                            <input type="hidden" value="<%=department.departmentName%>" name="departmentName">
+                            <input type="hidden" value="<%=user.otherData.presentSession%>" name="newSession">
+                            <button class="btn btn-warning btn-sm">Add Session</button>
+                        </form> 
+                        <%}%>
+                        </div>
+                    </li>
+                    <%})%>
+                </ul>
+                </div>
+            </div>
+            <hr>
+            <%})%>
+        <%}%>
+    </div>
+</div> 
+<%- include('includes/admin-footer') %> 
+
+<%- include('includes/footer') %> 

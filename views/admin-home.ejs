@@ -1,147 +1,43 @@
 <%- include('includes/header') %> 
 <%- include('includes/flash') %>
-<div style="display: flex;flex-wrap: wrap;">
-  <div class="col-lg notVisibleOnCollapse" >
-  </div>
-  <div class="col-lg-9 pt-1" >
-    <div class="">
-      <div style="width: 100%;position: relative;">
-        <img class="home-cover-image" src="/images/sponsor-banner.png"/>
-        <div>
-          <img class="home-profile-image" src="/images/sohag.jpg" />
-          <div>
-            <h5 class="bolder text-secondary d-inline"><strong>Sohag Roy</strong></h5>
-            <h5 class="bolder d-inline float-right"><a href="/rejected-accounts"> Rejected Accounts(<%=rejectedAccounts%>)  </a>| 
-            <i class="fas fa-user"></i> Admin</h5>
-          </div>  
-         </div>
-      </div> 
-      <hr>
-        
+<%- include('includes/admin-header') %> 
+
+    <div class="item-container mb-4">
+      <div class="row">
+        <div class="col-sm-6 mt-2 " >
+          <a href="/add-new-session-batch" style="text-decoration: none;" >
+            <div class="item-container bolder" style="color: #fff; background-color:#2a4bd5;">
+              <h5 class="text-center" style="padding: 1.75rem;"><strong>Add New Session Batch</strong></h5>            
+            </div>
+          </a>
+        </div>
+        <div class="col-sm-6 mt-2 " >
+          <a href="/handle-rejected-accounts" style="text-decoration: none;" >
+            <div class="item-container bolder" style="color: #fff; background-color:#D52AA0 ;">
+              <h5 class="text-center" style="padding: 1.75rem;"><strong>Handle Rejected Accounts(<%=rejectedAccounts%>)</strong></h5>
+            </div>
+          </a>
+        </div>
+        <div class="col-sm-6 mt-2 " >
+          <a href="/add-department-and-create-group" style="text-decoration: none;" >
+            <div class="item-container bolder" style="color: #fff; background-color:#D5B42A ;">
+              <h5 class="text-center" style="padding: 1.75rem;"><strong>Add New Department & Create Group</strong></h5>
+            </div>
+          </a>
+        </div>
+        <div class="col-sm-6 mt-2 " >
+          <a href="/handle-official-user-data" style="text-decoration: none;" >
+            <div class="item-container bolder" style="color: #fff; background-color:#2AD55F ;">
+              <h5 class="text-center" style="padding: 1.75rem;"><strong>Handle Official User Data</strong></h5>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="item-container" style="height: 50vh;">
-      <p><strong>This section will be used to keep all other sub-sections.</strong></p>
-    </div>
-  </div>
-  <div class="col-lg notVisibleOnCollapse" >
-  </div>
-</div>
+  <%- include('includes/admin-footer') %> 
+
 
 <!-- New designing page till upper section -->
-<hr>
-<div class="container">
-  <h4 class="text-center mt-4"><strong>Admin name is : </strong><i><%=user.userName%></i></h4>
-  <h4 class="text-center"><strong>Present Session : <%=user.otherData.presentSession%></strong></h4>
-</div>
 
-  <div class="container">
-    <h2 class="bolder text-center">All Groups(<%=allGroups.length%>)</h2>
-      <hr>
-      <%if(!allGroups.length){%>
-        <div class="btn btn-primary btn-block">No group available!!</div>
-      <%}else{%>
-        <%allGroups.forEach((group)=>{%>
-          <div class="container pt-2">
-            <p class="text-center"><strong>Group name : <%=group.groupName%></strong></p>
-            <a href="/group/<%=group.groupId%>/details" >Go to group details page</a>
-            <div class="card">
-              <ul class="list-group">
-                <%group.presentDepartments.forEach((department)=>{%>
-                  <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                    <span class="item-text"><strong>Departmet Name : </strong><%=department.departmentName%></span>
-                    <span class="item-text"><strong>Code : </strong><%=department.departmentCode%></span>
-                    <div>
-                    <a href="/department/<%=department.departmentCode%>/details"  class="btn btn-primary btn-sm">Details</a>
-                    <%if(department.allBatchYears.includes(user.otherData.presentSession)){%>
-                      <a href=""  class="btn btn-success btn-sm">Session Added</a>  
-                    <%}else{%>
-                      <form class="flex" action="/addNewSessionBatch" method="post"> 
-                        <input type="hidden" value="<%=group.groupId%>" name="groupId">
-                        <input type="hidden" value="<%=department.departmentCode%>" name="departmentCode">
-                        <input type="hidden" value="<%=department.departmentName%>" name="departmentName">
-                        <input type="hidden" value="<%=user.otherData.presentSession%>" name="newSession">
-                        <button class="btn btn-warning btn-sm">Add Session</button>
-                      </form> 
-                    <%}%>
-                    </div>
-                  </li>
-                <%})%>
-              </ul>
-            </div>
-          </div>
-          <hr>
-        <%})%>
-      <%}%>
-  </div>
- 
-<hr>
-<div class="container">
-  <div class="signUp-form-container ">   
-    <h2 class="bolder text-center">Add department</h2>
-    <form action="/addDepartment" method="POST" id="addDepartment-form">
-        <div class="form-group">
-          <label for="departmentName" class="text-muted"><small>Department Name</small></label>
-          <input name="departmentName" id="departmentName" class="form-control form-control-lg " type="text" placeholder="Enter department name." required autocomplete="off" />
-        </div>
-        <div class="form-group">
-          <label for="departmentCode" class="text-muted"><small>Department Code</small></label>
-          <input name="departmentCode" id="departmentCode" class="form-control form-control-lg " type="text" placeholder="Enter department code." required autocomplete="off" />
-        </div>
-        <div class="form-group">
-          <label for="courseDuration" class="text-muted"><small> Course Duration</small></label>
-          <input name="courseDuration" id="courseDuration" class="form-control form-control-lg " type="number" placeholder="Enter course duration." required autocomplete="off" />
-        </div>
-        <div style="text-align: center;">
-          <button class="btn btn-success btn-lg ">Add Department</button>
-        </div>
-    </form>
-  </div>
-  <h4 class="text-center bolder">Remain Departments</h4>
-  <%if(!remainDepartments.length){%>
-    <div class="btn btn-primary btn-block">Remaining department not available!!</div>
-  <%}else{%>
-  <ul id="remainDepartments" class="list-group pb-2">
-  </ul>
-  <form id="addDepartmentsOnGroupForm" class="card" action="/addNewGroup" method="POST">
-    <h4 class="text-center "><strong>Create Group</strong> </h4>
-    <div class="form-group">
-      <label for="groupName" class="text-muted"><small>Group Name</small></label>
-      <input name="groupName" id="groupName" class="form-control form-control-lg " type="text" placeholder="Enter group name." required autocomplete="off" />
-    </div>
-    <ul id="addedDepartments" class="list-group ">
-    </ul>
-    <input hidden type="text" id="selectedDepartments" name="addedDepartments">
-    <button id="submitGroupButton" class="btn btn-primary">Submit Group</button>
-  </form>
-  <script>
-    let remainDepartments = <%-JSON.stringify(remainDepartments)%>
-  </script>
-  <script src="/addDepartmentsOnGroup.js"></script>
-<%}%>
-</div>
-<hr>
-<div class="container">
-  <h4><strong>Add new session year</strong></h4>
-  <form action="/addNewSessionYear" method="POST" id="addSession-form">
-    <div class="form-group">
-      <label for="newSession" class="text-muted"><small>New Session</small></label>
-      <input name="newSession" id="newSession" class="form-control form-control-lg " type="text" placeholder="Enter new session." required autocomplete="off" />
-    </div>
-    <button class="btn btn-primary btn-block">Submit new session</button>
-  </form>
-  <hr>
-  <form action="/setPresentSessionYear" method="POST" id="setSession-form">
-    <div class="form-group">
-      <label for="sessionYear" class="text-muted mb-1"><small>Set present session year</small></label>
-      <select id="sessionYear" class="form-control form-control-lg" name="sessionYear" form="setSession-form">
-        <option value="">--Select Session Year--</option>
-        <%user.otherData.allSessionYears.forEach((session)=>{%>
-          <option value="<%=session%>"><%=session%></option>
-        <%})%>
-      </select>
-    </div>
-    <button class="btn btn-primary btn-block">Submit Session-year</button>
-  </form>
-</div>
 <%- include('includes/footer') %>
 

@@ -1,0 +1,58 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<%- include('includes/admin-header') %> 
+<div class="item-container">
+    <div class="container">
+        <div class="colored-container ">   
+          <h3 class="bolder text-white text-center">Add department</h3>
+          <form action="/addDepartment" method="POST" id="addDepartment-form">
+              <div class="form-group">
+                <label for="departmentName" class="text-muted"><small>Department Name</small></label>
+                <input name="departmentName" id="departmentName" class="form-control form-control-lg " type="text" placeholder="Enter department name." required autocomplete="off" />
+              </div>
+              <div class="form-group">
+                <label for="departmentCode" class="text-muted"><small>Department Code</small></label>
+                <input name="departmentCode" id="departmentCode" class="form-control form-control-lg " type="text" placeholder="Enter department code." required autocomplete="off" />
+              </div>
+              <div class="form-group">
+                <label for="courseDuration" class="text-muted"><small> Course Duration</small></label>
+                <input name="courseDuration" id="courseDuration" class="form-control form-control-lg " type="number" placeholder="Enter course duration." required autocomplete="off" />
+              </div>
+              <div style="text-align: center;">
+                <button class="btn btn-success btn-lg ">Add Department</button>
+              </div>
+          </form>
+        </div>
+        <div class="colored-container mt-4">
+            <h4 class="text-center text-white bolder">Remaining Departments</h4>
+            <%if(!remainDepartments.length){%>
+            <div class="btn btn-primary btn-block">Remaining department not available!!</div>
+            <%}else{%>
+                <ul id="remainDepartments" class="list-group pb-2">
+                </ul>
+                <form id="addDepartmentsOnGroupForm" class="card" action="/addNewGroup" method="POST">
+                    <h4 class="text-center bolder"><strong>Group Creation Form</strong> </h4>
+                    <div class="container">
+                        <div class="form-group">
+                            <label for="groupName" class="text-muted"><small>Group Name</small></label>
+                            <input name="groupName" id="groupName" class="form-control form-control-lg " type="text" placeholder="Enter group name." required autocomplete="off" />
+                        </div>
+                        <ul id="addedDepartments" class="list-group ">
+                        </ul>
+                        <input hidden type="text" id="selectedDepartments" name="addedDepartments">
+                        <button id="submitGroupButton" class="btn btn-block btn-primary">Submit Group</button>
+                    </div>
+                    
+                </form>
+                <script>
+                let remainDepartments = <%-JSON.stringify(remainDepartments)%>
+                </script>
+                <script src="/addDepartmentsOnGroup.js"></script>
+            <%}%>
+        </div>
+        
+      </div>
+</div> 
+<%- include('includes/admin-footer') %> 
+
+<%- include('includes/footer') %> 

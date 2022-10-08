@@ -168,4 +168,116 @@ Admin.setPresentSessionYear=function(newSession){
     }
   })
 }
+
+Admin.setUpStartingData=function(){
+  //Admins data should be added on database table named "OfficialDataTable" manually
+  //The table will be:
+  // {
+  //   dataType:"adminControllerAuthData",
+  //   regNumber:"2022ADMIN9999",
+  //   email:"",
+  //   phone:"",
+  //   password:"",
+  //   presentSession:null,//have to take those data on other table
+  //   allSessionYears:[],
+  //   rejectedAccounts:[],
+  //   isStartingSetUpDone:false, //have to add
+  // }
+  
+  let allNeededDataSets=[
+    {
+      dataType:"societyControllerAuthData",
+      regNumber:"2022UNSCN9999",
+      email:"",
+      phone:"",
+      password:"",
+    },
+    {
+      dataType:"postControllerAuthData",
+      regNumber:"2022POSTC9999",
+      email:"",
+      phone:"",
+      password:"",
+      submittedActivities:[],
+      completedActivities:[]
+    },
+    {
+      dataType:"videoEditorAuthData",
+      regNumber:"2022EDITR9999",
+      email:"",
+      phone:"",
+      password:"",
+      assignedActivities:[],
+      completedActivities:[]
+    },
+    {
+      dataType:"allDepartments",
+      departments:[],
+      allSessionYears:[]
+    },
+    {
+      dataType:"neededDataForCalculations",
+      regSerialNumber:0
+    },
+    {
+      dataType:"activityTopicsBySource",
+      batchTopics:["Campus Tour","Social Work","Group Study","Having Fun","Tour","Other"],
+      departmentTopics:["Freshers Party","Farewell Party","Get Together","Social Work","Study","Festival Organization","Tour","Others"],
+      groupTopics:["Research Talk","Idea Discussion","Get Together","Others"]
+    },
+    {
+      dataType:"allActivityHandling",
+      allActivities:[],
+      topActivities:[],
+      recentActivities:[]
+    },
+    {
+      dataType:"globalNotifications",
+      notifications:[]
+    },
+    {
+      dataType:"campusGroups",
+      cultural:{
+        allGroups:[],
+        completedGroups:[]
+      },
+      business:{
+        allGroups:[],
+        completedGroups:[]
+      },
+      research:{
+        allGroups:[],
+        completedGroups:[]
+      },
+      skill_Development:{
+        allGroups:[],
+        completedGroups:[]
+      },
+      social_Work:{
+        allGroups:[],
+        completedGroups:[]
+      }
+    }
+  ]
+  
+
+  return new Promise(async (resolve, reject) => {
+    try{
+      for(let dataSet of allNeededDataSets){
+        await officialUsersCollection.insertOne(dataSet)
+      } 
+      await officialUsersCollection.updateOne(
+        { dataType: "adminAuthData" },
+        {
+          $set: {
+            "isStartingSetUpDone": true,
+          }
+        }
+      )
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  }) 
+}
 module.exports=Admin

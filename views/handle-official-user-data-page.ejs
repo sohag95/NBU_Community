@@ -1,0 +1,21 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<%- include('includes/admin-header') %> 
+<div class="item-container" style="height: 60vh;">
+    <h3 class="bolder text-center"><strong>Official User Data Handling</strong></h3>
+    <h6 class="text-info text-center"><strong>[I have to add official user changing related functions here.]</strong></h6>
+    <hr>
+    <%if(isStartingSetUpDone){%>
+        <div class="colored-container">
+            <div class="btn btn-lg btn-block btn-success">Starting data setting completed!!</div>
+        </div>  
+    <%}else{%>
+        <div class="colored-container">
+            <form action="/setup-starting-data" method="post">
+                <button class="btn btn-lg btn-block btn-warning">Click here to set up starting data</button>
+            </form>
+        </div>
+    <%}%>
+</div> 
+<%- include('includes/admin-footer') %> 
+<%- include('includes/footer') %> 
