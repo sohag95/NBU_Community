@@ -1,0 +1,73 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<%- include('includes/officialUser-header') %> 
+<div class="item-container" >
+    
+<div class="container" style="background-color: #fff;">
+    <h3 class="text-info text-center bolder "><strong>Verification of case1 accounts</strong> </h3>  
+    <hr>
+    <h4 class="text-info text-center bolder">All Departments (<%=allDepartments.length%>)</h4>  
+    <div class="row">
+        <%if(!allDepartments.length){%>
+            <div class="btn btn-block btn-danger">No department added till now.</div>
+          <%}%>
+          <%allDepartments.forEach((department)=>{%>
+            <div class="col-sm-6 mt-2 colored-container">
+                  <strong class="d-block">Department Name : <%=department.departmentName%></strong>
+                  <strong class="d-block">Department Code : <%=department.departmentCode%></strong>
+                
+                
+                  <%if(!department.presentLeader){%>
+                    <strong class="d-block">Present Leader : "Not Set"</strong>
+                    <strong class="d-block">Requests for verification : 
+                      <%if(department.newBatchMemberRequests){%>
+                        <%=department.newBatchMemberRequests.length%>
+                      <%}%>
+                    </strong>  
+                  <%}else{%>
+                    <strong class="d-block">Present Leader : <%=department.presentLeader.userName%></strong>
+                    <strong class="d-block">Phone Number : <%=department.presentLeader.phone%></strong>
+                  <%}%>
+                
+                <%if(!department.presentLeader){%>
+                  
+                    <h6 class="bolder text-warning"><strong>All Requests :</strong></h6>
+                    <%if(!department.newBatchMemberRequests.length){%>
+                      <div class="btn btn-block btn-danger btn-lg">No request received!!</div>
+                    <%}else{%>
+                      <%department.newBatchMemberRequests.forEach((student)=>{%>
+                        <div class="student-room-container bg-warning" style="display: flex;width: 100%;">
+                          <div class="mr-2" >
+                            <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
+                          </div>
+                          <div class="row"  style="width: 100%;">
+                            <div class="col-sm-6"  style="width: 100%;display: flex;">
+                              <div style="width: 100%;">
+                                <strong class="d-block">Name : <%=student.userName%></strong>
+                                <strong class="d-block">Phone : <%=student.phone%></strong>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 " style="margin: auto;">
+                              <div class="float-btn" style="display: flex;">
+                                <a href="/verification/case1/<%=student.regNumber%>/page">
+                                  <div class="btn btn-primary btn-sm mr-1">Verify Account</div>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      <%})%>
+                      
+                    <%}%>
+                
+                <%}else{%>
+                  <div class="btn btn-success btn-block btn-lg">Leader has been set.</div>
+                <%}%>
+            </div>
+          <%})%>
+    </div>
+    
+  </div>
+</div> 
+<%- include('includes/officialUser-footer') %> 
+<%- include('includes/footer') %> 

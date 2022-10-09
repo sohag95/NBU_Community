@@ -4,13 +4,19 @@
     <div class="col-lg-9 pt-1" >
         <div class="">
             <div style="width: 100%;position: relative;">
-                <img class="home-cover-image" src="/images/admin-cover-photo.jpg"/>
+                <%if(user.accountType=="admin"){%>
+                    <img class="home-cover-image" src="/images/admin-cover-photo.jpg"/>
+                <%}else if(user.accountType=="societyController"){%>
+                    <img class="home-cover-image" src="/images/sponsor-banner.png"/>
+                <%}else{%>
+                    <img class="home-cover-image" src="/images/sponsor-banner2.png"/>
+                <%}%>
                 <div>
                 <img class="home-profile-image" src="/images/sohag.jpg" />
                 <div>
                     <h5 class="bolder text-secondary d-inline"><strong><%=user.userName%></strong></h5>
                     <h5 class="bolder d-inline float-right">
-                    <i class="fas fa-user"></i> Admin</h5>
+                    <i class="fas fa-user"></i> <%=user.accountType%></h5>
                 </div>  
                 </div>
             </div> 

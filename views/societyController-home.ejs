@@ -1,103 +1,43 @@
 <%- include('includes/header') %> 
 <%- include('includes/flash') %>
-<div style="display: flex;flex-wrap: wrap;">
-  <div class="col-lg notVisibleOnCollapse" >
-  </div>
-  <div class="col-lg-9 pt-1" >
-    <div class="">
-      <div style="width: 100%;position: relative;">
-        <img class="home-cover-image" src="/images/sponsor-banner.png"/>
-        <div>
-          <img class="home-profile-image" src="/images/sohag.jpg" />
-          <div>
-            <h5 class="bolder text-secondary d-inline"><strong>Sohag Roy</strong></h5>
-            <h5 class="bolder d-inline float-right"><i class="fas fa-user"></i> Society Controller</h5>
-          </div>  
-        </div>
-      </div> 
-    <hr>  
-    </div>
+<%- include('includes/officialUser-header') %> 
+
     
-    <div class="item-container" style="height: 50vh;">
-      <p><strong>This section will be used to keep all other sub-sections.</strong></p>
+    <div class="item-container" >
+      <div class="row">
+        <div class="col-sm-6 mt-2 " >
+          <a href="/user-verification-case1-page" style="text-decoration: none;" >
+            <div class="item-container bolder" style="color: #fff; background-color:#2a4bd5;">
+              <h5 class="text-center" style="padding: 1.75rem;"><strong>Verify case1 user accounts</strong></h5>            
+            </div>
+          </a>
+        </div>
+        <div class="col-sm-6 mt-2 " >
+          <a href="/handle-reporting-page" style="text-decoration: none;" >
+            <div class="item-container bolder" style="color: #fff; background-color:#D52AA0 ;">
+              <h5 class="text-center" style="padding: 1.75rem;"><strong>Handle Reporting</strong></h5>
+            </div>
+          </a>
+        </div>
+        <div class="col-sm-6 mt-2 " >
+          <a href="/verify-user-account-page" style="text-decoration: none;" >
+            <div class="item-container bolder" style="color: #fff; background-color:#D5B42A ;">
+              <h5 class="text-center" style="padding: 1.75rem;"><strong>Verify user account</strong></h5>
+            </div>
+          </a>
+        </div>
+        <div class="col-sm-6 mt-2 " >
+          <a href="/society-handling-page" style="text-decoration: none;" >
+            <div class="item-container bolder" style="color: #fff; background-color:#2AD55F ;">
+              <h5 class="text-center" style="padding: 1.75rem;"><strong>Handle Society</strong></h5>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-lg notVisibleOnCollapse" >
-  </div>
-</div>
+<%- include('includes/officialUser-footer') %> 
+
 
 <!-- New designing page till upper section -->
 
-
-<hr>
-<div class="container" >
-  <h4 class="text-center mt-4"><strong>This is Society Controller's home page!!</strong></h4>
-  <h4 class="text-center mt-4"><strong>Society Controller's name is : </strong><i><%=user.userName%></i></h4>
-</div>
-
-<div class="container" style="background-color: #fff;">
-  <h4 class="text-info bolder">All Departments :</h4>  
-  <%if(!allDepartments.length){%>
-    <div class="btn btn-block btn-danger">No department added till now.</div>
-  <%}%>
-  <%allDepartments.forEach((department)=>{%>
-    <div class="student-room-container mt-4">
-      <div class="row">
-        <div class="col-sm-6">
-          <p><strong>Department Name : <%=department.departmentName%></strong></p>
-          <p><strong>Department Code : <%=department.departmentCode%></strong></p>
-        </div>
-        <div class="col-sm-6">
-          <%if(!department.presentLeader){%>
-            <p><strong>Present Leader : "Not Set"</strong></p>
-            <p><strong>Requests for verification : 
-              <%if(department.newBatchMemberRequests){%>
-                <%=department.newBatchMemberRequests.length%>
-              <%}%>
-            </strong></p>  
-          <%}else{%>
-            <p><strong>Present Leader : <%=department.presentLeader.userName%></strong></p>
-            <p><strong>Phone Number : <%=department.presentLeader.phone%></strong></p>
-          <%}%>
-        </div>
-        <%if(!department.presentLeader){%>
-          <div class="col-12">
-            <h6 class="bolder"><strong>All Requests :</strong></h6>
-            <%if(!department.newBatchMemberRequests.length){%>
-              <div class="btn btn-block btn-danger btn-lg">No request received!!</div>
-            <%}else{%>
-              <%department.newBatchMemberRequests.forEach((student)=>{%>
-                <div class="student-room-container bg-warning" style="display: flex;width: 100%;">
-                  <div class="mr-2" >
-                    <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
-                  </div>
-                  <div class="row"  style="width: 100%;">
-                    <div class="col-sm-6"  style="width: 100%;display: flex;">
-                      <div style="width: 100%;">
-                        <strong class="d-block">Name : <%=student.userName%></strong>
-                        <strong class="d-block">Phone : <%=student.phone%></strong>
-                      </div>
-                    </div>
-                    <div class="col-sm-6 " style="margin: auto;">
-                      <div class="float-btn" style="display: flex;">
-                        <a href="/verification/case1/<%=student.regNumber%>/page">
-                          <div class="btn btn-primary btn-sm mr-1">Verify Account</div>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              <%})%>
-              
-            <%}%>
-            
-
-          </div>
-        <%}else{%>
-          <div class="btn btn-success btn-block btn-lg">Leader has been set.</div>
-        <%}%>
-      </div>
-    </div>
-  <%})%>
-</div>
 <%- include('includes/footer') %>

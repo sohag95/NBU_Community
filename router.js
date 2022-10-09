@@ -39,9 +39,8 @@ router.post("/photo-upload",upload.single('image'),awsS3BucketController.uploadP
 router.get('/image/:from/:size/:key',awsS3BucketController.getPhoto)
 
 //####################################
-//user log-in 
-router.post("/loggingIn",  userController.loggingIn)
-router.get("/notifications",  userController.userMustBeLoggedIn,notificationController.getAllNotifications)
+//guest-user related routers
+router.get('/',userController.guestHomePage)
 router.get("/recent-activities",  userController.recentActivities)
 router.get("/all-departments",  userController.allDepartments)
 
@@ -54,8 +53,9 @@ router.post("/upload-cover-photo",upload.single('image'),studentController.stude
 
 //########################
 //user related routes
-router.get('/',userController.guestHomePage)
 router.get('/log-in',userController.getLogInForm)
+router.post("/loggingIn",  userController.loggingIn)
+router.get("/notifications",  userController.userMustBeLoggedIn,notificationController.getAllNotifications)
 router.get('/sign-up-form',userController.getSignUpForm)
 router.get('/forgot-password-form',forgotPasswordController.getForgotPasswordForm)
 router.get('/reset-password-form/:email',userController.userMustNotLoggedIn,forgotPasswordController.getVerifiedDataByEmailId,forgotPasswordController.getResetPasswordForm)
@@ -72,18 +72,22 @@ router.post("/verification/:case/:regNumber/reject",userController.userMustBeLog
 //########################
 //NBU Community / Society controller related router
 router.get('/societyController-home',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.societyControllerHome)
+router.get('/user-verification-case1-page',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.getVerifyCase1AccountPage)
+router.get('/handle-reporting-page',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.getHandleReportingPage)
+router.get('/verify-user-account-page',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.getVerifyUserAccountPage)
+router.get('/society-handling-page',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.getSocietyHandlingPage)
 
 //########################
-//Student related router
+//STUDENT related router
 //unused router|router.post("/setEmailId",studentController.studentMustBeLoggedIn,studentController.setEmailId)
 router.post("/createNewAccount",multipleOperationController.checkAccountPosition,studentController.createNewAccount)
 router.get('/student-home',studentController.studentMustBeLoggedIn,studentController.getStudentHomePage)
 router.get("/student/:regNumber/profile",userController.ifUserLoggedIn,studentController.ifProfileUserExists,studentController.getProfileOtherData,studentController.getProfilePage)
 
 //########################
-router.post("/setup-starting-data",  officialUserController.adminMustBeLoggedIn,adminController.setUpStartingData)
-//Admin related routers
+//ADMIN related routers
 router.get('/admin-home',officialUserController.adminMustBeLoggedIn,adminController.adminHome)
+router.post("/setup-starting-data",  officialUserController.adminMustBeLoggedIn,adminController.setUpStartingData)
 router.get('/add-new-session-batch',officialUserController.adminMustBeLoggedIn,adminController.addNewSessionBatchPage)
 router.get('/handle-rejected-accounts',officialUserController.adminMustBeLoggedIn,adminController.getRejectedAccounts)
 router.get('/add-department-and-create-group',officialUserController.adminMustBeLoggedIn,adminController.addDepartmentAndCreateGroup)
@@ -97,7 +101,6 @@ router.post("/delete/:regNumber/account",  officialUserController.adminMustBeLog
 
 //########################
 //-----SOURCE related routers----
-
 router.get("/source/:from/:id/notifications",checkingController.ifSourcePresent,notificationController.getSourceNotifiations)
 
 //########################
@@ -197,8 +200,10 @@ router.post("/campus-group/:id/change-expected-members",studentController.studen
 router.post("/campus-group/:id/upload-banner",upload.single('image'),studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.checkIfUserAdmin,awsS3BucketController.uploadCampusGroupBannerPhoto)
 //--------------------------------
 router.post("/campus-group/:id/delete-group",studentController.studentMustBeLoggedIn,campusGroupController.ifCampusGroupExists,campusGroupController.checkIfUserGroupCreator,campusGroupController.checkIfGroupDeletable,campusGroupController.deleteCampusGroup)
+
+//###################################
 //Logging out router
 router.post("/loggingOut", userController.loggingOut)
-//###################################
 
+//###################################
 module.exports=router
