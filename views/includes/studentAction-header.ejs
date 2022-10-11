@@ -1,0 +1,18 @@
+<div style="display: flex;flex-wrap: wrap;">
+    <div class="col-lg notVisibleOnCollapse" >
+    </div>
+    <div class="col-lg-9 pt-1" >
+        <div class="">
+            <div style="width: 100%;position: relative;">
+                <img class="home-cover-image" src="/image/cover/large/cover-<%=headerData.regNumber%>"/>
+                <div>
+                <img class="home-profile-image" src="/image/profile/medium/profile-<%=headerData.regNumber%>" />
+                <div>
+                    <h5 class="bolder text-secondary d-inline"><strong><a href="/student/<%=headerData.regNumber%>/profile"><%=headerData.userName%></a></strong></h5>
+                    <h5 class="bolder d-inline float-right">
+                    <i class="fas fa-user"></i><%= headerData.isXstudent?" X-Student":" Running Student"%></h5>
+                </div>  
+                </div>
+            </div> 
+            <hr>
+        </div>

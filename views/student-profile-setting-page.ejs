@@ -1,0 +1,83 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<%- include('includes/studentAction-header') %> 
+<div class="item-container" >
+  <h5 class="bolder text-center">
+    <strong>Your Proifile Setting Page</strong>
+  </h5>
+  
+      <div class="colored-container">
+        <h5><strong>Profile Data Viewing</strong></h5>
+        <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+        <%if(!settingInfo.guestAllowedToViewProfile){%>
+          <h6 class="bolder text-center text-warning"><strong>[Your profile data are not visible for guest users.If you want to show your profile data to guest-user then keep on the 'guest profile viewing' option.]</strong></h6>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <form action="/on-profile-view-to-guest" method="post">
+            <button class="btn btn-block btn-info"><strong> Click here to on guest profile viewing</strong></button>
+          </form>
+        <%}else{%>
+          <h6 class="bolder text-center text-info"><strong>[Your profile data are visible for guest users.If you don't want to show your profile data to guest-user then keep off the 'guest profile viewing' option.]</strong></h6>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <form action="/off-profile-view-to-guest" method="post">
+            <button class="btn btn-block btn-warning"><strong>Click here to off guest profile viewing</strong> </button>
+          </form>
+        <%}%>
+        
+      </div>
+   <hr>
+      <div class="colored-container">
+        <h5><strong>Home-Tuition Handle</strong></h5>
+        <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+        <div class="text-center">
+          <%if(settingInfo.enrolledAsHomeTutor){%>
+            <%if(settingInfo.isHomeTutor){%>
+                <h5 class=" bolder text-success "><strong>You are enrolled as a home tutor!!</strong></h5>
+                <hr>
+                <i class=" d-block text-danger ">[If you are not available for home-tuition,please keep off your home-tutor option.So that your name does not appear on home-tutor searching.]<strong></strong></i>
+                <form action="/stop-as-home-tutor" method="post">
+                  <button class="btn btn-secondary btn-sm ">Click here to stop as home-tutor</button>
+                </form>
+            <%}else{%>
+                <h4 class=" bolder text-primary "><strong>Your home-tutor option is off!!</strong></h4>
+                <hr>
+                <i class=" d-block text-danger ">[If you are available for home-tuition,please keep on your home-tutor option.So that your name appears on home-tutor searching.]<strong></strong></i>
+                <form action="/start-as-home-tutor" method="post">
+                  <button class="btn btn-warning btn-lg mt-1"><strong>Click here to start as a home-tutor</strong> </button>
+                </form>
+            <%}%>
+          <%}else{%>
+            <h6 class="bolder text-center text-info"><strong>[You have not enrolled as home-tutor till.If you want to teach student,please enroll as a Home-Tutor.]</strong></h6>
+            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+            <a href="/tutor/<%=user.regNumber%>/details">
+              <button class="btn btn-block btn-warning"><strong>Go to enroll as home-tutor</strong> </button>
+            </a>
+          <%}%>
+        </div>
+      </div>
+
+  <hr>
+  <div class="colored-container">
+    <h5><strong>Reset-password Form</strong></h5>
+    <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+    <form action="/set-new-password" method="POST" class="">
+      <h6><strong class="text-primary">Give your present password</strong></h6>
+      <div class="form-group">
+          <label for="password-register" class="text-muted"><small>Present Password </small></label>
+          <input name="presentPassword" id="password-register" class="form-control form-control-lg " type="password" placeholder="Enter present password." required autocomplete="off" />          
+      </div>
+      <h6><strong class="text-primary">Set your new password</strong></h6>
+      <div class="form-group">
+          <label for="password-register" class="text-muted"><small>New Password </small></label>
+          <input name="newPassword" id="password-register" class="form-control form-control-lg " type="password" placeholder="Enter new password." required autocomplete="off" />          
+      </div>
+      <div class="form-group">
+          <label for="OTP-register" class="text-muted"><small>Confirmation-Password </small></label>
+          <input name="confirmPassword" id="OTP-reister" class="form-control form-control-lg " type="password" placeholder="Enter confirmation-password." required autocomplete="off" />          
+      </div>
+      <input type="hidden" name="email" >
+      <button class="btn btn-info btn-block btn-lg">Submit New Password</button>
+    </form>
+  </div>
+</div> 
+<%- include('includes/studentAction-footer') %> 
+<%- include('includes/footer') %> 

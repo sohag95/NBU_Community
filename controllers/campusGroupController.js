@@ -79,7 +79,7 @@ exports.ifValidStatus=function(req,res,next){
     res.redirect(`/campus-groups/type/${req.params.status}`)
   }
 }
-
+ 
 exports.allGroupsInSameStatusPage=async function(req,res){
   try{
     let groups

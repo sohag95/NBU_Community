@@ -83,6 +83,15 @@ router.get('/society-handling-page',officialUserController.societyControllerMust
 router.post("/createNewAccount",multipleOperationController.checkAccountPosition,studentController.createNewAccount)
 router.get('/student-home',studentController.studentMustBeLoggedIn,studentController.getStudentHomePage)
 router.get("/student/:regNumber/profile",userController.ifUserLoggedIn,studentController.ifProfileUserExists,studentController.getProfileOtherData,studentController.getProfilePage)
+router.post("/update-bio-status/:regNumber",studentController.studentMustBeLoggedIn,studentController.ifProfileUserExists,studentController.ifUserProfileOwner,studentController.setBioStatus)
+router.get("/profile-setting/:regNumber",studentController.studentMustBeLoggedIn,studentController.ifProfileUserExists,studentController.getProfileOtherData,studentController.ifUserProfileOwner,studentController.getProfileSettingPage)
+router.get("/activities/student/:regNumber",userController.userMustBeLoggedIn,studentController.ifProfileUserExists,studentController.getProfileOtherData,studentController.getStudentActivitiesPage)
+router.get("/voting-poles/student/:regNumber",userController.userMustBeLoggedIn,studentController.ifProfileUserExists,studentController.getProfileOtherData,studentController.getStudentVotingPolesPage)
+router.get("/campus-group/student/:regNumber",userController.userMustBeLoggedIn,studentController.ifProfileUserExists,studentController.getProfileOtherData,studentController.getStudentCampusGroupPage)
+router.post('/set-new-password',studentController.studentMustBeLoggedIn,studentController.checkPresentPassword,forgotPasswordController.checkNewPasswordData,studentController.resetNewPassword)
+router.post('/on-profile-view-to-guest',studentController.studentMustBeLoggedIn,studentController.onProfileViewToGuest)
+router.post('/off-profile-view-to-guest',studentController.studentMustBeLoggedIn,studentController.offProfileViewToGuest)
+
 
 //########################
 //ADMIN related routers

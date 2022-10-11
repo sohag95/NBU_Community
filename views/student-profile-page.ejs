@@ -2,69 +2,163 @@
 <%- include('includes/designs/profile-related-header') %>
     <!-- Profile related structures will be added here -->
     <!-- **************************************************** -->
+    <%if(!checkData.guestAllowedToViewProfile){%>
+      <div class="bolder text-center text-info"><strong >[Profile data is locked for guest-viewers]</strong></div>
+        
+      <div  style="height: 50vh;width: 100%;">
+        <img class="locked-profile-img" src="/images/locked-profile-banner.webp" alt="">
+      </div>
+    <%}else{%>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="">
+            <div class="item-container mb-2">
+              <p class="d-flex">
+                <strong class="mr-auto" ><i class="fas fa-user-tie"></i> Identity</strong>
+                <%if(checkData.isProfileOwner){%>
+                  <span class="d-block">
+                    <a href="/profile-setting/<%=profileInfo.regNumber%>"><strong class="bolder">Setting <i class="fas fa-toolbox"></i> </strong></a>
+                  </span>
+                <%}%>
+              </p>
+              <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+              <p><i class="fas fa-user"></i> <strong> Name - </strong> <span class="text-capitalize"><%=profileInfo.userName%></span></p>
+              <p><i class="fas fa-graduation-cap"></i><strong> Department - </strong><%=profileInfo.departmentName%></p>
+              <p><i class="fas fa-marker"></i><strong> Session Year - </strong> <%=profileInfo.sessionYear%></p>
+              <%if(profileInfo.gender=="male"){ %> 
+                <p><i class="fas fa-male"></i><strong> Gender - </strong> Male</p> 
+              <%}else if(profileInfo.gender=="female"){%>
+                <p><i class="fas fa-female"></i><strong> Gender - </strong> Female</p>
+              <%}else{%>
+                <p><i class="fas fa-female"></i><strong> Gender - </strong> Custom</p>
+              <%}%>
+              <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%= profileInfo.createdDate.getMonth() + 1 %>/<%= profileInfo.createdDate.getDate() %>/<%= profileInfo.createdDate.getFullYear() %></p>
+              <hr>
+              
+            </div>
+            <div class="item-container mb-2">
+              <strong><p>Participated Activities 
+                <%if(checkData.isUserLoggedIn){%>
+                  <a href="/activities/student/<%=profileInfo.regNumber%>">(See details)</a>
+                <%}%>
+              </p></strong>
+              <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+              <p><strong><i class="fas fa-heart"></i> Leading activities - </strong><%=profileInfo.actionData.activity.noOfLeadActivities%></p>
+              <p><strong><i class="fas fa-heart"></i> Membership activities - </strong><%=profileInfo.actionData.activity.noOfParticipatedActivities%></p>
+            </div>
+            <div class="item-container mb-2">
+              <strong><p>Voting Poles 
+                <%if(checkData.isUserLoggedIn){%>
+                  <a href="/voting-poles/student/<%=profileInfo.regNumber%>">(See details)</a>
+                <%}%>
+              </p></strong>
+              <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+              <p><strong><i class="fas fa-crown"></i> Winning Voting Poles - </strong><%=profileInfo.actionData.voting.noOfWinningPole%></p>
+              <p><strong><i class="fas fa-book"></i> Nomination Taken Poles - </strong><%=profileInfo.actionData.voting.noOfNominationTaken%></p>
+              <p><strong><i class="fas fa-map-marker-alt"></i> Total Vote Given - </strong><%=profileInfo.actionData.voting.noOfVoteGivenPole%></p>
+            </div>
 
-    <div class="row">
-      <div class="col-md-4">
-        <div class="">
-          <div class="item-container mb-2">
-            <strong><p>Identity</p></strong>
-            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+            <div class="item-container mb-2">
+              <a href="/campus-group/student/<%=profileInfo.regNumber%>">
+                <div class="btn btn-success btn-block"><%=profileInfo.userName%>'s Campus Groups(<%=profileInfo.actionData.noOfCampusGroup%>) <i class="fas fa-arrow-right"></i></div>
+              </a>
+            </div>
             
-            <p><i class="fas fa-home"></i> <strong> Name - </strong> <span class="text-capitalize"><%=profileInfo.userName%></span></p>
-            <p><i class="fas fa-graduation-cap"></i><strong> Department - </strong><%=profileInfo.departmentName%></p>
-            <p><i class="fas fa-map-marker-alt"></i><strong> Session Year - </strong> <%=profileInfo.sessionYear%></p>
-            <%if(profileInfo.gender=="male"){ %> 
-              <p><i class="fas fa-male"></i><strong> Gender - </strong> Male</p> 
-            <%}else if(profileInfo.gender=="female"){%>
-              <p><i class="fas fa-female"></i><strong> Gender - </strong> Female</p>
-            <%}else{%>
-              <p><i class="fas fa-female"></i><strong> Gender - </strong> Custom</p>
-            <%}%>
-            <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%= profileInfo.createdDate.getMonth() + 1 %>/<%= profileInfo.createdDate.getDate() %>/<%= profileInfo.createdDate.getFullYear() %></p>
-            
-            <%if(profileInfo.isVisitorsProfile){ %> 
-            <a href="/profile/<%= profileInfo.username %>/edit">
-              <div class="btn btn-secondary btn-block"><i class="fas fa-pen"></i> Update your profile</div>
-            </a>
-            <%}%>
-            <hr>
             
           </div>
-          <div class="item-container mb-2">
-            <strong><p>Qualification as a teacher</p></strong>
-            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
-            <p><i class="fas fa-crown"></i> <strong> Highest qualification - </strong> <span class="text-capitalize">Hello there</span></p>
-            <p><i class="fas fa-book"></i></i><strong> Stream - </strong> Hello there</p>
-            <p><i class="fas fa-heart"></i><strong> Favourite subject - </strong> <span class="text-capitalize">Hello there</span></p>
-            <p><i class="fas fa-marker"></i><strong> Secondary percentage - </strong> <span class="text-capitalize">Hello there</span></p>
-            <p><i class="fas fa-marker"></i><strong> Higher Secondary percentage - </strong> <span class="text-capitalize">Hello there</span></p>
-          </div>
+        </div>
+        <div class="col-md-8" >
           
-          <div class="item-container mb-2">
-            <a href="">
-              <div class="btn btn-success btn-block">Some link here <i class="fas fa-arrow-right"></i></div>
-            </a>
-          </div>
           
-
+          <h5 class="bolder text-center">All Activities</h5>
+          <div class=" mb-2">
+          <%if(!profileInfo.allActivities.length){%>
+            <%- include('includes/no-activity-banner') %>
+          <%}else{%>
+            <%profileInfo.allActivities.forEach((activity)=>{%>
+              <a href="/activity/<%=activity._id%>/details" class="d-block mb-2" style="text-decoration: none;">     
+                <div class="mb-2">
+                  <div class="item-container" >
+                    <div style="display: flex;">
+                      <div class="text-center">
+                        <%let logoLink=""%>
+                        <%if(activity.activityType=="batch"){%>
+                          <% logoLink="/images/batch.jpg"%>
+                        <%}else if(activity.activityType=="department"){%>
+                          <% logoLink="/images/department.jpg"%>
+                        <%}else{%>
+                          <% logoLink="/images/group.jpg"%>
+                        <%}%>
+                        <img class="activity-avatar-small" src="<%=logoLink%>" alt="">
+                      </div>
+                      <div class="post-header" style="width: 100%;display: flex;">
+                        <div class="mr-auto" style="padding-left: 5px;">
+                          <div style="margin: 0;padding: 0;">
+                            <strong class="text-primary">
+                              <span class="text-capitalize"><%=activity.activityType%></span>  
+                              | <%=activity.sourceName%> 
+                              <%if(activity.activityType=="batch"){%>
+                                (20<%=activity.activitySourceId.slice(0,2)%>-20<%=activity.activitySourceId.slice(2,4)%>)
+                              <%}%>
+                            </strong>
+                          </div>
+                          <div style="margin: 0;padding: 0;">
+                            <i><span>Published on <%= activity.publishedDate.getMonth() + 1 %>/<%= activity.publishedDate.getDate() %>/<%= activity.publishedDate.getFullYear() %></span></i> <span style="font-weight: 500;">.</span><i class="fas fa-user-friends fa-sm"></i>
+                          </div>
+                        </div>
+                        <div class="float-right">
+                          <p style="margin-right: 8px;" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <strong><i class="fas fa-ellipsis-h"></i></strong>
+                          </p>
+                          <div class="dropdown-menu dropdown-menu-right">
+                            <p class="dropdown-item text-primary" >For Post Owner</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr style="margin-bottom: .35rem;margin-top: 2px;">
+                    
+                    <div class="activityCoverPhotoContainer">
+                        <img class="activityCoverPhoto" src="<%=activity.videoCoverPhoto%>" alt="">
+                    </div>
+                    
+                    
+                    <div style="margin-bottom: 5px; border-bottom: 1px solid rgb(126, 124, 124);">
+                      <h6 style="margin-bottom: 0px;">
+                        <i class="d-block">
+                          <span class="text-capitalize"><%=activity.activityType%></span> activity | Conducted on <%= activity.activityDate.getMonth() + 1 %>/<%= activity.activityDate.getDate() %>/<%= activity.activityDate.getFullYear() %>
+                        </i>
+                      </h6>
+                      <h5 class="bolder">
+                        <%=activity.title%> | <%=activity.topic%>
+                      </h5>
+                    </div>
+              
+                    <div style="display: flex;">
+                      <div class="text-left" style="width: 50%;">
+                        <i class="far fa-thumbs-up"></i><span> <%=activity.likes%> <%= activity.likes>1  ? 'Likes' : 'Like'%></span>
+                      </div>
+                      <div class="text-right" style="width: 50%;">
+                        <span><%=activity.comments%> <%= activity.comments>1  ? 'Comments' : 'Comment'%> </span> 
+                      </div>
+                    </div>
+                    <!-- comment section -->
+                    </div>
+                </div>
+              </a>
+            <%})%>
+          <%}%>
+              
+          </div>
         </div>
       </div>
-      <div class="col-md-8" >
-        
-        
-        <h5 class="bolder text-center">All Activities</h5>
-        <div class=" mb-2">
-          
-            <%- include('includes/activity-banner-structure') %>
-            <%- include('includes/activity-banner-structure') %>
-
-        
-        </div>
-      </div>
-    </div>
+    <%}%>
     
 
     <!-- **************************************************** -->
 <%- include('includes/designs/profile-related-footer') %>
 
 <%- include('includes/footer') %>
+<!-- 
+<%- include('includes/activity-banner-structure') %>
+               -->

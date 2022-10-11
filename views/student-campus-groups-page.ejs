@@ -1,0 +1,53 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<%- include('includes/studentAction-header') %> 
+<div class="item-container" >
+  <h5 class="bolder text-center"><strong>
+    <%if(user.regNumber==headerData.regNumber){%>
+      Your
+    <%}else{%>
+      <%=headerData.userName%>'s
+    <%}%>
+    Campus-Groups (<%=allCampusGroups.length%>)</strong>
+  </h5>
+  <hr>   
+  <%if(!allCampusGroups.length){%>
+    <div class="colored-container">
+      <div class="btn btn-block btn-lg btn-info"><strong>
+        <%if(user.regNumber==headerData.regNumber){%>
+          You have not 
+        <%}else{%>
+          <%=headerData.userName%> has not
+        <%}%>
+        participated any campus-group!!</strong>
+      </div>
+    </div>
+  <%}else{%>   
+    <div class="row">
+      <%allCampusGroups.forEach((group)=>{%>
+        <div class="col-sm-6 mb-2">
+          <a href="/campus-group/<%=group._id%>/details"  style="text-decoration: none;">
+            <div class="colored-container">
+              <img class="campusGroup-cover-image"  src="/image/campusGroup-banner/large/<%=group._id%>" alt="">
+              <div class="text-center"><strong>Group Type : <span class="text-capitalize"><%=group.groupType%> </span><span class="text-warning"><%=group.isCompleted ? "(completed)":"(running)"%></span></strong></div>
+              <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+                <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
+                <span class="d-block">Group Name : <%=group.groupName%></span>
+                <span class="d-block">Present Members : <%=group.noOfPresentMembers%>/<%=group.expectedMembers%></span>
+                <span class="d-block"><strong >Creator : <%=group.createdBy.userName%> </strong>| <%=group.createdBy.departmentName%> (20<%=group.createdBy.regNumber.slice(0,2)%>-20<%=group.createdBy.regNumber.slice(2,4)%>)</span>
+                <div class="d-flex text-info">
+                  <span class="d-block mr-auto">Created Date : <%=group.createdDate%></span>
+                  <span class="d-block">Expiring Date : <%=group.expiringDate%></span>
+                </div>
+                <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+                <strong>Group Aim : <%=group.groupAim%></strong>
+              </div>
+            </div>
+          </a>
+        </div>
+      <%})%>
+    </div>
+  <%}%>
+</div> 
+<%- include('includes/studentAction-footer') %> 
+<%- include('includes/footer') %> 

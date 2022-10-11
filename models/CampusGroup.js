@@ -53,7 +53,7 @@ CampusGroup.prototype.cleanUp=function(){
       //    userName:""
       //   },
       //   editDate:new Date()
-      // }
+      // }  
     },
     expectedMembers:Number(this.data.expectedMembers),
     createdBy:this.createdBy,
@@ -131,6 +131,31 @@ CampusGroup.getCampusGroupDetailsById=function(id){
   })
 }
 
+CampusGroup.getCampusGroupsByArrayOfIds=function(ids){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      let allCampusGroups=await campusGroupCollection.find({_id:{ $in:ids }}).toArray()
+      allCampusGroups=allCampusGroups.map((group)=>{
+        let groupData={
+            _id:group._id,
+            groupName:group.groupName,
+            groupType:group.groupType,
+            createdBy:group.createdBy,
+            groupAim:group.aimOfTheGroup.aim,
+            expectedMembers:group.expectedMembers,
+            noOfPresentMembers:group.allMembers.length,
+            isCompleted:group.isCompleted,
+            expiringDate:group.expiringDate,
+            createdDate:group.createdDate
+        }
+        return groupData
+      })
+      resolve(allCampusGroups)
+    }catch{
+      reject()
+    }
+  })
+}
 
 CampusGroup.getCompletedAndRunningGroups=function(groupType){
   return new Promise(async (resolve, reject) => { 

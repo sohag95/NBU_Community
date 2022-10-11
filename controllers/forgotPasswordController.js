@@ -84,8 +84,13 @@ exports.checkNewPasswordData = function (req, res,next) {
     if(!hasError){
         next()
     }else{
-        req.flash("errors", errMsg)
-        req.session.save(() => res.redirect(`/reset-password-form/${req.body.email}`))
+        if(req.regNumber){//used when set new password
+            req.flash("errors", errMsg)
+            req.session.save(() => res.redirect(`/profile-setting/${req.regNumber}`))
+        }else{
+            req.flash("errors", errMsg)
+            req.session.save(() => res.redirect(`/reset-password-form/${req.body.email}`))
+        }
     }    
 }
 
@@ -119,7 +124,7 @@ exports.setNewPassword = function (req, res) {
         req.flash("success", "Successfully set new password!!Log in with new password.")
         req.session.save(() => res.redirect("/log-in"))        
     }).catch(()=>{
-        req.flash("success", "There is some problem.Please try again later.")
+        req.flash("errors", "There is some problem.Please try again later.")
         req.session.save(() => res.redirect(`/reset-password-form/${req.OTPData.email}`))    
     }) 
 }

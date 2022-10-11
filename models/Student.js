@@ -10,7 +10,7 @@ const OfficialUsers = require("./OfficialUsers")
 const validator = require("validator")
 const Notification = require("./Notification")
 const SentEmail = require("./SentEmail")
-
+ 
 let Student=function(regData,batchData,communityController){
   this.data=regData
   this.batchData=batchData
@@ -125,6 +125,8 @@ let Student=function(regData,batchData,communityController){
       isHomeTutor:false,
       createdDate:new Date(),
       creditPoints:0,
+      bioStatus:null,
+      guestAllowedToViewProfile:false,
       verification:{//this data will be used for verification as well as reset password
         code:verificationCode,//to verify new account
         resetPassword:{
@@ -153,7 +155,10 @@ let Student=function(regData,batchData,communityController){
         groupLeader:[]
       },
       nominationTakenPoles:[],
-      voteGivenPoles:[],
+      voteGivenPoles:{
+        leaderVote:[],
+        topicVote:[]
+      },
       campusGroupIds:[]
     }
    }catch{
@@ -197,7 +202,7 @@ let Student=function(regData,batchData,communityController){
         if (this.data.phone.length =! 10) {
           this.errors.push("Your phone number should contain 10 digits.")
         }
-        
+      
         if (!validator.isEmail(this.data.email)) {this.errors.push("You must provide a valid email address.")}
 
         // if (this.data.password!=this.data.rePassword) {
@@ -348,6 +353,21 @@ Student.prototype.studentLogIn = function () {
       .catch(function () {
         reject("Please try again later.")
       })
+  })
+}
+
+Student.checkPresentPassword = function (presentPassword,regNumber) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      let studentData=await studentsCollection.findOne({regNumber:regNumber})
+      if(bcrypt.compareSync(presentPassword, studentData.password)){
+        resolve()
+      }else{
+        reject("Present password has not matched!!")
+      }  
+    }catch{
+      reject("Sorry there is some problem.")
+    }
   })
 }
 
@@ -559,11 +579,92 @@ Student.setNewPassword = function (email,newPassword) {
   })
 }
 
+Student.resetNewPassword = function (regNumber,newPassword) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      let salt = bcrypt.genSaltSync(10)
+      let password = bcrypt.hashSync(newPassword, salt)
+
+      await studentsCollection.updateOne({regNumber:regNumber},{
+        $set:{
+          password:password
+        }
+      })
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Student.onProfileViewToGuest = function (regNumber) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      await studentsCollection.updateOne({regNumber:regNumber},{
+        $set:{
+          guestAllowedToViewProfile:true
+        }
+      })
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}  
+
+Student.offProfileViewToGuest = function (regNumber) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      await studentsCollection.updateOne({regNumber:regNumber},{
+        $set:{
+          guestAllowedToViewProfile:false
+        }
+      })
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+} 
+
+Student.setBioStatus = function (bioStatus,regNumber) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      let hasError=false
+      let errMsg=null
+      if (typeof bioStatus != "string") {
+        bioStatus = ""
+      }
+      if (bioStatus == "") {
+        errMsg="You must provide bio-status."
+        hasError=true
+      }
+      if (bioStatus.length > 150) {
+        errMsg="Your bio-status must be within 150 characters."
+        hasError=true
+      }
+      if(!hasError){
+        await studentsCollection.updateOne({regNumber:regNumber},{
+          $set:{
+            bioStatus:bioStatus,
+          }
+        })
+        console.log("hello yhere")
+        resolve()
+      }else{
+        reject(errMsg)
+      }
+    }catch{
+      reject("There is some problem!!")
+    }
+  })
+}
+
 Student.searchStudent = function(searchTerm) {
   return new Promise(async (resolve, reject) => {
     if (typeof searchTerm == "string") {
       let students = await studentsCollection.aggregate([{ $match: { $text: { $search: searchTerm } } }, { $sort: { score: { $meta: "textScore" } } }]).toArray()
-      studentsData = students.map(student => {
+      let studentsData = students.map(student => {
         data = {
           regNumber: student.regNumber,
           userName: student.userName,
@@ -572,7 +673,6 @@ Student.searchStudent = function(searchTerm) {
         }
         return data
       })
-      console.log(studentsData)
       resolve(studentsData)
     } else {
       reject()

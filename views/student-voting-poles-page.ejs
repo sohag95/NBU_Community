@@ -1,0 +1,143 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<%- include('includes/studentAction-header') %> 
+<div class="item-container" >
+  <h5 class="bolder text-center"><strong>
+    <%if(user.regNumber==headerData.regNumber){%>
+      Your
+    <%}else{%>
+      <%=headerData.userName%>'s
+    <%}%>
+    All Voting Related Poles</strong>
+  </h5>
+  <hr>
+  <strong class="d-block bolder">All Winning Voting Poles (<%=votingData.winningPoles.length%>)</strong>
+  <%if(!votingData.winningPoles.length){%>
+    <div class="colored-container">
+      <div class="btn btn-block btn-info">
+        <%if(user.regNumber==headerData.regNumber){%>
+          You have
+        <%}else{%>
+          <%=headerData.userName%> has
+        <%}%>
+        not won any voting pole yet!!
+      </div>
+    </div>
+  <%}else{%>
+    <div class="row">
+      <%votingData.winningPoles.forEach((pole)=>{%>
+        <div class="col-sm-4 mt-2">
+          <a href="/leader-voting/<%=pole._id%>/details"  style="text-decoration: none;">
+            <div class="colored-container">
+              <img class="voting-pole-cover-image"  src="/images/vote-banner.webp" alt="">
+              <div class="text-center"><strong>Vote Type : <span class="text-capitalize"><%=pole.from%> Leader Selection</span></strong></div>
+              <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+                <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
+                <span class="d-block">Department Name : <%=pole.sourceName%></span>
+                <%if(pole.from=="batch"){%>
+                  <span class="d-block">Session Year : (20<%=pole.sourceId.slice(0,2)%>-20<%=pole.sourceId.slice(2,4)%>)</span>
+                <%}%>
+                <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+                <strong class="d-block">Voting Dates : </strong>
+                <span class="d-block">Created Date : 12/05/2022 </span>
+                <span class="d-block">Result Date : 15/05/2022</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      <%})%>
+    </div>
+  <%}%>
+  
+  <hr>
+  <strong class="d-block bolder">All Nomination Taken Poles(<%=votingData.nominationTakenPoles.length%>)</strong>
+  <%if(!votingData.nominationTakenPoles.length){%>
+    <div class="colored-container">
+      <div class="btn btn-block btn-info">
+        <%if(user.regNumber==headerData.regNumber){%>
+          You have
+        <%}else{%>
+          <%=headerData.userName%> has
+        <%}%>
+        not taken nomination on any voting pole yet!!
+      </div>
+    </div>
+  <%}else{%>
+    <div class="row">
+      <%votingData.nominationTakenPoles.forEach((pole)=>{%>
+        <div class="col-sm-4 mt-2">
+          <a href="/leader-voting/<%=pole._id%>/details"  style="text-decoration: none;">
+            <div class="colored-container">
+              <img class="voting-pole-cover-image"  src="/images/vote-banner.webp" alt="">
+              <div class="text-center"><strong>Vote Type : <span class="text-capitalize"><%=pole.from%> Leader Selection</span></strong></div>
+              <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+                <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
+                <span class="d-block">Department Name : <%=pole.sourceName%></span>
+                <%if(pole.from=="batch"){%>
+                  <span class="d-block">Session Year : (20<%=pole.sourceId.slice(0,2)%>-20<%=pole.sourceId.slice(2,4)%>)</span>
+                <%}%>
+                <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+                <strong class="d-block">Voting Dates : </strong>
+                <span class="d-block">Created Date : 12/05/2022 </span>
+                <span class="d-block">Nomination Date : 15/05/2022</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      <%})%>
+    </div>
+  <%}%>
+  <hr>
+  <strong class="d-block bolder">All Vote Given Poles(<%=votingData.voteGivenPoles.leaderVote.length+votingData.voteGivenPoles.topicVote.length%>)</strong>
+  <strong class="d-block bolder text-info">Leader Voting Poles(<%=votingData.voteGivenPoles.leaderVote.length%>)</strong>
+   <%if(!votingData.voteGivenPoles.leaderVote.length){%>
+      <div class="colored-container">
+        <div class="btn btn-block btn-info">
+          <%if(user.regNumber==headerData.regNumber){%>
+            You have
+          <%}else{%>
+            <%=headerData.userName%> has
+          <%}%>
+          not given any leader selection vote yet!!
+        </div>
+      </div>
+    <%}else{%>
+      <div  style="display: flex;flex-wrap: wrap;">
+        <%votingData.voteGivenPoles.leaderVote.forEach((poleId,index)=>{%>
+          <a href="/leader-voting/<%=poleId%>/details" style="text-decoration: none;">
+            <div class="vote-pole-link-button ">
+              <strong>Voting No : <%=index+1%></strong>
+            </div>
+          </a>
+        <%})%>
+      </div>
+    <%}%>
+  
+  
+  <strong class="d-block bolder text-info">Topic Voting Poles(<%=votingData.voteGivenPoles.topicVote.length%>)</strong>
+    <%if(!votingData.voteGivenPoles.topicVote.length){%>
+      <div class="colored-container">
+        <div class="btn btn-block btn-info">
+          <%if(user.regNumber==headerData.regNumber){%>
+            You have
+          <%}else{%>
+            <%=headerData.userName%> has
+          <%}%>
+          not given any topic selection vote yet!!
+        </div>
+      </div>
+    <%}else{%>
+      <div  style="display: flex;flex-wrap: wrap;">
+        <%votingData.voteGivenPoles.topicVote.forEach((poleId,index)=>{%>
+          <a href="/topic-voting/<%=poleId%>/details" style="text-decoration: none;">
+            <div class="vote-pole-link-button ">
+              <strong>Voting No : <%=index+1%></strong>
+            </div>
+          </a>
+        <%})%>
+      </div>
+    <%}%>
+  
+</div> 
+<%- include('includes/studentAction-footer') %> 
+<%- include('includes/footer') %> 

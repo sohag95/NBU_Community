@@ -78,18 +78,28 @@
             <%}%>
           </div>
           
-          <h5><strong>
+          <h5 style="margin-bottom: 0px;">
+            <strong>
             <%=profileInfo.userName%>
               <%if(profileInfo.isVerified){%>
                 <span class="text-primary" > <i class="fas fa-check-circle"></i> </span>
               <%}else{%>
                 <span class="text-danger"> <i class="fas fa-times-circle"></i></span>
               <%}%>
-            </strong></h5>
-          <span>
-            <span >Bio status should be here.</span>
+            </strong>
+          </h5>
+          <strong class="d-block text-center text-warning">Total Credit Points : <%=profileInfo.creditPoints%></strong>
+          <span class="bolder text-info">
+            <%if(profileInfo.bioStatus){%>
+              <span ><%=profileInfo.bioStatus%></span>
+            <%}else{%>
+              <span >Bio status is not given.</span>
+            <%}%>
+            
             <%if(checkData.isProfileOwner){%>
-              <span type="button" class="d-block text-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit Bio</span>
+              <div>
+                <span type="button" class=" text-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit Bio</span>
+              </div>
               <!-- Modal -->
               <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -104,7 +114,7 @@
                       <form action="/update-bio-status/<%=profileInfo.regNumber%>" method="post">
                         <div class="form-group" style="text-align: left;">
                           <label for="status" class="text-muted" ><small>Edit status </small></label>
-                          <input name="bioStatus" value="<%=profileInfo.bioStatus%>" id="status" class="form-control form-control-sm " type="text" placeholder="status" autocomplete="off" />
+                          <input name="bioStatus" value="<%=profileInfo.bioStatus%>" id="status" class="form-control form-control-sm " type="text" placeholder="Write bio-status here" autocomplete="off" />
                         </div>
                         <div style="text-align: left;">
                           <button class="btn btn-success btn-sm ">Submit</button>

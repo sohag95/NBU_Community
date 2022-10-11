@@ -1,0 +1,95 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<%- include('includes/studentAction-header') %> 
+<div class="item-container" >
+  <h5 class="bolder text-center"><strong>
+    <%if(user.regNumber==headerData.regNumber){%>
+      Your
+    <%}else{%>
+      <%=headerData.userName%>'s
+    <%}%>
+    All Participated Activities (<%=allActivities.leadActivities.length+allActivities.participatedActivities.length%>)</strong>
+  </h5>
+  <hr>
+  <strong class="d-block bolder">All Leading Activities (<%=allActivities.leadActivities.length%>)</strong>
+  <%if(!allActivities.leadActivities.length){%>
+    <div class="colored-container">
+      <div class="btn btn-block btn-info">
+        <%if(user.regNumber==headerData.regNumber){%>
+          You have
+        <%}else{%>
+          <%=headerData.userName%> has
+        <%}%>
+        not lead any activity yet!!
+      </div>
+    </div>
+  <%}else{%>
+    <%allActivities.leadActivities.forEach((activity)=>{%>
+      <a href="/activity/<%=activity._id%>/details" style="text-decoration: none;">
+        <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #f0f2f5;">
+          <div class="text-center" style="position: relative;">
+            <img class="horizontal-activity-cover-photo"  src="/images/activity-banner.jpg" alt="">
+            <div class="batch-no "><i class="fa-duotone fa-circle-play"></i></div>
+          </div>
+            <div style="width: 100%;" class="ml-2 mr-2">
+                <div  style="color: #080700;font-weight: 400;">
+                  <span class="d-block text-primary"><strong><span class="text-capitalize"><%=activity.activityType%></span> Activity | <%=activity.sourceName%> 
+                    <%if(activity.activityType=="batch"){%>
+                      (20<%=activity.activitySourceId.slice(0,2)%>-20<%=activity.activitySourceId.slice(2,4)%>)
+                    <%}%>
+                    </strong> 
+                  </span>
+                  <h5  class="d-block"><strong><%=activity.title%> | <%=activity.topic%></strong></h5>
+                  <span  class="d-block"><strong><i>Conducted on <%=activity.activityDate%></i></strong></span>
+                  <span  class="d-block"><strong><i>Published on <%=activity.publishedDate%></i></strong></span>
+                  <span class="bolder"><%=activity.likes%> Likes | <%=activity.comments%> Comments</span>
+                </div>
+            </div>
+        </div>
+      </a>
+    <%})%>
+  <%}%>
+  
+  <hr>
+  <strong class="d-block bolder">All Membership Activities(<%=allActivities.participatedActivities.length%>)</strong>
+  <%if(!allActivities.participatedActivities.length){%>
+    <div class="colored-container">
+      <div class="btn btn-block btn-info">
+        <%if(user.regNumber==headerData.regNumber){%>
+          You have
+        <%}else{%>
+          <%=headerData.userName%> has
+        <%}%>
+        not participated on any activity as a member yet!!
+      </div>
+    </div>
+  <%}else{%>
+    <%allActivities.participatedActivities.forEach((activity)=>{%>
+      <a href="/activity/<%=activity._id%>/details" style="text-decoration: none;">
+        <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #f0f2f5;">
+          <div class="text-center" style="position: relative;">
+            <img class="horizontal-activity-cover-photo"  src="/images/activity-banner.jpg" alt="">
+            <div class="batch-no "><i class="fa-duotone fa-circle-play"></i></div>
+          </div>
+            <div style="width: 100%;" class="ml-2 mr-2">
+                <div  style="color: #080700;font-weight: 400;">
+                  <span class="d-block text-primary"><strong><span class="text-capitalize"><%=activity.activityType%></span> Activity | <%=activity.sourceName%> 
+                    <%if(activity.activityType=="batch"){%>
+                      (20<%=activity.activitySourceId.slice(0,2)%>-20<%=activity.activitySourceId.slice(2,4)%>)
+                    <%}%>
+                    </strong> 
+                  </span>
+                  <h5  class="d-block"><strong><%=activity.title%> | <%=activity.topic%></strong></h5>
+                  <span  class="d-block"><strong><i>Conducted on <%=activity.activityDate%></i></strong></span>
+                  <span  class="d-block"><strong><i>Published on <%=activity.publishedDate%></i></strong></span>
+                  <span class="bolder"><%=activity.likes%> <%activity.likes>1?"Likes":"Like"%> | <%=activity.comments%> <%activity.likes>1?"Comments":"Comment"%></span>
+                </div>
+            </div>
+        </div>
+      </a>
+    <%})%>
+  <%}%>
+  
+</div> 
+<%- include('includes/studentAction-footer') %> 
+<%- include('includes/footer') %> 

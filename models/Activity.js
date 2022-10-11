@@ -363,8 +363,25 @@ Activity.updateActivityDataAfterVoteResult=function(id,wonTopic){
 Activity.getAllActivityDetailsOfArrayIds=function(activityIds){
   return new Promise(async (resolve, reject) => { 
     try{
+      
       //update state and date
       let allActivities=await activityCollection.find({_id:{ $in:activityIds }}).toArray()
+      allActivities=allActivities.map((activity)=>{
+        let activityData={
+          _id:activity._id,
+          activityType:activity.activityType,
+          sourceName:activity.sourceName,
+          activitySourceId:activity.activitySourceId,
+          topic:activity.topic,
+          title:activity.title,
+          videoCoverPhoto:activity.videoCoverPhoto,
+          likes:activity.likes.length,
+          comments:activity.comments.length,
+          activityDate:activity.activityDates.activityDate,
+          publishedDate:activity.activityDates.publishedDate,
+        }
+        return activityData
+      })
       resolve(allActivities)
     }catch{
       reject("There is some problem.")

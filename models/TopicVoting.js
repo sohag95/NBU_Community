@@ -7,6 +7,7 @@ const Activity = require("./Activity")
 const AddCreditPoints = require("./AddCreditPoints")
 const GetAllMembers = require("./GetAllMembers")
 const SourceNotifications = require("./SourceNotifications")
+const StudentDataHandle = require("./StudentDataHandle")
 const votingCollection = require("../db").db().collection("VotingPoles")
 const activityCollection = require("../db").db().collection("Activities")
 
@@ -111,7 +112,8 @@ TopicVoting.giveTopicVote=function(id,votingData){
           voters:votingData
         }
       })
-      await AddCreditPoints.creditAfterTopicVoteToVoter(votingData.regNumber)
+      //add pole id on voters account as voted
+      await StudentDataHandle.addVotingPoleIdOnVoterAccount(votingData.regNumber,new ObjectId(id),"topicVote")
       resolve()
     }catch{
       reject()

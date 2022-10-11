@@ -96,18 +96,29 @@ StudentDataHandle.addNominationTakenPoleIdOnCandidateAccount= function(regNumber
 })
 }
 
-StudentDataHandle.addVotingPoleIdOnVoterAccount= function(regNumber,poleId){
+StudentDataHandle.addVotingPoleIdOnVoterAccount= function(regNumber,poleId,from){
  //voter regNumber
  return new Promise(async (resolve, reject) => { 
   try{
+    let dataContainerField=null
+    if(from=="leaderVote"){
+      dataContainerField="voteGivenPole.leaderVote"
+    }else{
+      dataContainerField="voteGivenPole.topicVote"
+    }
     await studentDataCollection.updateOne(
       {regNumber:regNumber},
       {
         $push:{
-          voteGivenPoles:poleId
+          [dataContainerField]:poleId
         }
       })
-      await AddCreditPoints.creditAfterLeaderVoteToVoter(regNumber)
+      if(from=="leaderVote"){
+        await AddCreditPoints.creditAfterLeaderVoteToVoter(regNumber)
+      }else{
+        await AddCreditPoints.creditAfterTopicVoteToVoter(regNumber)
+      }
+      
   resolve()
   }catch{
     console.log(" error on addVotingPoleIdOnVoterAccount")

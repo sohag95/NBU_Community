@@ -160,7 +160,7 @@ LeaderVoting.giveLeaderVote=function(id,votingData){
         }
       })
       //add pole id on voters account as voted
-      await StudentDataHandle.addVotingPoleIdOnVoterAccount(votingData.regNumber,id)
+      await StudentDataHandle.addVotingPoleIdOnVoterAccount(votingData.regNumber,id,"leaderVote")
       resolve()
     }catch{
       reject()
@@ -328,6 +328,28 @@ LeaderVoting.acceptSelfAsLeader=function(votingDetails,newLeaderData){
         await LeaderVoting.updateVotingSourceDataDuringAcceptance(votingDetails,newLeaderData)
         resolve()
       }
+    }catch{
+      reject()
+    }
+  })
+}
+
+LeaderVoting.getLeaderVotingPoleByArrayOfPoleIds=function(poleIds){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      let allVotingPoles=await votingCollection.find({_id:{ $in:poleIds }}).toArray()
+      allVotingPoles=allVotingPoles.map((pole)=>{
+        let poleData={
+          _id:pole._id,
+          voteFrom:pole.voteFrom,
+          from:pole.from,
+          sourceId:pole.sourceId,
+          sourceName:pole.sourceName,
+          votingDates:pole.votingDates
+        }
+        return poleData
+      })
+      resolve(allVotingPoles)
     }catch{
       reject()
     }
