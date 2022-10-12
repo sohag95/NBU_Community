@@ -42,7 +42,7 @@
                   <h5  class="d-block"><strong><%=activity.title%> | <%=activity.topic%></strong></h5>
                   <span  class="d-block"><strong><i>Conducted on <%=activity.activityDate%></i></strong></span>
                   <span  class="d-block"><strong><i>Published on <%=activity.publishedDate%></i></strong></span>
-                  <span class="bolder"><%=activity.likes%> Likes | <%=activity.comments%> Comments</span>
+                  <span class="bolder"><%=activity.likes%> <%=activity.likes>1?"Likes":"Like"%> | <%=activity.comments%> <%=activity.likes>1?"Comments":"Comment"%></span>
                 </div>
             </div>
         </div>
@@ -82,7 +82,7 @@
                   <h5  class="d-block"><strong><%=activity.title%> | <%=activity.topic%></strong></h5>
                   <span  class="d-block"><strong><i>Conducted on <%=activity.activityDate%></i></strong></span>
                   <span  class="d-block"><strong><i>Published on <%=activity.publishedDate%></i></strong></span>
-                  <span class="bolder"><%=activity.likes%> <%activity.likes>1?"Likes":"Like"%> | <%=activity.comments%> <%activity.likes>1?"Comments":"Comment"%></span>
+                  <span class="bolder"><%=activity.likes%> <%=activity.likes>1?"Likes":"Like"%> | <%=activity.comments%> <%=activity.likes>1?"Comments":"Comment"%></span>
                 </div>
             </div>
         </div>

@@ -1,0 +1,51 @@
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+  <div class="col-lg-9 pt-1" >
+    <img class="home-cover-image" src="/images/sponsor-banner.png"/>
+    <hr>
+    <h5 class="bolder text-primary">Top Activities :</h5>
+    <div class="item-container">
+        <%if(!topActivities.length){%>
+            <div class="colored-container">
+              <div class="btn btn-block btn-info">
+                No top activity selected till now!!
+              </div>
+            </div>
+          <%}else{%>
+            <%topActivities.forEach((activity)=>{%>
+              <a href="/activity/<%=activity._id%>/details" style="text-decoration: none;">
+                <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #f0f2f5;">
+                  <div class="text-center" style="position: relative;">
+                    <img class="horizontal-activity-cover-photo"  src="/images/activity-banner.jpg" alt="">
+                    <div class="batch-no "><i class="fa-duotone fa-circle-play"></i></div>
+                  </div>
+                    <div style="width: 100%;" class="ml-2 mr-2">
+                        <div  style="color: #080700;font-weight: 400;">
+                          <span class="d-block text-primary"><strong><span class="text-capitalize"><%=activity.activityType%></span> Activity | <%=activity.sourceName%> 
+                            <%if(activity.activityType=="batch"){%>
+                              (20<%=activity.activitySourceId.slice(0,2)%>-20<%=activity.activitySourceId.slice(2,4)%>)
+                            <%}%>
+                            </strong> 
+                          </span>
+                          <h5  class="d-block"><strong><%=activity.title%> | <%=activity.topic%></strong></h5>
+                          <span  class="d-block"><strong><i>Activity Date : <%=activity.activityDate%></i></strong></span>
+                          <span  class="d-block"><strong><i>Publish Date : <%=activity.publishedDate%></i></strong></span>
+                          <span class="bolder"><%=activity.likes%> <%=activity.likes>1?"Likes":"Like"%> | <%=activity.comments%> <%=activity.likes>1?"Comments":"Comment"%></span>
+                        </div>
+                    </div>
+                </div>
+              </a>
+            <%})%>
+          <%}%>
+    </div>
+
+  </div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+</div>
+
+<%- include('includes/footer') %>

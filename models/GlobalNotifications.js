@@ -21,6 +21,16 @@ GlobalNotifications.sentNotification=function(notification){
   })
 }
 
+GlobalNotifications.getGlobalNotifications=function(){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let data=await officialUsersCollection.findOne({dataType:"globalNotifications"})
+      resolve(data.notifications)
+    }catch{
+      reject()
+    }
+  })
+}
 //done
 GlobalNotifications.activityCreated=function(activityId,sourceId,sourceName,source){
   return new Promise(async (resolve, reject) => {

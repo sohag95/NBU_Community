@@ -365,7 +365,7 @@ Activity.getAllActivityDetailsOfArrayIds=function(activityIds){
     try{
       
       //update state and date
-      let allActivities=await activityCollection.find({_id:{ $in:activityIds }}).toArray()
+      let allActivities=await activityCollection.find({_id:{ $in:activityIds }}).sort({"activityDates.publishedDate":-1}).toArray()
       allActivities=allActivities.map((activity)=>{
         let activityData={
           _id:activity._id,
@@ -389,6 +389,33 @@ Activity.getAllActivityDetailsOfArrayIds=function(activityIds){
   })
 }
 
+Activity.getUpcommingActivities=function(){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      let today=new Date()
+      today.setHours(0,0,0,0)
+      
+      let allActivities=await activityCollection.find({ "activityDates.activityDate": { $gt: today }}).toArray()
+      allActivities=allActivities.map((activity)=>{
+        let activityData={
+          _id:activity._id,
+          activityType:activity.activityType,
+          sourceName:activity.sourceName,
+          activitySourceId:activity.activitySourceId,
+          topic:activity.topic,
+          title:activity.title,
+          shortDetails:activity.shortDetails,
+          activityDate:activity.activityDates.activityDate,
+          createdDate:activity.activityDates.createdDate,
+        }
+        return activityData
+      })
+      resolve(allActivities)
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
 
 Activity.getAllActivityMember=function(activityData){
   return new Promise(async (resolve, reject) => { 

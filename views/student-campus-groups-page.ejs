@@ -10,7 +10,22 @@
     <%}%>
     Campus-Groups (<%=allCampusGroups.length%>)</strong>
   </h5>
-  <hr>   
+  <hr> 
+  <%if(user.regNumber==headerData.regNumber){%>
+    <div class="colored-container">
+      <%if(allCampusGroups.length==5){%>
+        <div class="btn btn-warning btn-block btn-lg"><strong>You are member of 5 campus-groups!!</strong> </div>
+      <%}else{%>
+        <h5 class="text-center bolder text-success "><strong>[You can involved on maximum 5 campus-groups.]</strong></h5>
+        <hr>
+        <a href="/create-campus-group-form">
+          <div class="btn btn-success btn-block btn-lg"><strong>Create new campus group</strong> </div>
+        </a>
+      <%}%>
+      
+    </div>
+    <hr>
+  <%}%> 
   <%if(!allCampusGroups.length){%>
     <div class="colored-container">
       <div class="btn btn-block btn-lg btn-info"><strong>

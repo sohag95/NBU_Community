@@ -41,7 +41,6 @@ router.get('/image/:from/:size/:key',awsS3BucketController.getPhoto)
 //####################################
 //guest-user related routers
 router.get('/',userController.guestHomePage)
-router.get("/recent-activities",  userController.recentActivities)
 router.get("/all-departments",  userController.allDepartments)
 
 //Searching student by userName or regNumber 
@@ -139,6 +138,10 @@ router.get('/videoEditor-home',officialUserController.videoEditorMustBeLoggedIn,
 
 //########################
 //ACTIVITY RELATED ROUTERS
+router.get("/all-activities",activityController.getAllActivitiesPage)
+router.get("/top-activities",activityController.getTopActivitiesPage)
+router.get("/todays-activities",activityController.getTodaysActivitiesPage)
+
 //from=(batch/department/group) || id=(batchId/departmentCode/groupId)
 router.get("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getActivityCreationPage)
 router.post("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getExtraDataToCreateActivity,activityController.createNewActivity)

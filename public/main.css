@@ -1256,3 +1256,27 @@ div.feedbackButton{
   border-top-right-radius: 5px;
   transition: opacity linear 100ms;
 }
+
+.home-btn-avatar {
+  width: 26px;
+  height: 22px;
+  border-radius: 10px;
+  margin-right: 5px;
+  position: relative;
+}
+
+.student-home-link-btn{
+  color: #fff;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+.global-notification-text{
+  font-family: sf pro display,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: justify;
+  line-height: 12px;
+  padding-bottom: 0.3rem;
+  color: #3c3b37;
+}

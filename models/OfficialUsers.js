@@ -574,6 +574,17 @@ OfficialUsers.getSameTypeCampusGroupIds=function(groupType){
     }
   })
 }
+
+OfficialUsers.getAllActivityIds=function(){
+  return new Promise(async(resolve, reject) => {
+    try {
+      let activities=await officialUsersCollection.findOne({ dataType: "allActivityHandling" })
+      resolve(activities)
+    } catch {
+      reject()
+    }
+  })
+}
 module.exports=OfficialUsers
 
     

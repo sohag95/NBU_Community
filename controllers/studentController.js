@@ -1,8 +1,10 @@
 const Activity = require("../models/Activity")
 const CampusGroup = require("../models/CampusGroup")
+const GlobalNotifications = require("../models/GlobalNotifications")
 const HomeTutor = require("../models/HomeTutor")
 const LeaderVoting = require("../models/LeaderVoting")
 const Notification = require("../models/Notification")
+const OfficialUsers = require("../models/OfficialUsers")
 const Student = require("../models/Student")
  
 
@@ -31,9 +33,28 @@ exports.getStudentHomePage=async function(req,res){
       req.session.user.otherData.unseenNotifications=unseenNotifications
     }
     //--------------------------
-    console.log("Reg number :",req.regNumber)
+    let globalNotifications=await GlobalNotifications.getGlobalNotifications()
+    let totalNotifications=globalNotifications.length
+    if(totalNotifications>25){
+      globalNotifications=globalNotifications.slice(totalNotifications-5,totalNotifications)
+    }
+    globalNotifications=globalNotifications.reverse()
+    //--------------------------
+    let postActivities=[]
+    if(req.session.user.otherData.isVerified){
+      let activities=await OfficialUsers.getAllActivityIds()
+      let activityIds=activities.recentActivities.concat(activities.topActivities)
+      if(activityIds.length){
+        postActivities=await Activity.getAllActivityDetailsOfArrayIds(activityIds)
+      }
+    }
+    console.log("Global notifications :",globalNotifications)
+    console.log("postActivities :",postActivities)
     req.session.save(()=>{
-      res.render("student-home-page")
+      res.render("student-home-page",{
+        globalNotifications:globalNotifications,
+        postActivities:postActivities
+      })
     })
   }catch{
     res.render("404")

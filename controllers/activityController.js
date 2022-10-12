@@ -517,3 +517,66 @@ exports.commentOnActivity=function(req,res){
       res.redirect(`/activity/${req.params.id}/details`)
     })
 }
+
+
+exports.getAllActivitiesPage=async function(req,res){
+  try{
+    let allActivities=[]
+    let activities=await OfficialUsers.getAllActivityIds()
+    if(activities.allActivities.length){
+      allActivities=await Activity.getAllActivityDetailsOfArrayIds(activities.allActivities)
+    }
+    console.log("All activities :",allActivities)
+    res.render("all-activities-page",{
+      allActivities:allActivities
+    })
+  }catch{
+    res.render("404")
+  }
+}
+
+exports.getTopActivitiesPage=async function(req,res){
+  try{
+    let topActivities=[]
+    let activities=await OfficialUsers.getAllActivityIds()
+    if(activities.topActivities.length){
+      topActivities=await Activity.getAllActivityDetailsOfArrayIds(activities.topActivities)
+    }
+    console.log("Top activities :",topActivities)
+    res.render("top-activities-page",{
+      topActivities:topActivities
+    })
+  }catch{
+    res.render("404")
+  }
+}
+
+exports.getTodaysActivitiesPage=async function(req,res){
+  try{
+    let activities={
+      todaysActivity:[],
+      upcommingActivity:[]
+    }
+    let upcommingActivities=await Activity.getUpcommingActivities()
+    if(upcommingActivities.length){
+      let today=new Date()
+      today.setHours(0,0,0,0)
+      var tomorrow = today
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      upcommingActivities.forEach((activity)=>{
+        if(activity.activityDate>today && activity.activityDate<tomorrow){
+          activities.todaysActivity.push(activity)
+        }else{
+          activities.upcommingActivity.push(activity)
+        }
+      })
+    }
+    console.log("Upcomming activities :",activities)
+    
+    res.render("todays-activities-page",{
+      activities:activities
+    })
+  }catch{
+    res.render("404")
+  }
+}

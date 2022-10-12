@@ -2,137 +2,30 @@
   <div class="container" style="padding-left: 0;padding-right: 0;">
     <div class="card border-light mb-3" style="max-width: 100%;">
       <h5 class="card-header bolder text-success "><strong>Global Notifications</strong></h5>
-      <div class="card-body" style="max-height: 75vh; overflow-y: scroll;">
-        
-        <div class="notification-container mb-1 not-viewed">
-          <div style="display: flex;width: 100%;">
-              <div class="row"  style="width: 100%;">
-                <div class="col"  style="width: 100%;">
-                  <div style="width: 100%;">
-                    <strong class="bolder">This will contain the notification message part.</strong>  
+      <div class="card-body" style="max-height: 75vh; overflow-y: scroll;padding: .5rem;">
+        <%if(!globalNotifications.length){%>
+          <div class="btn btn-block btn-info">Not Available!!</div>
+        <%}else{%>
+          <%globalNotifications.forEach((notification)=>{%>
+            <div class="notification-container mb-1 not-viewed global-notification-text">
+              <div style="display: flex;width: 100%;">
+                  <div class="row"  style="width: 100%;">
+                    <div class="col"  style="width: 100%;">
+                      <div style="width: 100%;padding-bottom: 5px;">
+                        <span class="d-block"><%=notification.message%></span>  
+                      </div>
+                    </div>
                   </div>
-                </div>
               </div>
-          </div>
-            <hr style="padding: 0;margin: 0;">
-            <div class="ml-1" >
-              <a class="d-inline bolder text-primary mr-3" href=""> Go to link</a>
-              <strong class="float-right"><i>12/12/2022</i></strong> 
-            </div>
-        </div>
-        
-        <div class="notification-container mb-1 not-viewed">
-          <div style="display: flex;width: 100%;">
-              <div class="row"  style="width: 100%;">
-                <div class="col"  style="width: 100%;">
-                  <div style="width: 100%;">
-                    <strong class="bolder">This will contain the notification message part.</strong>  
-                  </div>
+                <hr style="padding: 0;margin: 0;">
+                <div class="ml-1" >
+                  <a class="d-inline bolder text-primary mr-3" href="<%=notification.gotoLink%>"> <%=notification.gotoText%></a>
+                  <strong class="float-right"><i>12/05/2022</i></strong> 
                 </div>
-              </div>
-          </div>
-            <hr style="padding: 0;margin: 0;">
-            <div class="ml-1" >
-              <a class="d-inline bolder text-primary mr-3" href=""> Go to link</a>
-              <strong class="float-right"><i>12/12/2022</i></strong> 
             </div>
-        </div>
-        <div class="notification-container mb-1 not-viewed">
-          <div style="display: flex;width: 100%;">
-              <div class="row"  style="width: 100%;">
-                <div class="col"  style="width: 100%;">
-                  <div style="width: 100%;">
-                    <strong class="bolder">This will contain the notification message part.</strong>  
-                  </div>
-                </div>
-              </div>
-          </div>
-            <hr style="padding: 0;margin: 0;">
-            <div class="ml-1" >
-              <a class="d-inline bolder text-primary mr-3" href=""> Go to link</a>
-              <strong class="float-right"><i>12/12/2022</i></strong> 
-            </div>
-        </div>
-        <div class="notification-container mb-1 not-viewed">
-          <div style="display: flex;width: 100%;">
-              <div class="row"  style="width: 100%;">
-                <div class="col"  style="width: 100%;">
-                  <div style="width: 100%;">
-                    <strong class="bolder">This will contain the notification message part.</strong>  
-                  </div>
-                </div>
-              </div>
-          </div>
-            <hr style="padding: 0;margin: 0;">
-            <div class="ml-1" >
-              <a class="d-inline bolder text-primary mr-3" href=""> Go to link</a>
-              <strong class="float-right"><i>12/12/2022</i></strong> 
-            </div>
-        </div>
-        <div class="notification-container mb-1 not-viewed">
-          <div style="display: flex;width: 100%;">
-              <div class="row"  style="width: 100%;">
-                <div class="col"  style="width: 100%;">
-                  <div style="width: 100%;">
-                    <strong class="bolder">This will contain the notification message part.</strong>  
-                  </div>
-                </div>
-              </div>
-          </div>
-            <hr style="padding: 0;margin: 0;">
-            <div class="ml-1" >
-              <a class="d-inline bolder text-primary mr-3" href=""> Go to link</a>
-              <strong class="float-right"><i>12/12/2022</i></strong> 
-            </div>
-        </div>
-        <div class="notification-container mb-1 not-viewed">
-          <div style="display: flex;width: 100%;">
-              <div class="row"  style="width: 100%;">
-                <div class="col"  style="width: 100%;">
-                  <div style="width: 100%;">
-                    <strong class="bolder">This will contain the notification message part.</strong>  
-                  </div>
-                </div>
-              </div>
-          </div>
-            <hr style="padding: 0;margin: 0;">
-            <div class="ml-1" >
-              <a class="d-inline bolder text-primary mr-3" href=""> Go to link</a>
-              <strong class="float-right"><i>12/12/2022</i></strong> 
-            </div>
-        </div>
-        <div class="notification-container mb-1 not-viewed">
-          <div style="display: flex;width: 100%;">
-              <div class="row"  style="width: 100%;">
-                <div class="col"  style="width: 100%;">
-                  <div style="width: 100%;">
-                    <strong class="bolder">This will contain the notification message part.</strong>  
-                  </div>
-                </div>
-              </div>
-          </div>
-            <hr style="padding: 0;margin: 0;">
-            <div class="ml-1" >
-              <a class="d-inline bolder text-primary mr-3" href=""> Go to link</a>
-              <strong class="float-right"><i>12/12/2022</i></strong> 
-            </div>
-        </div>
-        <div class="notification-container mb-1 not-viewed">
-          <div style="display: flex;width: 100%;">
-              <div class="row"  style="width: 100%;">
-                <div class="col"  style="width: 100%;">
-                  <div style="width: 100%;">
-                    <strong class="bolder">This will contain the notification message part.</strong>  
-                  </div>
-                </div>
-              </div>
-          </div>
-            <hr style="padding: 0;margin: 0;">
-            <div class="ml-1" >
-              <a class="d-inline bolder text-primary mr-3" href=""> Go to link</a>
-              <strong class="float-right"><i>12/12/2022</i></strong> 
-            </div>
-        </div>
+          <%})%>
+        <%}%>
+      
       </div>
     </div>
    <hr>

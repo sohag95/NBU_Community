@@ -202,13 +202,6 @@ exports.guestHomePage=async function(req,res){
 }
 
 
-exports.recentActivities=async function(req,res){
-  try {
-    res.render("recent-activities")
-  } catch {
-    res.render("404")
-  }
-}
 
 
 exports.allDepartments=async function(req,res){

@@ -7,37 +7,43 @@
           <strong><%=user.userName%></strong>
           </div>
         </a>
-          <a href="">
+          <a href="/profile-setting/<%=user.regNumber%>">
             <div class="side-item">
-              <i class="fas fa-users fa-lg"></i>
-              <strong>Friends</strong>
+              <i class="fas fa-toolbox fa-lg"></i>
+              <strong>Profile Setting</strong>
             </div>
           </a>
-          <a href="">
+          <a href="/activities/student/<%=user.regNumber%>">
           <div class="side-item">
-            <i class="fas fa-chalkboard-teacher fa-lg"></i>
-            <strong>Teachers</strong>
+            <i class="fas fa-running fa-lg"></i>
+            <strong>Your Activities</strong>
           </div>
           </a>
-         <a href="">
+          <a href="/all-activities">
             <div class="side-item">
-              <i class="fas fa-graduation-cap fa-lg"></i>
-              <strong>Students</strong>
+              <i class="fas fa-address-book fa-lg"></i>
+              <strong>See All Activities</strong>
             </div>
-            </a>
+          </a>
         
-        <a href="/batches">
-        <div class="side-item">
-          <i class="fas fa-school fa-lg"></i>
-          <strong>Batches</strong>
-        </div>
-      </a>
-      <a href="/library">
-        <div class="side-item">
-          <i class="fas fa-address-book fa-lg"></i>
-          <strong>Notes</strong>
-        </div>
-      </a>
+          <a href="/campus-group/student/<%=user.regNumber%>">
+            <div class="side-item">
+              <i class="fas fa-users fa-lg"></i>
+              <strong> Your Campus Groups</strong>
+            </div>
+          </a>
+          <a href="/campus-groups">
+            <div class="side-item">
+              <i class="fas fa-school fa-lg"></i>
+              <strong> All Campus Groups</strong>
+            </div>
+          </a>
+          <a href="/voting-poles/student/<%=user.regNumber%>">
+            <div class="side-item">
+              <i class="fas fa-chart-line fa-lg"></i>
+              <strong>Your Voting Poles</strong>
+            </div>
+          </a>
       
         <hr>
         <a href="#">
@@ -56,12 +62,21 @@
         <div class="side-item">
           <i class="fas fa-question-circle fa-lg"></i>
           <strong>Help</strong>
+          <i class="fas fa-graduation-cap fa-lg"></i>
+          <i class="fas fa-chalkboard-teacher fa-lg"></i>
+          <i class="fas fa-trophy fa-lg"></i>
+          <i class="fas fa-info-circle fa-lg"></i></i>
         </div>
       </a>
         <hr>
         <a href="/tutor/<%=user.regNumber%>/details">
           <div class="btn btn-secondary btn-block mt-2">
             <%=user.otherData.isHomeTutor?"Handle Home Tuition Details":"Enroll as home tutor"%>
+          </div>
+        </a>
+        <a href="/search-home-tutor">
+          <div class="btn btn-secondary btn-block mt-2">
+            <i class="fas fa-search"></i> Search Home-Tutor
           </div>
         </a>
         <hr>
