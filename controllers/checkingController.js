@@ -151,7 +151,8 @@ exports.ifActivityAlreadyLiked=function(req,res,next){
 //voting related routers
 
 
-
+//this function is used to get source data, decided by the parameters 
+//when type==all it says we need completedActivities ids otherwise get leader data for voting pole creation
 exports.ifSourcePresent=async function(req,res,next){
   try{
     req.sourceData=null
@@ -163,7 +164,11 @@ exports.ifSourcePresent=async function(req,res,next){
           from:req.params.from,
           sourceId:sourceData.batchId,
           sourceName:sourceData.departmentName,
-          leaders:{
+        }
+        if(req.params.type=="all"){
+          req.sourceData.completedActivities=sourceData.completedActivities
+        }else{
+          req.sourceData.leaders={
             mainLead:sourceData.presentLeader,
             assistantLead:sourceData.previousLeader,
           }
@@ -178,7 +183,11 @@ exports.ifSourcePresent=async function(req,res,next){
           from:req.params.from,
           sourceId:sourceData.departmentCode,
           sourceName:sourceData.departmentName,
-          leaders:{
+        }
+        if(req.params.type=="all"){
+          req.sourceData.completedActivities=sourceData.completedActivities
+        }else{
+          req.sourceData.leaders={
             mainLead:sourceData.presentLeader,
             assistantLead:sourceData.previousLeader,
           }
@@ -193,7 +202,11 @@ exports.ifSourcePresent=async function(req,res,next){
           from:req.params.from,
           sourceId:sourceData.groupId,
           sourceName:sourceData.groupName,
-          leaders:{
+        }
+        if(req.params.type=="all"){
+          req.sourceData.completedActivities=sourceData.completedActivities
+        }else{
+          req.sourceData.leaders={
             mainLead:sourceData.presentLeader,
             assistantLead:sourceData.previousLeader,
           }

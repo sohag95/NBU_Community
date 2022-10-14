@@ -55,12 +55,84 @@ OtherOperations.getDepartmentCodesFromGroupId=function(groupId){
     }
     recentXBatch=departmentData.activeBatches.seniours
   }
+  //get x-members/x-leaders of department
 
   let newData={
     newActiveBatches:newActiveBatches,
     recentXBatch:recentXBatch
   }
   return newData
+ }
+
+ OtherOperations.getBatchId=function(sessionYear,departmentCode){
+  let firstYear=sessionYear.slice(2,4)
+  let secondYear=sessionYear.slice(7,9)
+  let batchId=firstYear+secondYear+departmentCode
+  return batchId
+ }
+
+ OtherOperations.getXstudentsAndXleadersOfDepartment=function(departmentData,XBatchId){
+  let allPresentMembers=departmentData.allPresentMembers
+  let allPresentLeaders=departmentData.allLeaders
+  let allXMembers=departmentData.allXMembers
+  let allXLeaders=departmentData.allXLeaders
+  allPresentMembers=allPresentMembers.filter((member)=>{
+    if(member.regNumber.slice(0,9)==XBatchId){
+      allXMembers.push(member)
+    }else{
+      return member
+    }
+  })
+
+  allPresentLeaders=allPresentLeaders.filter((member)=>{
+    if(member.regNumber.slice(0,9)==XBatchId){
+      allXLeaders.push(member)
+    }else{
+      return member
+    }
+  })
+
+  let memberAndLeaderData={
+    allPresentMembers:allPresentMembers,
+    allPresentLeaders:allPresentLeaders,
+    allXMembers:allXMembers,
+    allXLeaders:allXLeaders
+  }
+
+  return memberAndLeaderData
+ }
+
+
+ 
+ OtherOperations.getXstudentsAndXleadersOfGroup=function(groupData,XBatchId){
+  let allPresentMembers=groupData.allPresentMembers
+  let allPresentLeaders=groupData.allLeaders
+  let allXMembers=groupData.allXMembers
+  let allXLeaders=groupData.allXLeaders
+  allPresentMembers=allPresentMembers.filter((member)=>{
+    if(member.regNumber.slice(0,9)==XBatchId){
+      allXMembers.push(member)
+    }else{
+      return member
+    }
+  })
+
+  allPresentLeaders=allPresentLeaders.filter((member)=>{
+    if(member.regNumber.slice(0,9)==XBatchId){
+      allXLeaders.push(member)
+    }else{
+      return member
+    }
+  })
+
+  let memberAndLeaderData={
+    allPresentMembers:allPresentMembers,
+    allPresentLeaders:allPresentLeaders,
+    allXMembers:allXMembers,
+    allXLeaders:allXLeaders
+  }
+
+  return memberAndLeaderData
  }
 
 

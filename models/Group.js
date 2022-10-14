@@ -14,13 +14,16 @@ Group.prototype.prepareGroupDataField=function(){
     presentDepartments:this.data.presentDepartments,
     presentLeader:null,
     previousLeader:null,
-    allPresentMembers:[],//"present" added later may occure some error,i have to fix that
     allLeaders:[],
+    allPresentMembers:[],//"present" added later may occure some error,i have to fix that
+    allXMembers:[],
+    allXLeaders:[],
     presentActivity:null,
     previosActivity:null,
     completedActivities:[],
     groupNotifications:[],
-    coverPhoto:null
+    isVoteGoingOn:false,
+    leaderVotingData:null,
   }
 }
 
@@ -91,9 +94,35 @@ Group.findGroupByGroupId= function(groupId){
   })
 }
 
-Group.addOnGroupMember= function(groupId,memberData){
+Group.updateXMemberAndXLeaderOnGroup= function(groupId,XBatchId){
   return new Promise(async (resolve, reject) => {
     try{
+      let groupData=await Group.findGroupByGroupId(groupId)
+      //getting new membership data of group
+      let memberAndLeaderData=OtherOperations.getXstudentsAndXleadersOfGroup(groupData,XBatchId)
+        await groupsCollection.updateOne(
+          { groupId: groupId },
+          {
+            $set: {
+              "allPresentMembers":memberAndLeaderData.allPresentMembers,
+              "allLeaders":memberAndLeaderData.allPresentLeaders,
+              "allXMembers":memberAndLeaderData.allXMembers,
+              "allXLeaders":memberAndLeaderData.allXLeaders
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+
+Group.addOnGroupPresentMember= function(groupId,memberData){
+  return new Promise(async (resolve, reject) => {
+    try{
+      //#########--Need not to check as only new selected leader can fetch this function---#############
       // let groupDetails=await groupsCollection.findOne({groupId:groupId})
       // let isAlreadyMember=false
       // groupDetails.allMembers.forEach((member)=>{
@@ -105,10 +134,9 @@ Group.addOnGroupMember= function(groupId,memberData){
       
       // if(!isAlreadyMember){
       // }
-      //#########--Need not to check as only new selected leader can fetch this function---#############
         await groupsCollection.updateOne({groupId:groupId},{
           $push:{
-            allMembers:memberData
+            allPresentMembers:memberData
           }
         })
       
@@ -118,6 +146,90 @@ Group.addOnGroupMember= function(groupId,memberData){
     }
   })
 }
+
+Group.makeGroupPresentLeader=function(groupId,newLeaderData){
+  return new Promise(async (resolve, reject) => {
+    try{
+      // newLeaderData={
+      //   regNumber:
+      //   userName:
+      //   phone:
+      //   departmentName:
+      //   createdDate:
+      //   aim:
+      //   votingPoleId:auto
+      // }
+      let newLeader=true
+      let groupDetails=await groupsCollection.findOne({groupId:groupId})
+      let newPreviousLeader=groupDetails.presentLeader
+      if( groupDetails.allLeaders.length){
+        groupDetails.allLeaders.forEach((leader)=>{
+          if(leader.regNumber==newLeaderData.regNumber){
+            newLeader=false
+          }
+        })
+      }
+       //update new leader data
+      await groupsCollection.updateOne(
+        {groupId:groupId},
+        {
+          $set: {
+            "presentLeader": newLeaderData,
+            "isVoteGoingOn":false,
+            "leaderVotingData":null,
+          }
+        }
+      )
+       //in case of same present leader again,previous leader will remain same also
+       if(groupDetails.presentLeader.regNumber!=newLeaderData.regNumber){
+        await groupsCollection.updateOne(
+          { groupId: groupId },
+          {
+            $set: {
+              previousLeader: newPreviousLeader
+            }
+          }
+        )
+      }
+      if(newLeader){
+        console.log("pushing data on department leaders")
+        let leaderData={
+          regNumber:newLeaderData.regNumber,
+          userName:newLeaderData.userName,
+          phone:newLeaderData.phone
+        }
+        await groupsCollection.updateOne(
+          {groupId:groupId},
+          {
+            $push:{
+              "allLeaders":leaderData
+            }
+          }
+        )
+       
+      }
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+
+Group.addFirstCase1UserAsDefaultGroupLeader= function(groupId,leaderData){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let groupDetails=await groupsCollection.findOne({groupId:groupId})
+      if(!groupDetails.presentLeader){
+        await Group.makeGroupPresentLeader(groupId,leaderData)
+      }
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
 
 Group.updatePresentActivityField= function(groupId,activityData){
   return new Promise(async (resolve, reject) => {

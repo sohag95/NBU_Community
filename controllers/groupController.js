@@ -113,7 +113,17 @@ exports.getGroupDetailsPage =async function (req, res) {
 
 exports.getGroupPreviousDetailsPage = function (req, res) {
   try{
-    res.render('group-previous-details-page')
+    let groupDetails={
+      groupId:req.groupDetails.groupId,
+      groupName:req.groupDetails.groupName,
+      presentDepartments:req.groupDetails.presentDepartments,
+      allXLeaders:req.groupDetails.allXLeaders,
+      allXMembers:req.groupDetails.allXMembers
+    }
+    console.log("Group Data :",groupDetails)
+    res.render('group-previous-details-page',{
+      groupDetails:groupDetails
+    })
   }catch{
     res.render('404')
   }

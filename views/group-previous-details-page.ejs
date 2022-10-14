@@ -7,144 +7,119 @@
       <div class="col-lg-9 pt-1" >
         <div class="">
           <div style="width: 100%;position: relative;">
-            <img class="department-batch-group-cover-image" src="/images/sponsor-banner3.png" width="1000" height="250"/>
+            <img class="department-batch-group-cover-image" src="/image/group-banner/large/<%=groupDetails.groupId%>" width="1000" height="250"/>
             <div class="text-center">
               <h5>
                 <strong>
-                  <span class="text-primary" > Group Name : Science Group</span>
+                  <span class="text-primary" > Group Name : <%=groupDetails.groupName%></span>
                 </strong>
               </h5>  
             </div>
           </div>  
           <hr>
           <div class="d-flex justify-content-center">
-            <a href="/batch"><span class="button">Bengali</span></a>
-            <a href=""><span class="button">English</span></a>
-            <a href=""><span class="button">Nepali</span></a>
+            <%groupDetails.presentDepartments.forEach((department)=>{%>
+              <a href="/department/<%=department.departmentCode%>/details"><span class="button"><%=department.departmentName%></span></a>
+            <%})%>
           </div>
           <hr>
         </div>
         <h5 class="text-primary text-center"><strong >Group's Previous Details</strong></h5>
         <hr>
-        <div class="item-container path">
-          <strong><h5>All Previous Leaders (4)</h5></strong>
-            <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-            <div style="display: flex;    flex-wrap: wrap;">
-              <div class="col-md-6 left-member-container" >
-                  <div class="member-container align-items-center">
-                    <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                    <div class="name-container">
-                      <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                      <strong class="d-block float-right" style="color: rgb(6, 0, 0);"><i class="fas fa-ellipsis-h"></i></strong>
-                    </div>
-                  </div>
-                  <div class="member-container align-items-center">
-                    <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                    <div class="name-container">
-                      <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                      <strong class="d-block float-right" style="color: rgb(6, 0, 0);"><i class="fas fa-ellipsis-h"></i></strong>
-                    </div>
-                  </div>
-              </div>
-              <div class="col-md-6 right-member-container" >
-                <div class="member-container align-items-center">
-                  <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                  <div class="name-container">
-                    <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                    <strong class="d-block float-right" style="color: rgb(6, 0, 0);"><i class="fas fa-ellipsis-h"></i></strong>
-                  </div>
-                  
-                </div>
-                <div class="member-container align-items-center">
-                  <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                  <div class="name-container">
-                    <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                    <strong class="d-block float-right" style="color: rgb(6, 0, 0);"><i class="fas fa-ellipsis-h"></i></strong>
-                  </div>
-                </div>
-              </div>
+        <div class="item-container">
+          <strong><h5 class="bolder">All X/Previous Leaders (<%=groupDetails.allXLeaders.length%>)</h5></strong>
+          <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+          <%if(!groupDetails.allXLeaders.length){%>
+            <div class="colored-container">
+              <div class="btn btn-lg btn-block btn-info">There is no X-Leader on this group!!</div>
             </div>
-        </div>
+          <%}else{%>  
+            <%if(groupDetails.allXLeaders.length==1){%>
+              <div class="col">
+                <div class="member-container">
+                  <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allXLeaders[0].regNumber%>" alt="">
+                  <div class="name-container">
+                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allXLeaders[0].regNumber%>/profile"><%=groupDetails.allXLeaders[0].userName%></a></strong>
+                    <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                  </div>
+                </div>
+              </div>
+            <%}else{%>
+              <%let middle=parseInt(groupDetails.allXLeaders.length/2)%>
+              <div style="display: flex;    flex-wrap: wrap;">
+                <div class="col-md-6 left-member-container" >
+                  <%for(let i=0;i<middle;i++){%>
+                    <div class="member-container">
+                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allXLeaders[i].regNumber%>" alt="">
+                      <div class="name-container">
+                        <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allXLeaders[i].regNumber%>/profile"><%=groupDetails.allXLeaders[i].userName%></a></strong>
+                        <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                      </div>
+                    </div>
+                  <%}%>
+                </div>
+                <div class="col-md-6 right-member-container" >
+                  <%for(let j=middle;j<groupDetails.allXLeaders.length;j++){%>
+                  <div class="member-container">
+                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allXLeaders[j].regNumber%>" alt="">
+                    <div class="name-container">
+                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allXLeaders[j].regNumber%>/profile"><%=groupDetails.allPresentMembers[j].userName%></a></strong>
+                      <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                    </div>
+                  </div>
+                  <%}%>
+                </div>
+              </div>
+            <%}%>
+          <%}%>
+        </div> 
         <hr>
-        <div class="item-container path">
-          <strong><h5>All Previous Members (4)</h5></strong>
-            <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-            <div style="display: flex;    flex-wrap: wrap;">
-              <div class="col-md-6 left-member-container" >
-                  <div class="member-container align-items-center">
-                    <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                    <div class="name-container">
-                      <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                      <strong class="d-block float-right" style="color: rgb(6, 0, 0);"><i class="fas fa-ellipsis-h"></i></strong>
-                    </div>
-                    
-                  </div>
-                  <div class="member-container align-items-center">
-                    <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                    <div class="name-container">
-                      <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                      <strong class="d-block float-right" style="color: rgb(6, 0, 0);"><i class="fas fa-ellipsis-h"></i></strong>
-                    </div>
-                    
-                  </div>
-              </div>
-              <div class="col-md-6 right-member-container" >
-                <div class="member-container align-items-center">
-                  <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+        <div class="item-container">
+          <strong><h5 class="bolder">All X/Previous Members (<%=groupDetails.allXMembers.length%>)</h5></strong>
+          <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+          <%if(!groupDetails.allXMembers.length){%>
+            <div class="colored-container">
+              <div class="btn btn-lg btn-block btn-info">There is no X-Member on this group!!</div>
+            </div>
+          <%}else{%>  
+            <%if(groupDetails.allXMembers.length==1){%>
+              <div class="col">
+                <div class="member-container">
+                  <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allXMembers[0].regNumber%>" alt="">
                   <div class="name-container">
-                    <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                    <strong class="d-block float-right" style="color: rgb(6, 0, 0);"><i class="fas fa-ellipsis-h"></i></strong>
+                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allXMembers[0].regNumber%>/profile"><%=groupDetails.allXMembers[0].userName%></a></strong>
+                    <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
                   </div>
-                  
                 </div>
-                <div class="member-container align-items-center">
-                  <img class="member-avatar"  src="/images/sohag.jpg" alt="">
-                  <div class="name-container">
-                    <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/">Sohag Roy</a></strong>
-                    <strong class="d-block float-right" style="color: rgb(6, 0, 0);"><i class="fas fa-ellipsis-h"></i></strong>
+              </div>
+            <%}else{%>
+              <%let middle=parseInt(groupDetails.allXMembers.length/2)%>
+              <div style="display: flex;    flex-wrap: wrap;">
+                <div class="col-md-6 left-member-container" >
+                  <%for(let i=0;i<middle;i++){%>
+                    <div class="member-container">
+                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allXMembers[i].regNumber%>" alt="">
+                      <div class="name-container">
+                        <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allXMembers[i].regNumber%>/profile"><%=groupDetails.allXMembers[i].userName%></a></strong>
+                        <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                      </div>
+                    </div>
+                  <%}%>
+                </div>
+                <div class="col-md-6 right-member-container" >
+                  <%for(let j=middle;j<groupDetails.allXMembers.length;j++){%>
+                  <div class="member-container">
+                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allXMembers[j].regNumber%>" alt="">
+                    <div class="name-container">
+                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allXMembers[j].regNumber%>/profile"><%=groupDetails.allPresentMembers[j].userName%></a></strong>
+                      <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                    </div>
                   </div>
-                  
+                  <%}%>
                 </div>
               </div>
-            </div>
-        </div>
-        <hr>
-        <div class="">
-          <h5 class="bolder text-primary">All Previous Activities (10)</h5>
-          <a href="/hello" class="d-block" style="text-decoration: none;">
-            <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #fff;">
-              <div class="text-center" style="position: relative;">
-                <img class="horizontal-activity-cover-photo"  src="/images/activity-banner.jpg" alt="">
-                <div class="batch-no "><i class="fa-duotone fa-circle-play"></i></div>
-              </div>
-                <div style="width: 100%;" class="ml-2 mr-2">
-                    <div  style="color: #080700;font-weight: 400;">
-                      <span class="d-block text-primary"><strong>Batch Activity | Computer Science (2021-2022)</strong> </span>
-                      <h5  class="d-block"><strong>First activity as campus tour ,enjoyed a lot | Campus tour</strong></h5>
-                      <span  class="d-block"><strong><i>Conducted on 12 May 2022</i></strong></span>
-                      <span  class="d-block"><strong><i>Published on 15 May 2022</i></strong></span>
-                      <span>12 Likes | 15 Comments</span>
-                    </div> 
-                </div>
-            </div>
-          </a>
-          <a href="/hello" class="d-block" style="text-decoration: none;">
-            <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #fff;">
-              <div class="text-center" style="position: relative;">
-                <img class="horizontal-activity-cover-photo"  src="/images/activity-banner.jpg" alt="">
-                <div class="batch-no "><i class="fa-duotone fa-circle-play"></i></div>
-              </div>
-                <div style="width: 100%;" class="ml-2 mr-2">
-                    <div  style="color: #080700;font-weight: 400;">
-                      <span class="d-block text-primary"><strong>Batch Activity | Computer Science (2021-2022)</strong> </span>
-                      <h5  class="d-block"><strong>First activity as campus tour ,enjoyed a lot | Campus tour</strong></h5>
-                      <span  class="d-block"><strong><i>Conducted on 12 May 2022</i></strong></span>
-                      <span  class="d-block"><strong><i>Published on 15 May 2022</i></strong></span>
-                      <span>12 Likes | 15 Comments</span>
-                    </div> 
-                </div>
-            </div>
-          </a>
+            <%}%>
+          <%}%>
         </div>
       </div>
       <div class="col-lg notVisibleOnCollapse" >

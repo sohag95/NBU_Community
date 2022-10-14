@@ -94,7 +94,7 @@ router.post('/off-profile-view-to-guest',studentController.studentMustBeLoggedIn
 
 //########################
 //ADMIN related routers
-router.get('/admin-home',officialUserController.adminMustBeLoggedIn,adminController.adminHome)
+router.get('/admin-home',officialUserController.adminMustBeLoggedIn,adminController.adminHome) 
 router.post("/setup-starting-data",  officialUserController.adminMustBeLoggedIn,adminController.setUpStartingData)
 router.get('/add-new-session-batch',officialUserController.adminMustBeLoggedIn,adminController.addNewSessionBatchPage)
 router.get('/handle-rejected-accounts',officialUserController.adminMustBeLoggedIn,adminController.getRejectedAccounts)
@@ -110,6 +110,8 @@ router.post("/delete/:regNumber/account",  officialUserController.adminMustBeLog
 //########################
 //-----SOURCE related routers----
 router.get("/source/:from/:id/notifications",checkingController.ifSourcePresent,notificationController.getSourceNotifiations)
+//here type=all to get particular data
+router.get("/activities/:type/:from/:id",checkingController.ifSourcePresent,activityController.getSourceAllActivities)
 
 //########################
 //sessionBatch related routers

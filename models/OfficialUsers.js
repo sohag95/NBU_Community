@@ -70,6 +70,25 @@ OfficialUsers.addRejectedAccountOnAdminAccount=function(regNumber){
   })
 }
 
+//admin will thank the member to be the part of nbu community
+OfficialUsers.addXBatchIdOnAdminsTable=function(XBatchId){
+  return new Promise(async(resolve, reject) => {
+    try {
+      await officialUsersCollection.updateOne(
+        { dataType: "adminAuthData" },
+        {
+          $push: {
+            thanksGivingXBatchIds: XBatchId
+          }
+        }
+      )
+      resolve()
+    } catch {
+      reject()
+    }
+  })
+}
+
 
 OfficialUsers.getRejectedAccounts=function(){
   return new Promise(async(resolve, reject) => {

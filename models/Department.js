@@ -1,5 +1,6 @@
 
 const Group = require("./Group")
+const OfficialUsers = require("./OfficialUsers")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
 const SourceNotifications = require("./SourceNotifications")
@@ -40,6 +41,8 @@ Department.prototype.prepareDepartmentDataField=function(){
     previousLeader:null,
     allLeaders:[],
     allPresentMembers:[],
+    allXMembers:[],
+    allXLeaders:[],
     activeBatches:activeBatches,
     XBatches:[],
     presentActivity:null,
@@ -71,7 +74,7 @@ Department.updateActiveBatchesSequenceYear=function(dataSet){
       let departmentData=await departmentsCollection.findOne({departmentCode:dataSet.departmentCode})
      console.log("departmentData :",departmentData)
       let newData=OtherOperations.getNewActiveBatchesSequenceAndXBatch(departmentData,dataSet)
-      // newData={
+      // newData={ 
       //   newActiveBatches:newActiveBatches,
       //   recentXBatch:recentXBatch
       // }
@@ -81,12 +84,28 @@ Department.updateActiveBatchesSequenceYear=function(dataSet){
           "activeBatches":newData.newActiveBatches
         }
       })
+      //Update the status of a batch after adding a new batch on department
+      await SessionBatch.updateBatchStateAfterAddingNewBatch(newData.newActiveBatches)
       if(newData.recentXBatch){
+        //get X-members and X-leaders to store on department table
+        let memberAndLeaderData=OtherOperations.getXstudentsAndXleadersOfDepartment(departmentData,newData.recentXBatch.batchId)
         await departmentsCollection.updateOne({departmentCode:dataSet.departmentCode},{
           $push:{
-            "XBatches":newData.recentXBatch
-          }
+            "XBatches":newData.recentXBatch,
+          },
+          $set: {
+            "allPresentMembers":memberAndLeaderData.allPresentMembers,
+            "allLeaders":memberAndLeaderData.allPresentLeaders,
+            "allXMembers":memberAndLeaderData.allXMembers,
+            "allXLeaders":memberAndLeaderData.allXLeaders
+          } 
         })
+        //Mark batch state as "X"
+        await SessionBatch.updateBatchState(newData.recentXBatch.batchId,"X")
+        //add batchId on admins Data Table to sent each individual member "thank you message"
+        await OfficialUsers.addXBatchIdOnAdminsTable(newData.recentXBatch.batchId)
+        //find group's x-members and leaders and update the group table
+        await Group.updateXMemberAndXLeaderOnGroup(departmentData.groupId,newData.recentXBatch.batchId)
       }
       resolve()
     }catch{
@@ -170,9 +189,13 @@ Department.addOnDepartmentPresentMember= function(departmentCode,memberData){
       // if(!isAlreadyMember){
       //}
       //#########--Need not to check as only new selected leader can fetch this function---#############
+        let memberInfo={
+          regNumber:memberData.regNumber,
+          userName:memberData.userName
+        }
         await departmentsCollection.updateOne({departmentCode:departmentCode},{
           $push:{
-            allPresentMembers:memberData
+            allPresentMembers:memberInfo
           }
         })
       
@@ -225,8 +248,8 @@ Department.makeDepartmentPresentLeader=function(departmentCode,newLeaderData){
       )
        //in case of same present leader again,previous leader will remain same also
        if(departmentDetails.presentLeader.regNumber!=newLeaderData.regNumber){
-        await sessionBatchesCollection.updateOne(
-          { batchId: batchId },
+        await departmentsCollection.updateOne(
+          { departmentCode: departmentCode },
           {
             $set: {
               previousLeader: newPreviousLeader
@@ -249,7 +272,14 @@ Department.makeDepartmentPresentLeader=function(departmentCode,newLeaderData){
             }
           }
         )
-        await Group.addOnGroupMember(departmentDetails.groupId,leaderData)
+        //new department leader is a member of academic-group
+        let groupMemberData={
+          regNumber:leaderData.regNumber,
+          userName:leaderData.userName,
+          departmentName:departmentDetails.departmentName,
+          createdDate:new Date()
+        }
+        await Group.addOnGroupPresentMember(departmentDetails.groupId,groupMemberData)
       }
       resolve()
     }catch{

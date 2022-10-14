@@ -580,3 +580,23 @@ exports.getTodaysActivitiesPage=async function(req,res){
     res.render("404")
   }
 }
+
+exports.getSourceAllActivities=async function(req,res){
+  try{
+    let sourceData={
+        from:req.sourceData.from,
+        sourceId:req.sourceData.sourceId,
+        sourceName:req.sourceData.sourceName,
+        allActivities:[]
+    }
+    if(req.sourceData.completedActivities.length){
+      sourceData.allActivities=await Activity.getAllActivityDetailsOfArrayIds(req.sourceData.completedActivities)
+    }
+    console.log("all activities :",sourceData)
+    res.render("source-all-activities-page",{
+      sourceData:sourceData
+    })
+  }catch{
+    res.render("404")
+  }
+}

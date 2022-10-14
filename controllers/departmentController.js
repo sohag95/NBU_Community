@@ -117,8 +117,20 @@ exports.getDepartmentDetailsPage =async function (req, res) {
 
 exports.getDepartmentPreviousDetailsPage = function (req, res) {
   try{
-    res.render('department-previous-details-page')
+    let departmentDetails={
+      departmentCode:req.departmentDetails.departmentCode,
+      departmentName:req.departmentDetails.departmentName,
+      activeBatches:req.departmentDetails.activeBatches,
+      XBatches:req.departmentDetails.XBatches,
+      allXLeaders:req.departmentDetails.allXLeaders,
+      allXMembers:req.departmentDetails.allXMembers
+    }
+    console.log("Department data :",departmentDetails)
+    res.render('department-previous-details-page',{
+      departmentDetails:departmentDetails
+    })
   }catch{
     res.render('404')
   }
 }
+ 

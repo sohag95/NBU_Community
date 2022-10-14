@@ -6,14 +6,20 @@
   <div class="col-lg-9 pt-1" >
     <div class="">
       <div style="width: 100%;position: relative;">
-        <img class="department-batch-group-cover-image" src="/images/department-banner/BNGLI.jpg" />
+        <%if(sourceData.source=="batch"){%>
+          <img class="department-batch-group-cover-image" src="/image/batch-banner/large/<%=sourceData.sourceId%>" width="1000" height="250"/>
+        <%}else if(sourceData.source=="department"){%>
+          <img class="department-batch-group-cover-image" src="/image/department-banner/large/<%=sourceData.sourceId%>" width="1000" height="250"/>
+        <%}else{%>
+          <img class="department-batch-group-cover-image" src="/image/group-banner/large/<%=sourceData.sourceId%>" width="1000" height="250"/>
+        <%}%>
         <div class="text-center">
           <h5>
             <strong>
               <%if(sourceData.source=="group"){%>
-                <span class="text-primary d-block" > Group :<a href=""> <%=sourceData.sourceName%></a></span>
+                <span class="text-primary d-block" > Group : <%=sourceData.sourceName%></span>
               <%}else{%>
-                <span class="text-primary d-block" > Department :<a href=""> <%=sourceData.sourceName%></a></span>
+                <span class="text-primary d-block" > Department : <%=sourceData.sourceName%></span>
               <%}%>
               <%if(sourceData.source=="batch"){%>
                 <span class="text-primary d-block"> Batch Session : 20<%=sourceData.sourceId.slice(0,2)%>-20<%=sourceData.sourceId.slice(2,4)%></span>

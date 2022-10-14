@@ -337,9 +337,11 @@ exports.acceptSelfAsLeader =async function (req, res) {
       gole:req.body.gole,
       votingPoleId:req.votingDetails._id
     }
+    //departmentName will be used in case of group leader
+    let departmentName=studentData.departmentName
     
     let from=req.votingDetails.from
-    LeaderVoting.acceptSelfAsLeader(req.votingDetails,newLeaderData).then(()=>{
+    LeaderVoting.acceptSelfAsLeader(req.votingDetails,newLeaderData,departmentName).then(()=>{
       req.votingDetails=undefined
       req.flash("success", `Congrets!! Now you are the new present leader of the ${from}.`)
       req.session.save( () =>{

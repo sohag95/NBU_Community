@@ -67,7 +67,7 @@ Verification.prototype.setAccountAsGroupMember=function(){
         departmentName:this.studentData.departmentName,
         createdDate:new Date()
       }
-      await Group.addOnGroupMember(this.studentData.groupId,memberData)
+      await Group.addOnGroupPresentMember(this.studentData.groupId,memberData)
       resolve()
     }catch{
       reject()
@@ -131,7 +131,7 @@ Verification.prototype.updateRemainAccountsVerificationMessage=function(){
       // this.remainingRequests.forEach(async(member)=>{
       //   await Student.updateVerificationMessage(member.regNumber,verifiedBy)
       // })
-      for( let member in this.remainingRequests){
+      for( let member of this.remainingRequests){
         await Student.updateVerificationMessage(member.regNumber,verifiedBy)
       }
       resolve()
@@ -144,7 +144,7 @@ Verification.prototype.updateRemainAccountsVerificationMessage=function(){
 Verification.prototype.pushAllRemainAccountsOnBatch=function(){
   return new Promise(async (resolve, reject) => { 
     try{
-      for(let memberData in this.remainingRequests){
+      for(let memberData of this.remainingRequests){
         await SessionBatch.sentNewStudentRequestOnBatch(this.studentData.batchId,memberData)
       }
       // this.remainingRequests.forEach(async(memberData)=>{
@@ -170,7 +170,7 @@ Verification.prototype.case1andcase2LeadOperations=function(){
         await this.pushAllRemainAccountsOnBatch()
         console.log("functions ran.")
       }
-      await SessionBatch.addOnBatchMember(this.studentData.batchId,this.studentShortInfo)
+      await SessionBatch.addOnBatchPresentMembers(this.studentData.batchId,this.studentShortInfo)
       await this.setAccountAsDepartmentMember()
       await Department.updateDepartmentRequestFieldEmpty(this.studentData.departmentCode)
       resolve()
@@ -179,11 +179,18 @@ Verification.prototype.case1andcase2LeadOperations=function(){
     }
   })
 }
-
+// this.studentShortInfo={
+//   regNumber:this.studentData.regNumber,
+//   userName:this.studentData.userName,
+//   phone:this.studentData.phone,
+//   createdDate:new Date(),
+//   gole:"Making the community batter.",
+//   votingPoleId:"auto"
+// }
 //case1 : user account is very first one on department,this function can run only by community controller
 Verification.prototype.case1Verification=function(){
   //update users verified data and upgrade account as verified with verifier details
-  //set user as group member
+  //set user as group member,default group leader -1st one
   //set user as department's present leader
   //set user as batch present leader
   //if there are multiple requests,then remaining accounts verifiedBy data should change and push all those account on sessionBatche's member request field
@@ -194,6 +201,17 @@ Verification.prototype.case1Verification=function(){
       await this.case1andcase2LeadOperations()
       await Department.makeDepartmentPresentLeader(this.studentData.departmentCode,this.studentShortInfo)
       await SessionBatch.makeSessionBatchPresentLeader(this.studentData.batchId,this.studentShortInfo)
+      //make groups 1st case1 user as group leader,and other user as group member
+      let leaderData={
+        regNumber:this.studentData.regNumber,
+        userName:this.studentData.userName,
+        departmentName:this.studentData.departmentName,
+        phone:this.studentData.phone,
+        createdDate:new Date(),
+        aim:"Making the community strong.",
+        votingPoleId:"auto"
+      }
+      await Group.addFirstCase1UserAsDefaultGroupLeader(this.studentData.groupId,leaderData)
       resolve()
     }catch{
       reject()
@@ -237,7 +255,7 @@ Verification.prototype.case3Verification=function(){
   return new Promise(async (resolve, reject) => { 
     try{
       await this.markAsVerfiedAccount()
-      await SessionBatch.addOnBatchMember(this.studentData.batchId,this.studentShortInfo)
+      await SessionBatch.addOnBatchPresentMembers(this.studentData.batchId,this.studentShortInfo)
       await this.updateNewMemberRequestsFieldOnBatch()
       resolve()
     }catch{

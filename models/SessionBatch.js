@@ -41,7 +41,7 @@ SessionBatch.prototype.cleanUpData=function(){
     presentActivity:null,
     previosActivity:null,//contains previous activity id
     completedActivities:[],
-    batchState:"1stYear",//values will be : 1stYear/2ndYear/3rdYear/seniours/xBatch
+    batchState:"1st",//values will be : 1st/2nd/3rd/seniours/X
     createdDate:new Date()
   }
 }
@@ -74,6 +74,48 @@ SessionBatch.prototype.createSessionBatch=function(){
       }
     }catch{
       reject("There is some problem!!")
+    }
+  })
+}
+
+//updation of batchState
+SessionBatch.updateBatchState= function(batchId,state){
+  return new Promise(async (resolve, reject) => {
+    try{
+        await sessionBatchesCollection.updateOne(
+          { batchId: batchId },
+          {
+            $set: {
+              "batchState": state
+            }
+          }
+        )
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+SessionBatch.updateBatchStateAfterAddingNewBatch= function(newActiveBatches){
+  return new Promise(async (resolve, reject) => {
+    try{
+      if(newActiveBatches.fristYear){
+        await SessionBatch.updateBatchState(newActiveBatches.fristYear.batchId,"1st")
+      }
+      if(newActiveBatches.secondYear){
+        await SessionBatch.updateBatchState(newActiveBatches.secondYear.batchId,"2nd")
+      }
+      if(newActiveBatches.thirdYear){
+        await SessionBatch.updateBatchState(newActiveBatches.thirdYear.batchId,"3rd")
+      }
+      if(newActiveBatches.seniours){
+        await SessionBatch.updateBatchState(newActiveBatches.seniours.batchId,"seniour")
+      
+      }
+      resolve()
+    }catch{
+      reject()
     }
   })
 }
@@ -193,7 +235,7 @@ SessionBatch.makeSessionBatchPresentLeader= function(batchId,newLeaderData){
 }
 
 
-SessionBatch.addOnBatchMember= function(batchId,studentData){
+SessionBatch.addOnBatchPresentMembers= function(batchId,studentData){
   return new Promise(async (resolve, reject) => {
     try{
       
@@ -201,7 +243,7 @@ SessionBatch.addOnBatchMember= function(batchId,studentData){
           { batchId: batchId },
           {
             $push: {
-              allMembers: studentData
+              allPresentMembers: studentData
             }
           }
         )

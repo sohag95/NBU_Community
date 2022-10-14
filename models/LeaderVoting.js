@@ -291,18 +291,19 @@ LeaderVoting.deaclreLeaderVotingPoleResultAutomatically=function(votingDetails){
   })
 }
 
-LeaderVoting.updateVotingSourceDataDuringAcceptance=function(votingDetails,newLeaderData){
+LeaderVoting.updateVotingSourceDataDuringAcceptance=function(votingDetails,newLeaderData,departmentName){
   return new Promise(async (resolve, reject) => { 
     try{
       if(votingDetails.from=="batch"){
         await SessionBatch.makeSessionBatchPresentLeader(votingDetails.sourceId,newLeaderData)
       }else if(votingDetails.from=="department"){
         await Department.makeDepartmentPresentLeader(votingDetails.sourceId,newLeaderData)
+      }else if(votingDetails.from=="group"){
+        //new leaderData should contain departmentName
+        newLeaderData.departmentName=departmentName
+        await Group.makeGroupPresentLeader(votingDetails.sourceId,newLeaderData)
       }else{
-        //***************--NOTICE--***************** */
-        //this function has not created yet
-        //await Group.makeGroupPresentLeader(votingDetails.sourceId,newLeaderData)
-      console.log("Group present leader has not set yet.")
+        console.log("Some problem on votingDetails.from")
       }
       resolve()
     }catch{
@@ -312,7 +313,7 @@ LeaderVoting.updateVotingSourceDataDuringAcceptance=function(votingDetails,newLe
 }
 
 
-LeaderVoting.acceptSelfAsLeader=function(votingDetails,newLeaderData){
+LeaderVoting.acceptSelfAsLeader=function(votingDetails,newLeaderData,departmentName){
   return new Promise(async (resolve, reject) => { 
     try{
       if(newLeaderData.gole=="" || typeof newLeaderData.gole!="string"){
@@ -325,7 +326,7 @@ LeaderVoting.acceptSelfAsLeader=function(votingDetails,newLeaderData){
             "votingDates.acceptanceDate":new Date(),
           }
         })
-        await LeaderVoting.updateVotingSourceDataDuringAcceptance(votingDetails,newLeaderData)
+        await LeaderVoting.updateVotingSourceDataDuringAcceptance(votingDetails,newLeaderData,departmentName)
         resolve()
       }
     }catch{
