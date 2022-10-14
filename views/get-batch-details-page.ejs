@@ -346,42 +346,84 @@
 
     <hr>
       <div class="item-container">
-        <strong><h5 class="bolder">All Members (<%=batchDetails.allMembers.length%>)</h5></strong>
+        <strong><h5 class="bolder">All Members (<%=batchDetails.allPresentMembers.length%>)</h5></strong>
         <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-        <%if(!batchDetails.allMembers.length){%>
+        <%if(!batchDetails.allPresentMembers.length){%>
           <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
         <%}else{%>  
-          <%if(batchDetails.allMembers.length==1){%>
+          <%if(batchDetails.allPresentMembers.length==1){%>
             <div class="col">
               <div class="member-container">
-                <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allMembers[0].regNumber%>" alt="">
+                <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allPresentMembers[0].regNumber%>" alt="">
                 <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[0].regNumber%>/profile"><%=batchDetails.allMembers[0].userName%></a></strong>
-                  <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                  <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allPresentMembers[0].regNumber%>/profile"><%=batchDetails.allPresentMembers[0].userName%></a></strong>
+                  <div class="float-right">    
+                    <strong type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><i class="fas fa-ellipsis-h"></i></strong>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <%if(checkData.isBatchMember && user.regNumber!=batchDetails.allPresentMembers[0].regNumber){%>
+                        <form action="/sent-report" method="post">
+                          <input type="hidden" name="type" value="student">
+                          <input type="hidden" name="subType" value="fakeStudent">
+                          <input type="hidden" name="reportingId" value="<%=batchDetails.allPresentMembers[0].regNumber%>">
+                          <button class="btn btn-sm btn-info  btn-block">Fake Account?Report!</button>
+                        </form>
+                      <%}else{%>
+                        <strong class="bolder">For Batch Members</strong>
+                      <%}%>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           <%}else{%>
-            <%let middle=parseInt(batchDetails.allMembers.length/2)%>
+            <%let middle=parseInt(batchDetails.allPresentMembers.length/2)%>
             <div style="display: flex;    flex-wrap: wrap;">
               <div class="col-md-6 left-member-container" >
                 <%for(let i=0;i<middle;i++){%>
                   <div class="member-container">
-                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allMembers[i].regNumber%>" alt="">
+                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allPresentMembers[i].regNumber%>" alt="">
                     <div class="name-container">
-                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[i].regNumber%>/profile"><%=batchDetails.allMembers[i].userName%></a></strong>
-                      <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allPresentMembers[i].regNumber%>/profile"><%=batchDetails.allPresentMembers[i].userName%></a></strong>
+                      <div class="float-right">    
+                        <strong type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><i class="fas fa-ellipsis-h"></i></strong>
+                        <div class="dropdown-menu dropdown-menu-right">
+                          <%if(checkData.isBatchMember && user.regNumber!=batchDetails.allPresentMembers[i].regNumber){%>
+                            <form action="/sent-report" method="post">
+                              <input type="hidden" name="type" value="student">
+                              <input type="hidden" name="subType" value="fakeStudent">
+                              <input type="hidden" name="reportingId" value="<%=batchDetails.allPresentMembers[i].regNumber%>">
+                              <button class="btn btn-sm btn-info  btn-block">Fake Account?Report!</button>
+                            </form>
+                          <%}else{%>
+                            <strong class="bolder">For Batch Members</strong>
+                          <%}%>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 <%}%>
               </div>
               <div class="col-md-6 right-member-container" >
-                <%for(let j=middle;j<batchDetails.allMembers.length;j++){%>
+                <%for(let j=middle;j<batchDetails.allPresentMembers.length;j++){%>
                 <div class="member-container">
-                  <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allMembers[j].regNumber%>" alt="">
+                  <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allPresentMembers[j].regNumber%>" alt="">
                   <div class="name-container">
-                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[j].regNumber%>/profile"><%=batchDetails.allMembers[j].userName%></a></strong>
-                    <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allPresentMembers[j].regNumber%>/profile"><%=batchDetails.allPresentMembers[j].userName%></a></strong>
+                    <div class="float-right">    
+                      <strong type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><i class="fas fa-ellipsis-h"></i></strong>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <%if(checkData.isBatchMember && user.regNumber!=batchDetails.allPresentMembers[j].regNumber){%>
+                          <form action="/sent-report" method="post">
+                            <input type="hidden" name="type" value="student">
+                            <input type="hidden" name="subType" value="fakeStudent">
+                            <input type="hidden" name="reportingId" value="<%=batchDetails.allPresentMembers[j].regNumber%>">
+                            <button class="btn btn-sm btn-info  btn-block">Fake Account?Report!</button>
+                          </form>
+                        <%}else{%>
+                          <strong class="bolder">For Batch Members</strong>
+                        <%}%>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <%}%>

@@ -53,10 +53,14 @@ exports.checkIfAlreadyReported=async function(req,res,next){
     if(!found){
       next()
     }else{
-      req.flash("errors", "You have already reported for this problem!!")
-      req.session.save( () =>{
-        res.redirect("/")
-      })
+      req.flash("errors", "You have already reported for this issue!!")
+      if(req.body.subType=="fakeStudent"){
+        //go to batch page
+        res.redirect(`/batch/${req.regNumber.slice(0,9)}/details`)
+      }else{
+        //goto activity page
+        res.redirect(`/activity/${req.body.reportingId}/details`)
+      }
     }
   }catch{
     res.render("404")
@@ -65,11 +69,17 @@ exports.checkIfAlreadyReported=async function(req,res,next){
 
 exports.sentReport=async function(req,res){
   try{
-    if(req.regNumber!=req.reportingData.reportingId){
+    if(req.regNumber!=req.body.reportingId){
       let reporting=new Reporting(req.reportingData)
       reporting.sentReport().then(()=>{
         req.flash("success", "Report accepted!!!")
-        res.redirect("/test")
+        if(req.body.subType=="fakeStudent"){
+          //go to batch page
+          res.redirect(`/batch/${req.regNumber.slice(0,9)}/details`)
+        }else{
+          //goto activity page
+          res.redirect(`/activity/${req.body.reportingId}/details`)
+        }
       }).catch((err)=>{
         req.flash("errors", err)
         res.redirect("/")
@@ -81,5 +91,4 @@ exports.sentReport=async function(req,res){
   }catch{
     res.render("404")
   }
-  
 }

@@ -6,7 +6,7 @@ let Reporting=function(data){
   // data={
   //   reportType:{
   //     type:"abc",//"student","activity"
-  //     subType:"def"//student-fakeStudent,badLeader | activity-notParticipant,fakeActivity,badComment 
+  //     subType:"def"//student-fakeStudent | activity-notParticipant,fakeActivity,badComment 
   //   },
   //   reportingId:{
   //    /regNumber,activityId.indexNumbers
