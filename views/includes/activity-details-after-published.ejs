@@ -32,7 +32,7 @@
                         (20<%=activityDetails.activitySourceId.slice(0,2)%>-20<%=activityDetails.activitySourceId.slice(2,4)%>)
                       <%}%>
                        | 
-                      <i><span>Published on <%= activityDetails.activityDates.publishedDate.getMonth() + 1 %>/<%= activityDetails.activityDates.publishedDate.getDate() %>/<%= activityDetails.activityDates.publishedDate.getFullYear() %></span></i></strong>
+                      <i><span>Published on <%= activityDetails.activityDates.publishedDate.getDate() %>/<%= activityDetails.activityDates.publishedDate.getMonth() + 1 %>/<%= activityDetails.activityDates.publishedDate.getFullYear() %></span></i></strong>
                     </a>
                   </div>
                   <div style="margin: 0;padding: 0;">
@@ -240,15 +240,15 @@
           </p>
           <p><strong>From : </strong><a href="/<%=activityDetails.activityType%>/<%=activityDetails.activitySourceId%>/details"><strong class="text-capitalize"><%=activityDetails.activityType%></strong></a></p>
           <p><strong>Department Name : </strong><%=activityDetails.sourceName%></p>
-          <p><strong>Created Date : </strong><%= activityDetails.activityDates.createdDate.getMonth() + 1 %>/<%= activityDetails.activityDates.createdDate.getDate() %>/<%= activityDetails.activityDates.createdDate.getFullYear() %></p>
+          <p><strong>Created Date : </strong><%= activityDetails.activityDates.createdDate.getDate() %> <%=activityDetails.activityDates.createdDate.toLocaleString('default', { month: 'long' })%> <%= activityDetails.activityDates.createdDate.getFullYear() %></p>
           <%if(activityDetails.isTopicByVote){%>
-            <p><strong>Topic Voting Date : </strong><%= activityDetails.activityDates.votingResultDate.getMonth() + 1 %>/<%= activityDetails.activityDates.votingResultDate.getDate() %>/<%= activityDetails.activityDates.votingResultDate.getFullYear() %></p>
+            <p><strong>Topic Voting Date : </strong><%= activityDetails.activityDates.votingResultDate.getDate() %> <%=activityDetails.activityDates.votingResultDate.toLocaleString('default', { month: 'long' })%> <%= activityDetails.activityDates.votingResultDate.getFullYear() %></p>
           <%}%>
-          <p><strong>Activity Date : </strong><%= activityDetails.activityDates.activityDate.getMonth() + 1 %>/<%= activityDetails.activityDates.activityDate.getDate() %>/<%= activityDetails.activityDates.activityDate.getFullYear() %></p>
-          <p><strong>Activity Submission Date : </strong><%= activityDetails.activityDates.submissionDate.getMonth() + 1 %>/<%= activityDetails.activityDates.submissionDate.getDate() %>/<%= activityDetails.activityDates.submissionDate.getFullYear() %></p>
-          <p><strong>Activity Received Date : </strong><%= activityDetails.activityDates.receivedDate.getMonth() + 1 %>/<%= activityDetails.activityDates.receivedDate.getDate() %>/<%= activityDetails.activityDates.receivedDate.getFullYear() %></p>
-          <p><strong>Activity video editing Date : </strong><%= activityDetails.activityDates.editedDate.getMonth() + 1 %>/<%= activityDetails.activityDates.editedDate.getDate() %>/<%= activityDetails.activityDates.editedDate.getFullYear() %></p>
-          <p><strong>Activity Published Date : </strong><%= activityDetails.activityDates.publishedDate.getMonth() + 1 %>/<%= activityDetails.activityDates.publishedDate.getDate() %>/<%= activityDetails.activityDates.publishedDate.getFullYear() %></p>
+          <p><strong>Activity Date : </strong><%= activityDetails.activityDates.activityDate.getDate() %> <%=activityDetails.activityDates.activityDate.toLocaleString('default', { month: 'long' })%> <%= activityDetails.activityDates.activityDate.getFullYear() %></p>
+          <p><strong>Activity Submission Date : </strong><%= activityDetails.activityDates.submissionDate.getDate() %> <%=activityDetails.activityDates.submissionDate.toLocaleString('default', { month: 'long' })%> <%= activityDetails.activityDates.submissionDate.getFullYear() %></p>
+          <p><strong>Activity Received Date : </strong><%= activityDetails.activityDates.receivedDate.getDate() %> <%=activityDetails.activityDates.receivedDate.toLocaleString('default', { month: 'long' })%> <%= activityDetails.activityDates.receivedDate.getFullYear() %></p>
+          <p><strong>Activity video editing Date : </strong><%= activityDetails.activityDates.editedDate.getDate() %> <%=activityDetails.activityDates.editedDate.toLocaleString('default', { month: 'long' })%> <%= activityDetails.activityDates.editedDate.getFullYear() %></p>
+          <p><strong>Activity Published Date : </strong><%= activityDetails.activityDates.publishedDate.getDate() %> <%=activityDetails.activityDates.publishedDate.toLocaleString('default', { month: 'long' })%> <%= activityDetails.activityDates.publishedDate.getFullYear() %> at <%=activityDetails.activityDates.publishedDate.getHours()%>:<%=activityDetails.activityDates.publishedDate.getMinutes()%></p>
           <hr>
           <p><strong>Activity Short Details : </strong><i><%=activityDetails.shortDetails%></i></p>
           <hr>
@@ -283,7 +283,7 @@
               
             <hr>
             <div class="col-lg-6">
-              <p><strong>Last Activity Handler :(last updation - <%= activityDetails.activityHandler.lastDate.getMonth() + 1 %>/<%= activityDetails.activityHandler.lastDate.getDate() %>/<%= activityDetails.activityHandler.lastDate.getFullYear() %>)</strong></p>
+              <p><strong>Last Activity Handler :(last updation - <%= activityDetails.activityHandler.lastDate.getDate() %>  <%=activityDetails.activityHandler.lastDate.toLocaleString('default', { month: 'short' }) %>, <%= activityDetails.activityHandler.lastDate.getFullYear() %> at <%=activityDetails.activityHandler.lastDate.getHours()%>:<%=activityDetails.activityHandler.lastDate.getMinutes()%>)</strong></p>
               <div class="member-container">
                 <img class="member-avatar"  src="/image/profile/medium/profile-<%=activityDetails.activityHandler.handler.regNumber%>" alt="">
                 <div class="name-container">

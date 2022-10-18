@@ -72,6 +72,9 @@
           <p><i class="fas fa-graduation-cap"></i><strong> Department - </strong>Computer Science</p>
           <p><i class="fas fa-map-marker-alt"></i><strong> Session Year - </strong> 2021-2022</p>
           <p><i class="fas fa-map-marker-alt"></i><strong> Credit Points - </strong> 105</p>
+          <p><i class="fas fa-map-marker-alt"></i><strong> Date Check1 - </strong> <%= date.getDate() %>/<%= date.getMonth() + 1 %>/<%= date.getFullYear() %></p>
+          <p><i class="fas fa-map-marker-alt"></i><strong> Date Check2 - </strong> <%= date.getDate() %> <%=date.toLocaleString('default', { month: 'long' }) %> , <%= date.getFullYear() %></p>
+          <p><i class="fas fa-map-marker-alt"></i><strong> Date Check3 - </strong> <%= date.getDate() %> <%=date.toLocaleString('default', { month: 'short' }) %> , <%= date.getFullYear() %> at <%=date.getHours()%>:<%=date.getMinutes()%></p>
         
         </div>
       </div>

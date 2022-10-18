@@ -330,8 +330,8 @@
       <p><strong>Group Type : </strong><span class="text-capitalize"><%=campusGroupDetails.groupType%></span></p>
       <p><strong>Group Name : </strong><%=campusGroupDetails.groupName%></p>
       <p><strong>Expected Members : </strong><%=campusGroupDetails.expectedMembers%></p>
-      <p><strong>Created Date : </strong><%=campusGroupDetails.createdDate%></p>
-      <p><strong>Expired Date : </strong><%=campusGroupDetails.expeiringDate%></p>
+      <p><strong>Created Date : </strong><%= campusGroupDetails.createdDate.getDate() %> <%=campusGroupDetails.createdDate.toLocaleString('default', { month: 'long' }) %> , <%= campusGroupDetails.createdDate.getFullYear() %></p>
+      <p><strong>Expired Date : </strong><%= campusGroupDetails.expiringDate.getDate() %> <%=campusGroupDetails.expiringDate.toLocaleString('default', { month: 'long' }) %> , <%= campusGroupDetails.expiringDate.getFullYear() %> </p>
       <hr>
       <div class="row">
         <div class="col-lg-12">

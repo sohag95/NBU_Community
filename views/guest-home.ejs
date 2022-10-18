@@ -10,239 +10,134 @@
   <div class="col-lg-10" style="margin: 0;padding: 0;position: relative;">
     <img class="banner" src="/images/banner.jpg" alt="">
     <div class="banner-batch" >
-      <h1>One Lession At A Time</h1>
-      <p>One step ahead to make our society batter.</p>
+      <h1>Let's Build a Better Society</h1>
+      <p>Involve yourself on activity to make our society better.</p>
     </div>
     <hr>
-    <div class=" mt-2 mb-2" style="padding: 10px 10px;">
-      <div class="path text-center" style="padding: 1rem;">
-          <div class="row" >
-            <div class="col-sm-4">
-              <a href="/campus-groups">
-                <div class="btn btn-outline-info btn-sm btn-block"><strong>See all campus groups <i class="fas fa-arrow-right"></i></strong></div>
-              </a>
-            </div>
-            <div class="col-sm-4">
-              <a href="/search-home-tutor">
-                <div class="btn btn-outline-warning btn-sm btn-block"><strong>Search for home-tutor <i class="fas fa-arrow-right"></i></strong></div>
-              </a>
-            </div>
-            <div class="col-sm-4">
-              <a href="/all-activities">
-                <div class="btn btn-outline-info btn-sm btn-block"><strong>See all activities of NBU community <i class="fas fa-arrow-right"></i></strong></div>
-              </a>
-            </div>
+    <div class="row text-center" style="padding: 0px;margin:0px;" >
+      <div class="col-sm-4 mb-2">
+        <a href="/campus-groups">
+          <div class="student-home-link-btn" style="background-color: rgb(6, 66, 66)">
+            <strong><i class="fas fa-users fa-lg"></i> See Campus Groups</strong>
           </div>
+        </a>
+      </div>
+      <div class="col-sm-4 mb-2">
+        <a href="/search-home-tutor">
+          <div class="student-home-link-btn" style="background-color:  rgb(224, 166, 31);">
+            <strong><i class="fas fa-search"></i> Home-Tutor Searching</strong>
+          </div>
+        </a>
+      </div>
+      <div class="col-sm-4 mb-2">
+        <a href="/all-activities">
+          <div class="student-home-link-btn" style="background-color:  rgb(47, 140, 30)">
+            <strong><i class="fas fa-running fa-lg"></i> See All Activities</strong>
+          </div>
+        </a>
       </div>
     </div>
-     
-<hr>
-  <div class=" item-container mb-1" style="background-color:#f0f2f5 ;">
-    <h5 class="bolder ">Current Batch Activities :</h5>
-    <div class="teacher-banner-container pb-2">
-        <a href="" style="text-decoration: none;">
-          <div class="activity-link-container-small">
-            <img class="activity-cover-image"  src="/image/profile/medium/checkImg" alt="">
-            <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-              <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-              <span class="d-block">Dept - Bengali (2021-2022)</span>
-              <i class="d-block">Published On 12 May 2022.</i>
-            </div>
-          </div>
-        </a>
-        <a href="" style="text-decoration: none;">
-          <div class="activity-link-container-small">
-            <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-            <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-              <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-              <span class="d-block">Dept - Bengali (2021-2022)</span>
-              <i class="d-block">Published On 12 May 2022.</i>
-            </div>
-          </div>
-        </a>
-        <a href="" style="text-decoration: none;">
-          <div class="activity-link-container-small">
-            <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-            <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-              <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-              <span class="d-block">Dept - Bengali (2021-2022)</span>
-              <i class="d-block">Published On 12 May 2022.</i>
-            </div>
-          </div>
-        </a>
-        <a href="" style="text-decoration: none;">
-          <div class="activity-link-container-small">
-            <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-            <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-              <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-              <span class="d-block">Dept - Bengali (2021-2022)</span>
-              <i class="d-block">Published On 12 May 2022.</i>
-            </div>
-          </div>
-        </a>
+    <hr>
 
-        
-        <a href="" style="text-decoration: none;">
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-            <span class="d-block">Dept - Bengali (2021-2022)</span>
-            <i class="d-block">Published On 12 May 2022.</i>
+    
+    
+  <div class=" item-container mb-1" style="background-color:#f0f2f5 ;">
+    <h5 class="bolder ">Batch Activities :</h5>
+      <%if(!activities.batchActivities.length){%>
+        <div class="colored-container">
+          <div class="btn btn-block btn-info">
+            No batch activity conducted till now!!
           </div>
         </div>
-        </a>
-      
-    </div>
+      <%}else{%>
+        <div class="teacher-banner-container pb-2">
+        <%activities.batchActivities.forEach((activity)=>{%>
+          <a href="/activity/<%=activity._id%>/details" style="text-decoration: none;">
+            <div class="activity-link-container-small">
+              <img class="activity-cover-image"  src="/image/profile/medium/checkImg" alt="">
+              <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
+                <span class="d-block"><strong><%=activity.title.slice(0,30)%>... | <%=activity.topic%> </strong></span>
+                <span class="d-block">Dept : <%=activity.sourceName%> (20<%=activity.activitySourceId.slice(0,2)%>-20<%=activity.activitySourceId.slice(2,4)%>)
+                </span>
+                <i class="d-block">Published On <%= activity.publishedDate.getDate() %> <%=activity.publishedDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.publishedDate.getFullYear() %> </i>
+                <hr style="padding: 0;margin:0;">
+                <div class="d-flex">
+                  <i class="d-block mr-auto"><%=activity.likes%> <%=activity.likes>1?"Likes":"Like"%></i>
+                  <i class="d-block "><%=activity.comments%> <%=activity.likes>1?"Comments":"Comment"%></i>
+                </div>
+              </div>
+            </div>
+          </a>
+        <%})%>
+      </div>
+      <%}%>
+    
   </div>
 <hr>
 
   <div class=" item-container mb-1" style="background-color:#f0f2f5 ;">
-    <h5 class="bolder text-">Department Activities :</h5>
-    <div class="teacher-banner-container pb-2">
-     
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-            <span class="d-block">Dept - Computer Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
+    <h5 class="bolder text-">Department Activities :</h5> 
+      <%if(!activities.departmentActivities.length){%>
+        <div class="colored-container">
+          <div class="btn btn-block btn-info">
+            No departmental activity conducted till now!!
           </div>
         </div>
-
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-            <span class="d-block">Dept - Computer Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
-          </div>
+      <%}else{%>
+        <div class="teacher-banner-container pb-2">
+        <%activities.departmentActivities.forEach((activity)=>{%>
+          <a href="/activity/<%=activity._id%>/details" style="text-decoration: none;">
+            <div class="activity-link-container-small">
+              <img class="activity-cover-image"  src="/image/profile/medium/checkImg" alt="">
+              <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
+                <span class="d-block"><strong><%=activity.title.slice(0,30)%>... | <%=activity.topic%> </strong></span>
+                <span class="d-block">Dept - <%=activity.sourceName%> 
+                </span>
+                <i class="d-block">Published On <%= activity.publishedDate.getDate() %> <%=activity.publishedDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.publishedDate.getFullYear() %> </i>
+                <hr style="padding: 0;margin:0;">
+                <div class="d-flex">
+                  <i class="d-block mr-auto"><%=activity.likes%> <%=activity.likes>1?"Likes":"Like"%></i>
+                  <i class="d-block "><%=activity.comments%> <%=activity.likes>1?"Comments":"Comment"%></i>
+                </div>
+              </div>
+            </div>
+          </a>
+        <%})%>
         </div>
-
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-            <span class="d-block">Dept - Computer Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
-          </div>
-        </div>
-
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-            <span class="d-block">Dept - Computer Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
-          </div>
-        </div>
-
-
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-            <span class="d-block">Dept - Computer Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
-          </div>
-        </div>
-      
-    </div>
+      <%}%>
   </div>
     
   <hr>
   <div class=" item-container mb-1" style="background-color:#f0f2f5 ;">
     <h5 class="bolder text-">Group Activities :</h5>
-    <div class="teacher-banner-container pb-2">
-     
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-            <span class="d-block">Group - Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
+      <%if(!activities.groupActivities.length){%>
+        <div class="colored-container">
+          <div class="btn btn-block btn-info">
+            No group activity conducted till now!!
           </div>
         </div>
-
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-           <span class="d-block">Group - Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
-          </div>
+      <%}else{%>
+        <div class="teacher-banner-container pb-2">
+        <%activities.groupActivities.forEach((activity)=>{%>
+          <a href="/activity/<%=activity._id%>/details" style="text-decoration: none;">
+            <div class="activity-link-container-small">
+              <img class="activity-cover-image"  src="/image/profile/medium/checkImg" alt="">
+              <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
+                <span class="d-block"><strong><%=activity.title.slice(0,30)%>... | <%=activity.topic%> </strong></span>
+                <span class="d-block">Group Name - <%=activity.sourceName%> 
+                </span>
+                <i class="d-block">Published On <%= activity.publishedDate.getDate() %> <%=activity.publishedDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.publishedDate.getFullYear() %> </i>
+                <hr style="padding: 0;margin:0;">
+                <div class="d-flex">
+                  <i class="d-block mr-auto"><%=activity.likes%> <%=activity.likes>1?"Likes":"Like"%></i>
+                  <i class="d-block "><%=activity.comments%> <%=activity.likes>1?"Comments":"Comment"%></i>
+                </div>
+              </div>
+            </div>
+          </a>
+        <%})%>
         </div>
-
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-           <span class="d-block">Group - Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
-          </div>
-        </div>
-
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-           <span class="d-block">Group - Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
-          </div>
-        </div>
-
-        
-
-        <div class="activity-link-container-small">
-          <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
-          <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
-            <span class="d-block"><strong>Taking a campus tour with all friends | Campus Tour </strong></span>
-           <span class="d-block">Group - Science </span>
-            <i class="d-block">Published On 12 May 2022.</i>
-            <a href="#">
-              <div class="class btn btn-outline-primary btn-sm btn-block">
-              Activity details
-            </div></a>
-          </div>
-        </div>
-      
-    </div>
+      <%}%>
   </div>
   
    

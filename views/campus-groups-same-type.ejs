@@ -33,8 +33,8 @@
                 <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
                   <span class="d-block"><strong>Group Name : <%=group.groupName%></strong></span>
                   <span class="d-block">Present Members : <%=group.presentMembers%>/<%=group.expectedMembers%></span>
-                  <i class="d-block">Created Date : <%=group.createdDate%></i>
-                  <i class="d-block">Expiring Date : <%=group.expiringDate%></i>
+                  <i class="d-block">Created Date : <%= group.createdDate.getDate() %> <%=group.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= group.createdDate.getFullYear() %></i>
+                  <i class="d-block">Expiring Date : <%= group.expiringDate.getDate() %> <%=group.expiringDate.toLocaleString('default', { month: 'short' }) %> , <%= group.expiringDate.getFullYear() %></i>
                 </div>
               </div>
             </a>

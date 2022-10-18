@@ -1045,7 +1045,7 @@ div.feedbackButton{
 
 .activity-cover-image {
   width: 100%;
-  height: auto;
+  height: 8.5rem;
   object-fit: cover;
   vertical-align: middle;
   border-top-left-radius: 5px;
@@ -1123,6 +1123,9 @@ div.feedbackButton{
 }
 .allLeadersContainer{
   max-height:12rem;
+}
+.activity-cover-image{
+  height: 6rem;
 }
 }
 

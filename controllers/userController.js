@@ -1,4 +1,6 @@
+const Activity = require('../models/Activity')
 const GetAllMembers = require('../models/GetAllMembers')
+const OfficialUsers = require('../models/OfficialUsers')
 const OfficialUser=require('../models/OfficialUsers')
 const SentEmail = require('../models/SentEmail')
 const Student = require('../models/Student')
@@ -16,17 +18,20 @@ exports.test =async function (req, res) {
   //let emailIds=["roysohag95@gmail.com","troy61125@gmail.com"]
   //await sentEmail.mailAsAccountVerified(emailId)
   //await sentEmail.mailAsActivityCreated(emailIds)
-  var twentyMinutesLater = new Date();
-  let prev=twentyMinutesLater
-  twentyMinutesLater.setMinutes(twentyMinutesLater.getMinutes() + 20);
-  let after=twentyMinutesLater
-  if(prev>after){
-    console.log("Prev date :",prev)
-  }else{
-    //this will execute all the time
-    console.log("After date :",twentyMinutesLater)
-  }
-  res.render('test-page')
+  // var twentyMinutesLater = new Date();
+  // let prev=twentyMinutesLater
+  // twentyMinutesLater.setMinutes(twentyMinutesLater.getMinutes() + 20);
+  // let after=twentyMinutesLater
+  // if(prev>after){
+  //   console.log("Prev date :",prev)
+  // }else{
+  //   //this will execute all the time
+  //   console.log("After date :",twentyMinutesLater)
+  // }
+  let date=new Date()
+  res.render('test-page',{
+    date:date
+  })
   }catch{
     req.flash("errors", "There is some problem.")
     req.session.save(() => res.redirect("/"))
@@ -196,7 +201,41 @@ exports.getSignUpForm =async function (req, res) {
 
 exports.guestHomePage=async function(req,res){
   try {
-    res.render("guest-home")
+    let activities={
+      batchActivities:[],
+      departmentActivities:[],
+      groupActivities:[]
+    }
+    
+
+    let activityIds=await OfficialUsers.getAllActivityIds()
+    if(activityIds.allActivities.length){
+      let allActivities=await Activity.getAllActivityDetailsOfArrayIds(activityIds.allActivities)
+      
+      allActivities.forEach((activity)=>{
+        if(activity.activityType=="batch"){
+          activities.batchActivities.push(activity)
+        }else if(activity.activityType=="department"){
+          activities.departmentActivities.push(activity)
+        }else if(activity.activityType=="group"){
+          activities.groupActivities.push(activity)
+        }
+      })
+
+      if(activities.batchActivities.length>6){
+        activities.batchActivities=activities.batchActivities.slice(0,6)
+      }
+      if(activities.departmentActivities.length>6){
+        activities.departmentActivities=activities.departmentActivities.slice(0,6)
+      }
+      if(activities.groupActivities.length>6){
+        activities.groupActivities=activities.groupActivities.slice(0,6)
+      }
+    }
+
+    res.render("guest-home",{
+      activities:activities
+    })
   } catch {
     res.render("404")
   }
