@@ -93,7 +93,7 @@ export default class SignUpForm {
         !this.rePassword.errors
       ) {
         let selectedDepartmentIndex=this.department.selectedIndex
-        if (confirm(`According to your provided data, Your department is : '${this.department.options[selectedDepartmentIndex].text}' and Your session year is : '${this.sessionYear.value}' .You can not change it later!! `)) {
+        if (confirm(`According to your provided data, Your department is : '${this.department.options[selectedDepartmentIndex].text}' and Your batch session year is : '${this.sessionYear.value}' .You can not change it later!! `)) {
           this.form.submit()
         }
     }

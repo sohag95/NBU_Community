@@ -32,7 +32,7 @@
               <%}else{%>
                 <p><i class="fas fa-female"></i><strong> Gender - </strong> Custom</p>
               <%}%>
-              <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%= profileInfo.createdDate.getMonth() + 1 %>/<%= profileInfo.createdDate.getDate() %>/<%= profileInfo.createdDate.getFullYear() %></p>
+              <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%= profileInfo.createdDate.getDate() %> <%=profileInfo.createdDate.toLocaleString('default', { month: 'long' }) %>, <%= profileInfo.createdDate.getFullYear() %></p>
               <hr>
               
             </div>
@@ -103,7 +103,7 @@
                             </strong>
                           </div>
                           <div style="margin: 0;padding: 0;">
-                            <i><span>Published on <%= activity.publishedDate.getMonth() + 1 %>/<%= activity.publishedDate.getDate() %>/<%= activity.publishedDate.getFullYear() %></span></i> <span style="font-weight: 500;">.</span><i class="fas fa-user-friends fa-sm"></i>
+                            <i><span>Published on <%= activity.publishedDate.getDate() %> <%=activity.publishedDate.toLocaleString('default', { month: 'short' }) %>, <%= activity.publishedDate.getFullYear() %></span></i> <span style="font-weight: 500;">.</span><i class="fas fa-user-friends fa-sm"></i>
                           </div>
                         </div>
                         <div class="float-right">
@@ -126,7 +126,7 @@
                     <div style="margin-bottom: 5px; border-bottom: 1px solid rgb(126, 124, 124);">
                       <h6 style="margin-bottom: 0px;">
                         <i class="d-block">
-                          <span class="text-capitalize"><%=activity.activityType%></span> activity | Conducted on <%= activity.activityDate.getMonth() + 1 %>/<%= activity.activityDate.getDate() %>/<%= activity.activityDate.getFullYear() %>
+                          <span class="text-capitalize"><%=activity.activityType%></span> activity | Conducted on <%= activity.activityDate.getDate() %> <%=activity.activityDate.toLocaleString('default', { month: 'short' }) %>, <%= activity.activityDate.getFullYear() %>
                         </i>
                       </h6>
                       <h5 class="bolder">

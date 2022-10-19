@@ -102,7 +102,7 @@
                 <h5 class="text-center text-warning"><strong>Wishing you "all the best" to become a new leader.</strong></h5>
               <%}%>
             <%}%>
-            <i class="d-block text-center"><strong>Last Date of Nomination : <%=votingDetails.votingDates.nominationLastDate%></strong> </i>    
+            <i class="d-block text-center"><strong>Last Date of Nomination :  <%= votingDetails.votingDates.nominationLastDate.getDate() %> <%=votingDetails.votingDates.nominationLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.nominationLastDate.getFullYear() %> at <%=votingDetails.votingDates.nominationLastDate.getHours()%>:<%=votingDetails.votingDates.nominationLastDate.getMinutes()%></strong> </i>    
           <%}else{%>
             <!-- checkData.votingStatus=="voting" -->
             <h4 class="text-center text-warning"><strong>Leader Voting Is Going On!</strong></h4>
@@ -114,7 +114,7 @@
                 <h6 class="text-warning text-center"><strong>You voted for :<i> <%=votingDetails.nominationTakers[votingIndex].userName%></i></strong></h6>
               <%}%>
             <%}%>
-            <i class="d-block text-center"><strong>Last Date of Voting : <%=votingDetails.votingDates.votingLastDate%></strong> </i>    
+            <i class="d-block text-center"><strong>Last Date of Voting : <%= votingDetails.votingDates.votingLastDate.getDate() %> <%=votingDetails.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.votingLastDate.getFullYear() %> at <%=votingDetails.votingDates.votingLastDate.getHours()%>:<%=votingDetails.votingDates.votingLastDate.getMinutes()%></strong> </i>    
           <%}%>
         </div>
       </div>
@@ -201,11 +201,11 @@
                 <div class="ml-auto">- <%=vote.parcentage%>%</div>
               </div>
             <%})%>
-            <h6 class="pt-2 text-warning"><strong>Result declared on - <%=votingDetails.votingDates.resultDate%></strong></h6>
+            <h6 class="pt-2 text-warning"><strong>Result declared on - <%= votingDetails.votingDates.resultDate.getDate() %> <%=votingDetails.votingDates.resultDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.resultDate.getFullYear() %> at <%=votingDetails.votingDates.resultDate.getHours()%>:<%=votingDetails.votingDates.resultDate.getMinutes()%></strong></h6>
           <%}else{%>
             <!-- this section will handle nomination status -->
-            <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary"><%=votingDetails.votingDates.nominationLastDate%></span></strong>
-            <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary"><%=votingDetails.votingDates.votingLastDate%></span></strong>
+            <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary"><%= votingDetails.votingDates.nominationLastDate.getDate() %> <%=votingDetails.votingDates.nominationLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.nominationLastDate.getFullYear() %> at <%=votingDetails.votingDates.nominationLastDate.getHours()%>:<%=votingDetails.votingDates.nominationLastDate.getMinutes()%></span></strong>
+            <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary"><%= votingDetails.votingDates.votingLastDate.getDate() %> <%=votingDetails.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.votingLastDate.getFullYear() %> at <%=votingDetails.votingDates.votingLastDate.getHours()%>:<%=votingDetails.votingDates.votingLastDate.getMinutes()%></span></strong>
           <%}%>
       
         </div>
@@ -240,14 +240,14 @@
       <p><strong>Type : </strong>Leder Selection </p>
       <p><strong>From : </strong><span class="text-capitalize"><%=votingDetails.from%></span></p>
       <p><strong>Department Name : </strong><%=votingDetails.sourceName%></p>
-      <p><strong>Created Date : </strong><%=votingDetails.votingDates.createdDate%></p>
-      <p><strong>Nomination Last Date : </strong><%=votingDetails.votingDates.nominationLastDate%></p>
-      <p><strong>Voting Last Date : </strong><%=votingDetails.votingDates.votingLastDate%></p>
+      <p><strong>Created Date : </strong><%= votingDetails.votingDates.createdDate.getDate() %> <%=votingDetails.votingDates.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.createdDate.getFullYear() %> at <%=votingDetails.votingDates.createdDate.getHours()%>:<%=votingDetails.votingDates.createdDate.getMinutes()%></p>
+      <p><strong>Nomination Last Date : </strong><%= votingDetails.votingDates.nominationLastDate.getDate() %> <%=votingDetails.votingDates.nominationLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.nominationLastDate.getFullYear() %> at <%=votingDetails.votingDates.nominationLastDate.getHours()%>:<%=votingDetails.votingDates.nominationLastDate.getMinutes()%></p>
+      <p><strong>Voting Last Date : </strong><%= votingDetails.votingDates.votingLastDate.getDate() %> <%=votingDetails.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.votingLastDate.getFullYear() %> at <%=votingDetails.votingDates.votingLastDate.getHours()%>:<%=votingDetails.votingDates.votingLastDate.getMinutes()%></p>
       <%if(votingDetails.isResultDeclared){%>
-        <p><strong>Result Declaration Date : </strong><%=votingDetails.votingDates.resultDate%></p>
+        <p><strong>Result Declaration Date : </strong><%= votingDetails.votingDates.resultDate.getDate() %> <%=votingDetails.votingDates.resultDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.resultDate.getFullYear() %> at <%=votingDetails.votingDates.resultDate.getHours()%>:<%=votingDetails.votingDates.resultDate.getMinutes()%></p>
       <%}%>
       <%if(votingDetails.isWonLeaderAccept){%>
-        <p><strong>Leader Acceptance Date : </strong><%=votingDetails.votingDates.acceptanceDate%></p>
+        <p><strong>Leader Acceptance Date : </strong> <%= votingDetails.votingDates.acceptanceDate.getDate() %> <%=votingDetails.votingDates.acceptanceDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.acceptanceDate.getFullYear() %> at <%=votingDetails.votingDates.acceptanceDate.getHours()%>:<%=votingDetails.votingDates.acceptanceDate.getMinutes()%></p>
       <%}%>
       <hr>
       <h5><strong>Voting Leaders</strong></h5>

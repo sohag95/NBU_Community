@@ -32,8 +32,8 @@
                             </strong> 
                           </span>
                           <h5  class="d-block"><strong><%=activity.title%> | <%=activity.topic%></strong></h5>
-                          <span  class="d-block"><strong><i>Activity Date : <%=activity.activityDate%></i></strong></span>
-                          <span  class="d-block"><strong><i>Publish Date : <%=activity.publishedDate%></i></strong></span>
+                          <span  class="d-block"><strong><i>Activity Date : <%= activity.activityDate.getDate() %> <%=activity.activityDate.toLocaleString('default', { month: 'long' }) %> , <%= activity.activityDate.getFullYear() %></i></strong></span>
+                          <span  class="d-block"><strong><i>Published Date : <%= activity.publishedDate.getDate() %> <%=activity.publishedDate.toLocaleString('default', { month: 'long' }) %> , <%= activity.publishedDate.getFullYear() %></i></strong></span>
                           <span class="bolder"><%=activity.likes%> <%=activity.likes>1?"Likes":"Like"%> | <%=activity.comments%> <%=activity.likes>1?"Comments":"Comment"%></span>
                         </div>
                     </div>

@@ -99,9 +99,9 @@
                                 [No topic selected]
                             <%}%>
                            </strong></h5>
-                          <span  class="d-block"><strong><i>Created Date : <%=activity.createdDate%></i></strong></span>
-                          <span  class="d-block"><strong><i>Activity Date : <%=activity.activityDate%></i></strong></span>
-                          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+                           <span  class="d-block"><strong><i>Created Date : <%= activity.createdDate.getDate() %> <%=activity.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.createdDate.getFullYear() %></i></strong></span>
+                           <span  class="d-block"><strong><i>Activity Date : <%= activity.activityDate.getDate() %> <%=activity.activityDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.activityDate.getFullYear() %></i></strong></span>
+                           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
                            <strong>Activity Short Details : </strong> 
                             <%if(activity.shortDetails){%>
                                 <%=activity.shortDetails%>

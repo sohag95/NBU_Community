@@ -51,8 +51,8 @@
                 <span class="d-block">Present Members : <%=group.noOfPresentMembers%>/<%=group.expectedMembers%></span>
                 <span class="d-block"><strong >Creator : <%=group.createdBy.userName%> </strong>| <%=group.createdBy.departmentName%> (20<%=group.createdBy.regNumber.slice(0,2)%>-20<%=group.createdBy.regNumber.slice(2,4)%>)</span>
                 <div class="d-flex text-info">
-                  <span class="d-block mr-auto">Created Date : <%=group.createdDate%></span>
-                  <span class="d-block">Expiring Date : <%=group.expiringDate%></span>
+                  <span class="d-block mr-auto">Created Date : <%= group.createdDate.getDate() %> <%=group.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= group.createdDate.getFullYear() %></span>
+                  <span class="d-block">Expiring Date : <%= group.expiringDate.getDate() %> <%=group.expiringDate.toLocaleString('default', { month: 'short' }) %> , <%= group.expiringDate.getFullYear() %></span>
                 </div>
                 <hr style="margin-bottom: .25rem;margin-top: 0rem;">
                 <strong>Group Aim : <%=group.groupAim%></strong>

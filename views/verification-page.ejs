@@ -31,7 +31,7 @@
           <p><i class="fas fa-home"></i> <strong> Reg No - </strong> <%=studentData.regNumber%></p>
           <p><i class="fas fa-home"></i> <strong> Department - </strong> <%=studentData.departmentName%></p>
           <p><i class="fas fa-home"></i> <strong> Session - </strong> <%=studentData.sessionYear%></p>
-          <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%=studentData.createdDate%></p>    
+          <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%= studentData.createdDate.getDate() %> <%=studentData.createdDate.toLocaleString('default', { month: 'long' }) %> , <%= studentData.createdDate.getFullYear() %></p>    
         </div>
       </div>
     </div>

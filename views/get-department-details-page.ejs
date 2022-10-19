@@ -169,7 +169,7 @@
                         <hr style="padding: 0;margin: 0;">
                         <div class="ml-1" >
                           <a class="d-inline bolder text-primary mr-3" href="<%=notification.gotoLink%>"> <%=notification.gotoText%></a>
-                          <strong class="float-right"><i>12/12/12</i></strong> 
+                          <strong class="float-right"><i><%= notification.createdDate.getDate() %>/<%= notification.createdDate.getMonth() + 1 %>/<%= notification.createdDate.getFullYear() %></i></strong> 
                         </div>
                       <%}%>
                     </div>

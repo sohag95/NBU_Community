@@ -125,10 +125,10 @@
                               </div>
                             </div>
                               
-                            <div >
-                              <i><strong>Commented on </strong> <%= comment.createdDate.getMonth() + 1 %>/<%= comment.createdDate.getDate() %>/<%= comment.createdDate.getFullYear() %></i>
-                            </div>
-                              <p class="btmMarginZero textJustifyAlign" ><strong class="bolder"> Comment : </strong> <%= comment.comment %></p>                                           
+                            <div>
+                              <i>On <%= comment.createdDate.getDate() %> <%=comment.createdDate.toLocaleString('default', { month: 'long' }) %> , <%= comment.createdDate.getFullYear() %> at <%=comment.createdDate.getHours()%>:<%=comment.createdDate.getMinutes()%> </i>
+                            </div>  
+                            <p class="btmMarginZero textJustifyAlign" ><strong class="bolder"> Comment : </strong> <%= comment.comment %></p>                                           
                           </div> 
                         <% }) %>                                      
                         <!-- close -->
@@ -314,7 +314,6 @@
   <div class="col-lg notVisibleOnCollapse" >
   </div>
 </div>
-
 
 
 <!-- New structure till upper section -->

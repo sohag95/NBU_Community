@@ -67,7 +67,7 @@
             <%}%>
             <p><i class="fas fa-graduation-cap"></i><strong> Stream - </strong><span class="text-capitalize"><%=tutorDetails.tutorData.stream%></span></p>
             <p><i class="fas fa-graduation-cap"></i><strong> Gender - </strong><span class="text-capitalize"><%=tutorDetails.gender%></span></p>
-            <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%=tutorDetails.tutorData.createdDate%></p>    
+            <p><i class="fas fa-clock"></i><strong> Joined on - </strong><%= tutorDetails.tutorData.createdDate.getDate() %> <%=tutorDetails.tutorData.createdDate.toLocaleString('default', { month: 'long' }) %>, <%= tutorDetails.tutorData.createdDate.getFullYear() %></p>    
          </div>
         </div>
         <div class="col-lg-6">
@@ -86,7 +86,7 @@
             <%if(isVisitorOwner){%>
               <p><i class="fas fa-home"></i> <strong> Contact (<%=tutorDetails.tutorData.contact.type%>) - </strong><%=tutorDetails.tutorData.contact.id%></p>
             <%}else{%>
-              <p><i class="fas fa-clock"></i><strong> Last Data Edited On - </strong><%=tutorDetails.tutorData.lastEditDate%></p>    
+              <p><i class="fas fa-clock"></i><strong> Last Data Edited On - </strong><%= tutorDetails.tutorData.lastEditDate.getDate() %> <%=tutorDetails.tutorData.lastEditDate.toLocaleString('default', { month: 'long' }) %>, <%= tutorDetails.tutorData.lastEditDate.getFullYear() %></p>    
               <p ><i class="text-danger">[Tutor's given academic parcentage are not verified.Please check before appoint <%=tutorDetails.gender=="male"?"him":"her"%> as a home tutor.]</i></p>
             <%}%>
           </div>

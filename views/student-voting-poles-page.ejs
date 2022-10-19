@@ -39,8 +39,8 @@
                 <%}%>
                 <hr style="margin-bottom: .25rem;margin-top: 0rem;">
                 <strong class="d-block">Voting Dates : </strong>
-                <span class="d-block">Created Date : 12/05/2022 </span>
-                <span class="d-block">Result Date : 15/05/2022</span>
+                <span class="d-block">Created Date :  <%= pole.votingDates.createdDate.getDate() %> <%=pole.votingDates.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= pole.votingDates.createdDate.getFullYear() %> </span>
+                <span class="d-block">Result Date :  <%= pole.votingDates.resultDate.getDate() %> <%=pole.votingDates.resultDate.toLocaleString('default', { month: 'short' }) %> , <%= pole.votingDates.resultDate.getFullYear() %></span>
               </div>
             </div>
           </a>
@@ -78,8 +78,8 @@
                 <%}%>
                 <hr style="margin-bottom: .25rem;margin-top: 0rem;">
                 <strong class="d-block">Voting Dates : </strong>
-                <span class="d-block">Created Date : 12/05/2022 </span>
-                <span class="d-block">Nomination Date : 15/05/2022</span>
+                <span class="d-block">Created Date :  <%= pole.votingDates.createdDate.getDate() %> <%=pole.votingDates.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= pole.votingDates.createdDate.getFullYear() %> </span>
+                <span class="d-block">Nomination Last Date :  <%= pole.votingDates.nominationLastDate.getDate() %> <%=pole.votingDates.nominationLastDate.toLocaleString('default', { month: 'short' }) %> , <%= pole.votingDates.nominationLastDate.getFullYear() %></span>
               </div>
             </div>
           </a>

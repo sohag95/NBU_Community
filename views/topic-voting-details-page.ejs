@@ -38,7 +38,7 @@
               <div class="ml-auto">- <%=vote.parcentage%>%</div>
             </div>
           <%})%>
-          <h5 class="pt-2 text-warning"><strong>Result declared on - 12 May 2022</strong></h5>
+          <h5 class="pt-2 text-warning"><strong>Result declared on - <%= votingDetails.votingDates.resultDate.getDate() %> <%=votingDetails.votingDates.resultDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.resultDate.getFullYear() %> at <%=votingDetails.votingDates.resultDate.getHours()%>:<%=votingDetails.votingDates.resultDate.getMinutes()%></strong></h5>
         </div>
       </div>
     </div>
@@ -55,9 +55,9 @@
       <p><strong>Type : </strong><%=votingDetails.voteType%> </p>
       <p><strong>From : </strong><%=votingDetails.from%></p>
       <p><strong>Source Name : </strong><%=votingDetails.sourceName%></p>
-      <p><strong>Created Date : </strong><%=votingDetails.votingDates.createdDate%></p>
-      <p><strong>Voting Last Date : </strong><%=votingDetails.votingDates.votingLastDate%></p>
-      <p><strong>Result Declaration Date : </strong><%=votingDetails.votingDates.resultDate%></p>
+      <p><strong>Created Date : </strong><%= votingDetails.votingDates.createdDate.getDate() %> <%=votingDetails.votingDates.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.createdDate.getFullYear() %> at <%=votingDetails.votingDates.createdDate.getHours()%>:<%=votingDetails.votingDates.createdDate.getMinutes()%></p>
+      <p><strong>Voting Last Date : </strong><%= votingDetails.votingDates.votingLastDate.getDate() %> <%=votingDetails.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.votingLastDate.getFullYear() %> at <%=votingDetails.votingDates.votingLastDate.getHours()%>:<%=votingDetails.votingDates.votingLastDate.getMinutes()%></p>
+      <p><strong>Result Declaration Date : </strong><%= votingDetails.votingDates.resultDate.getDate() %> <%=votingDetails.votingDates.resultDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.resultDate.getFullYear() %> at <%=votingDetails.votingDates.resultDate.getHours()%>:<%=votingDetails.votingDates.resultDate.getMinutes()%></p>
       <hr>
       
       <h5><strong>Activity Leaders</strong></h5>

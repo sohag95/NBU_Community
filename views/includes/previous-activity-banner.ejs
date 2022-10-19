@@ -27,7 +27,7 @@
               </strong>
             </div>
             <div style="margin: 0;padding: 0;">
-              <i><span>Published on <%= previousActivityData.publishedDate.getMonth() + 1 %>/<%= previousActivityData.publishedDate.getDate() %>/<%= previousActivityData.publishedDate.getFullYear() %></span></i> <span style="font-weight: 500;">.</span><i class="fas fa-user-friends fa-sm"></i>
+              <i><span>Published on <%= previousActivityData.publishedDate.getDate() %> <%=previousActivityData.publishedDate.toLocaleString('default', { month: 'short' }) %>, <%= previousActivityData.publishedDate.getFullYear() %></span></i> <span style="font-weight: 500;">.</span><i class="fas fa-user-friends fa-sm"></i>
             </div>
           </div>
           <div class="float-right">
@@ -50,7 +50,7 @@
       <div style="margin-bottom: 5px; border-bottom: 1px solid rgb(126, 124, 124);">
         <h6 style="margin-bottom: 0px;">
           <i class="d-block">
-            <span class="text-capitalize"><%=previousActivityData.activityType%></span> activity | Conducted on <%= previousActivityData.activityDate.getMonth() + 1 %>/<%= previousActivityData.activityDate.getDate() %>/<%= previousActivityData.activityDate.getFullYear() %>
+            <span class="text-capitalize"><%=previousActivityData.activityType%></span> activity | Conducted on <%= previousActivityData.activityDate.getDate() %> <%=previousActivityData.activityDate.toLocaleString('default', { month: 'short' }) %>, <%= previousActivityData.activityDate.getFullYear() %>
           </i>
         </h6>
         <h5 class="bolder">
