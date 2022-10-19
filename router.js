@@ -42,6 +42,8 @@ router.get('/image/:from/:size/:key',awsS3BucketController.getPhoto)
 //guest-user related routers
 router.get('/',userController.guestHomePage)
 router.get("/all-departments",  userController.allDepartments)
+router.post("/doesEmailExists",userController.doesEmailExist)
+router.post("/doesPhoneNumberExists",userController.doesPhoneNumberExist)
 
 //Searching student by userName or regNumber 
 router.post("/search-student",userController.searchStudent)

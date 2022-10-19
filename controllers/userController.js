@@ -6,6 +6,20 @@ const SentEmail = require('../models/SentEmail')
 const Student = require('../models/Student')
 
 
+exports.doesEmailExist = function(req, res) {
+  Student.ifEmailIdRegistered(req.body.email.toLowerCase()).then(()=> {
+    res.json(true)
+  }).catch(()=> {
+    res.json(false)
+  })
+}
+exports.doesPhoneNumberExist = function(req, res) {
+  Student.ifPhoneNumberRegistered(req.body.phone).then(()=> {
+    res.json(true)
+  }).catch(()=> {
+    res.json(false)
+  })
+}
 exports.test =async function (req, res) {
   try{
     console.log("Params data :",req.params.id)

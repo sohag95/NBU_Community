@@ -517,6 +517,21 @@ Student.ifEmailIdRegistered = function (email) {
   })
 }
 
+Student.ifPhoneNumberRegistered = function (phone) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      let data=await studentsCollection.findOne({phone:phone})
+      if(data){
+        resolve()
+      }else{
+        reject()
+      }
+    }catch{
+      reject()
+    }
+  })
+}
+
 Student.sentResetPasswordNewOTP = function (email) {
   return new Promise(async(resolve, reject) => {
     try{
