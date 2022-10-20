@@ -54,7 +54,7 @@
         <%activities.batchActivities.forEach((activity)=>{%>
           <a href="/activity/<%=activity._id%>/details" style="text-decoration: none;">
             <div class="activity-link-container-small">
-              <img class="activity-cover-image"  src="/image/profile/medium/checkImg" alt="">
+              <img class="activity-cover-image"  src="/image/activity-banner/medium/<%=activity._id%>" alt="">
               <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
                 <span class="d-block"><strong><%=activity.title.slice(0,30)%>... | <%=activity.topic%> </strong></span>
                 <span class="d-block">Dept : <%=activity.sourceName%> (20<%=activity.activitySourceId.slice(0,2)%>-20<%=activity.activitySourceId.slice(2,4)%>)
@@ -88,7 +88,7 @@
         <%activities.departmentActivities.forEach((activity)=>{%>
           <a href="/activity/<%=activity._id%>/details" style="text-decoration: none;">
             <div class="activity-link-container-small">
-              <img class="activity-cover-image"  src="/image/profile/medium/checkImg" alt="">
+              <img class="activity-cover-image"  src="/image/activity-banner/medium/<%=activity._id%>" alt="">
               <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
                 <span class="d-block"><strong><%=activity.title.slice(0,30)%>... | <%=activity.topic%> </strong></span>
                 <span class="d-block">Dept - <%=activity.sourceName%> 
@@ -121,7 +121,7 @@
         <%activities.groupActivities.forEach((activity)=>{%>
           <a href="/activity/<%=activity._id%>/details" style="text-decoration: none;">
             <div class="activity-link-container-small">
-              <img class="activity-cover-image"  src="/image/profile/medium/checkImg" alt="">
+              <img class="activity-cover-image"  src="/image/activity-banner/medium/<%=activity._id%>" alt="">
               <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
                 <span class="d-block"><strong><%=activity.title.slice(0,30)%>... | <%=activity.topic%> </strong></span>
                 <span class="d-block">Group Name - <%=activity.sourceName%> 

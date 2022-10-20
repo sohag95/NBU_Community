@@ -23,17 +23,17 @@ exports.getPhoto=function(req,res){
     if(req.params.from=="profile"){
       res.redirect("/images/defaultProfilePic.jfif");
     }else if(req.params.from=="cover"){
-      res.redirect("/images/defaultProfilePic.jfif");
+      res.redirect("/images/defaultCover-banner.jfif");
     }else if(req.params.from=="batch-banner"){
-      res.redirect("/images/defaultProfilePic.jfif");
+      res.redirect("/images/batch-cover.png");
     }else if(req.params.from=="department-banner"){
-      res.redirect("/images/defaultProfilePic.jfif");
+      res.redirect("/images/department-cover.png");
     }else if(req.params.from=="group-banner"){
-      res.redirect("/images/defaultProfilePic.jfif");
+      res.redirect("/images/group-cover.png");
     }else if(req.params.from=="campusGroup-banner"){
-      res.redirect("/images/defaultProfilePic.jfif");
+      res.redirect("/images/campusGroup-cover.png");
     }else if(req.params.from=="activity-banner"){
-      res.redirect("/images/defaultProfilePic.jfif");
+      res.redirect("/images/activity-cover.png");
     }
   })
   

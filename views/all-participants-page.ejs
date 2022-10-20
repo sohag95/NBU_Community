@@ -10,7 +10,13 @@
     <div class="single-batch-container">
       <div class="single-batch-data pb-4">
         <div style="position: relative;">
-          <img class="single-batch-image"  src="/images/sponsor-banner.png" alt="">
+          <%if(activityData.activityType=="batch"){%>
+            <img class="home-cover-image"  src="/image/batch-banner/large/<%=activityData.sourceId%>" alt="">
+          <%}else if(activityData.activityType=="department"){%>
+            <img class="home-cover-image"  src="/image/department-banner/large/<%=activityData.sourceId%>" alt="">
+          <%}else{%>
+            <img class="home-cover-image"  src="/image/group-banner/large/<%=activityData.sourceId%>" alt="">
+          <%}%>
           <div class="text-success text-center"><strong>Activity Type : <%=activityData.from%></strong></div>
           <div class="text-success text-center"><strong>Source Name : <%=activityData.sourceName%></strong></div>
           <div class="text-success text-center"><strong>Topic : <i><%=activityData.topic%></i></strong></div>

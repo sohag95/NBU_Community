@@ -7,7 +7,7 @@
   <div class="col-lg-9 pt-1" >
     <div class="">
       <div style="width: 100%;position: relative;">
-        <img class="department-batch-group-cover-image" src="/images/sponsor-banner2.png" />
+        <img class="department-batch-group-cover-image" src="/images/campusGroup-cover.png" />
         <div class="text-center">
           <h5>
             <strong>
@@ -29,7 +29,7 @@
           <%groups.runningGroups.forEach((group)=>{%>
             <a href="/campus-group/<%=group._id%>/details" style="text-decoration: none;">
               <div class="activity-link-container-small">
-                <img class="activity-cover-image"  src="/images/activity-banner.jpg" alt="">
+                <img class="activity-cover-image"  src="/image/campusGroup-banner/large/<%=group._id%>" alt="">
                 <div class="text-left" style="padding-bottom: 5px;padding-left: 2px;">
                   <span class="d-block"><strong>Group Name : <%=group.groupName%></strong></span>
                   <span class="d-block">Present Members : <%=group.presentMembers%>/<%=group.expectedMembers%></span>
