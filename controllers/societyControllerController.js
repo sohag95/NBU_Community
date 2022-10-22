@@ -1,4 +1,5 @@
 const Department=require('../models/Department')
+const Reporting = require('../models/Reporting')
 
 exports.societyControllerHome =async function (req, res) {
   try{
@@ -33,7 +34,27 @@ exports.getVerifyCase1AccountPage =async function (req, res) {
 
 exports.getHandleReportingPage =async function (req, res) {
   try{
-    res.render('reporting-handling-page')
+    let allReports={
+      badComments:[],
+      fakeParticipants:[],
+      fakeActivity:[],
+      fakeStudent:[]
+    }
+    let unresolvedReports=await Reporting.getAllUnResolvedReports()
+    unresolvedReports.forEach((report)=>{
+      if(report.reportType.subType=="badComment"){
+        allReports.badComments.push(report)
+      }else if(report.reportType.subType=="notParticipant"){
+        allReports.fakeParticipants.push(report)
+      }else if(report.reportType.subType=="fakeStudent"){
+        allReports.fakeStudent.push(report)
+      }else if(report.reportType.subType=="fakeActivity"){
+        allReports.fakeActivity.push(report)
+      }
+    })
+    res.render('reporting-handling-page',{
+      allReports:allReports
+    })
   }catch{
     res.render("404")
   }

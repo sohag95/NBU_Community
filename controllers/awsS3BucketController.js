@@ -41,13 +41,37 @@ exports.getPhoto=function(req,res){
 
 exports.uploadProfilePhoto=function(req,res){
   let fileName="profile-"+req.regNumber
+  let userType=req.regNumber.slice(4,9)
   let awsS3Bucket=new AWSS3Bucket()
   awsS3Bucket.uploadProfilePhoto(req.file.buffer,fileName).then(()=>{
     req.flash("success", "Profile Photo successfully uploaded!!")
-    res.redirect(`/student/${req.regNumber}/profile`)
+    if(userType=="ADMIN"){
+      req.session.save(function() {
+        res.redirect('/admin-home')
+      })
+    }else if(userType=="UNSCN"){
+      req.session.save(function() {
+        res.redirect('/societyController-home')
+      })
+    }else if(userType=="POSTC"){
+      req.session.save(function() {
+        res.redirect('/postController-home')
+      })
+    }else if(userType=="EDITR"){
+      req.session.save(function() { 
+        res.redirect('/videoEditor-home')
+      })
+    }else{
+      req.session.save(function() {
+        res.redirect(`/student/${req.regNumber}/profile`)
+      })
+    }
+    
   }).catch(()=>{
-    req.flash("errors", "There is some problem")
-    res.render("404")
+    req.flash("errors", "There is some problem!Please upload another photo.")
+    req.session.save(function() {
+      res.render("404")
+    })
   })
   
 }

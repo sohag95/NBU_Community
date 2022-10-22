@@ -32,16 +32,20 @@ exports.checkIfAlreadyReported=async function(req,res,next){
     if(req.reportingData.reportType.subType=="badComment"){
       req.reportingData.reportingId={
         activityId:req.body.reportingId,
-        commentIndex:Number(req.body.commentIndex)
+        commentIndex:Number(req.body.commentIndex),
+        comment:req.body.comment
       }
     }else if(req.reportingData.reportType.subType=="notParticipant"){
       req.reportingData.reportingId={
         activityId:req.body.reportingId,
+        regNumber:req.body.regNumber,
+        userName:req.body.userName,
         participantIndex:Number(req.body.participantIndex)
       }
     }else if(req.reportingData.reportType.subType=="fakeStudent"){
       req.reportingData.reportingId={
         regNumber:req.body.reportingId,
+        userName:req.body.userName
       }
     }else if(req.reportingData.reportType.subType=="fakeActivity"){
       req.reportingData.reportingId={
@@ -91,4 +95,14 @@ exports.sentReport=async function(req,res){
   }catch{
     res.render("404")
   }
+}
+
+exports.reportResolved= function(req,res){
+    Reporting.markReportAsResolved(req.body.reportId).then(()=>{
+      req.flash("success", "Successfully resolved the report!!")
+      res.redirect("/handle-reporting-page")
+    }).catch(()=>{
+      req.flash("errors", "Sorry there is some problem!!")
+      res.redirect("/handle-reporting-page")
+    })
 }

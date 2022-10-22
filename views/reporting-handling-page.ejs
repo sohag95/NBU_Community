@@ -1,8 +1,236 @@
 <%- include('includes/header') %> 
 <%- include('includes/flash') %>
-<%- include('includes/officialUser-header') %> 
-<div class="item-container" style="height: 60vh;">
-    <div class="btn btn-block btn-info"><strong>I have to work on this page later!!</strong></div>
+<%- include('includes/officialUser-header') %>                 
+               
+<div class="item-container">
+    <div id="accordion">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+               <strong> Reported Bad Comments (<%=allReports.badComments.length%>)</strong>
+              </button>
+            </h5>
+          </div>
+      
+          <div id="collapseOne" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <%if(!allReports.badComments.length){%>
+                <div class="btn btn-block btn-info btn-lg">No bad comment reported!!</div>
+              <%}else{%>
+                <h5 class="bolder text-info text-center"><strong> All Reported Bad Comment (<%=allReports.badComments.length%>) </strong></h5>
+                <hr style="margin-top: 5px;margin-bottom:5px;">
+                <%allReports.badComments.forEach((report,index)=>{%>
+                    <div class="colored-container mb-2">
+                        <p><strong>Comment : </strong><%=report.comment%></p>
+                        <hr style="margin-top: 5px;margin-bottom:5px;">
+                        <div class="d-flex">
+                            <div class="mr-auto">
+                                <a href="/student/<%=report.reportedBy.regNumber%>/profile">
+                                  <img class="avatar-small"  src="/image/profile/small/profile-<%=report.reportedBy.regNumber%>" alt="">
+                                  <strong class="ml-1"><%=report.reportedBy.userName%></strong>
+                                </a> (reporter)
+                              </div>
+                            <strong class="d-block">Reporting Date : <%= report.createdDate.getDate() %> <%=report.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= report.createdDate.getFullYear() %> at <%=report.createdDate.getHours()%>:<%=report.createdDate.getMinutes()%></strong>
+                        </div>
+                        <hr style="margin-top: 5px;margin-bottom:5px;">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <form action="/erase-reported-comment" method="post">
+                                    <input type="hidden" name="commentIndex" value="<%=report.reportingId.commentIndex%>">
+                                    <input type="hidden" name="activityId" value="<%=report.reportingId.activityId%>">
+                                    <input type="hidden" name="reportId" value="<%=report._id%>">
+                                    <button class="btn btn-sm btn-block btn-danger">Erase Comment</button>
+                                </form>
+                            </div>
+                            <div class="col-sm-6">
+                                <form action="/report-resolved" method="post">
+                                    <input type="hidden" name="reportId" value="<%=report._id%>">
+                                    <button class="btn btn-sm btn-block btn-warning">Resolved</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <%})%>
+              <%}%>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingTwo">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+               <strong>Reported Fake Activity Participant (<%=allReports.fakeParticipants.length%>)</strong> 
+              </button>
+            </h5>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+            <div class="card-body">
+              <%if(!allReports.fakeParticipants.length){%>
+                <div class="btn btn-block btn-info btn-lg">No Fake Activity Participant Reported!!</div>
+              <%}else{%>
+                <h5 class="bolder text-info text-center">All Reported Activity Fake Participants (<%=allReports.fakeParticipants.length%>)</h5>
+                <hr style="margin-top: 5px;margin-bottom:5px;">
+                <%allReports.fakeParticipants.forEach((report,index)=>{%>
+                    <div class="colored-container mb-2">
+                        <div class="member-container align-items-center">
+                            <div class="col-sm-6">
+                                <img class="member-avatar"  src="/image/profile/medium/profile-<%=report.reportingId.regNumber%>" alt="">
+                                <a href="/student/<%=report.reportingId.regNumber%>/profile"><strong><%=report.reportingId.userName%></strong> </a>
+                            </div>
+                            <div class="col-sm-6 text-info">
+                                <strong class="d-block">Activity Id : <%=report.reportingId.activityId%></strong>
+                                <a href="/activity/<%=report.reportingId.activityId%>/details"><strong class="d-block">Go to activity details...</strong></a>
+                            </div>            
+                        </div>
+                        <hr style="margin-top: 5px;margin-bottom:5px;">
+                        <div class="d-flex">
+                            <div class="mr-auto">                                
+                                <a href="/student/<%=report.reportedBy.regNumber%>/profile">
+                                    <img class="avatar-small"  src="/image/profile/small/profile-<%=report.reportedBy.regNumber%>" alt="">
+                                    <strong class="ml-1"><%=report.reportedBy.userName%></strong>
+                                </a> (reporter)
+                              </div>
+                            <strong class="d-block">Reporting Date : <%= report.createdDate.getDate() %> <%=report.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= report.createdDate.getFullYear() %> at <%=report.createdDate.getHours()%>:<%=report.createdDate.getMinutes()%></strong>
+                        </div>
+                        <hr style="margin-top: 5px;margin-bottom:5px;">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <form action="/remove-fake-participant" method="post">
+                                    <input type="hidden" name="participantIndex" value="<%=report.reportingId.activityId%>">
+                                    <input type="hidden" name="activityId" value="<%=report.reportingId.participantIndex%>">
+                                    <input type="hidden" name="reportId" value="<%=report._id%>">
+                                    <button class="btn btn-sm btn-block btn-danger">Mark As Fake Participant</button>
+                                </form>
+                            </div>
+                            <div class="col-sm-6">
+                                <form action="/report-resolved" method="post">
+                                    <input type="hidden" name="reportId" value="<%=report._id%>">
+                                    <button class="btn btn-sm btn-block btn-warning">Resolved</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <%})%>
+              <%}%>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingThree">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <strong>Reported Fake Activity (<%=allReports.fakeActivity.length%>)</strong>  
+              </button>
+            </h5>
+          </div>
+          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+            <div class="card-body">
+              <%if(!allReports.fakeActivity.length){%>
+                <div class="btn btn-block btn-info btn-lg">No Fake Activity Reported!!</div>
+              <%}else{%>
+                <h5 class="bolder text-info text-center">All Reported Fake Activities (<%=allReports.fakeActivity.length%>)</h5>
+                <hr style="margin-top: 5px;margin-bottom:5px;">
+                <%allReports.fakeActivity.forEach((report,index)=>{%>
+                    <div class="colored-container mb-2">
+                        <div class="member-container align-items-center text-info">
+                           <strong class="d-block mr-auto">Activity Id : <%=report.reportingId.activityId%></strong>
+                            <a href="/activity/<%=report.reportingId.activityId%>/details"><strong class="d-block">Go to Activity Details...</strong></a>
+                        </div>
+                        <hr style="margin-top: 5px;margin-bottom:5px;">
+                        <div class="d-flex">
+                            <div class="mr-auto">                                
+                                <a href="/student/<%=report.reportedBy.regNumber%>/profile">
+                                <img class="avatar-small"  src="/image/profile/small/profile-<%=report.reportedBy.regNumber%>" alt="">
+                                  <strong class="ml-1"><%=report.reportedBy.userName%></strong>
+                                </a> (reporter)
+                              </div>
+                            <strong class="d-block">Reporting Date : <%= report.createdDate.getDate() %> <%=report.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= report.createdDate.getFullYear() %> at <%=report.createdDate.getHours()%>:<%=report.createdDate.getMinutes()%></strong>
+                        </div>
+                        <hr style="margin-top: 5px;margin-bottom:5px;">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <form action="/mark-fake-activity" method="post">
+                                    <input type="hidden" name="activityId" value="<%=report.reportingId.activityId%>">
+                                    <input type="hidden" name="reportId" value="<%=report._id%>">
+                                    <button class="btn btn-sm btn-block btn-danger">Confirm As Fake Activity</button>
+                                </form>
+                            </div>
+                            <div class="col-sm-6">
+                                <form action="/report-resolved" method="post">
+                                    <input type="hidden" name="reportId" value="<%=report._id%>">
+                                    <button class="btn btn-sm btn-block btn-warning">Resolved</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <%})%>
+              <%}%>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingFour">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                <strong>Reported Fake Student (<%=allReports.fakeStudent.length%>)</strong>  
+              </button>
+            </h5>
+          </div>
+          <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+            <div class="card-body">
+              <%if(!allReports.fakeStudent.length){%>
+                <div class="btn btn-block btn-info btn-lg">No Fake Student Reported!!</div>
+                
+              <%}else{%>
+                <h5 class="bolder text-info text-center">All Reported Fake Students (<%=allReports.fakeStudent.length%>)</h5>
+                <hr style="margin-top: 5px;margin-bottom:5px;">
+                <%allReports.fakeStudent.forEach((report,index)=>{%>
+                    <div class="colored-container mb-2">
+                        <div class="member-container align-items-center">
+                            <img class="member-avatar"  src="/image/profile/medium/profile-<%=report.reportingId.regNumber%>" alt="">
+                            <div class="name-container">
+                              <strong class="d-block ml-2" style="width: 100%;">
+                                <a href="/student/<%=report.reportingId.regNumber%>/profile">
+                                    <%=report.reportingId.userName%>
+                                </a>
+                              </strong>
+                            </div>
+                        </div>
+                        <hr style="margin-top: 5px;margin-bottom:5px;">
+                        <div class="d-flex">
+                            <div class="mr-auto">                                
+                                <a href="/student/<%=report.reportedBy.regNumber%>/profile">
+                                <img class="avatar-small"  src="/image/profile/small/profile-<%=report.reportedBy.regNumber%>" alt="">
+                                  <strong class="ml-1"><%=report.reportedBy.userName%></strong>
+                                </a> (reporter)
+                              </div>
+                            <strong class="d-block">Reporting Date : <%= report.createdDate.getDate() %> <%=report.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= report.createdDate.getFullYear() %> at <%=report.createdDate.getHours()%>:<%=report.createdDate.getMinutes()%></strong>
+                        </div>
+                        <hr style="margin-top: 5px;margin-bottom:5px;">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <form action="/fake-student-account" method="post">
+                                    <input type="hidden" name="regNumber" value="<%=report.reportingId.regNumber%>">
+                                    <input type="hidden" name="reportId" value="<%=report._id%>">
+                                    <button class="btn btn-sm btn-block btn-danger">Confirm As Fake Account</button>
+                                </form>
+                            </div>
+                            <div class="col-sm-6">
+                                <form action="/report-resolved" method="post">
+                                    <input type="hidden" name="reportId" value="<%=report._id%>">
+                                    <button class="btn btn-sm btn-block btn-warning">Resolved</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <%})%>
+              <%}%>
+            </div>
+          </div>
+        </div>
+        
+      </div>
 </div> 
 <%- include('includes/officialUser-footer') %> 
 <%- include('includes/footer') %> 

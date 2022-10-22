@@ -1,4 +1,5 @@
 const HomeTutor = require("../models/HomeTutor")
+const OfficialUsers = require("../models/OfficialUsers")
 const Student = require("../models/Student")
 
 
@@ -144,8 +145,25 @@ exports.updateTutorParsonalInfo=function(req,res){
 }
 
 
-exports.getTutorSearchPage=function(req,res){
-  res.render("tutor-search-page")
+exports.getTutorSearchPage=async function(req,res){
+  try{
+    let allDepartments=await OfficialUsers.allDepartments()
+    allDepartments=allDepartments.map((department)=>{
+      return department.departmentName
+    })
+    allDepartments.sort(function(a, b){
+      if(a < b) { return -1; }
+      if(a > b) { return 1; }
+      return 0;
+    })
+    console.log("Departments :",allDepartments)
+    res.render("tutor-search-page",{
+      allDepartments:allDepartments
+    })
+  }catch{
+    res.render("404")
+  }
+  
 }
 
 exports.searchHomeTutor=function(req,res){

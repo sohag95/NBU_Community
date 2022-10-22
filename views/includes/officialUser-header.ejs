@@ -13,10 +13,43 @@
                 <%}else if(user.accountType=="videoEditor"){%>
                     <img class="home-cover-image" src="/images/videoEditor-cover.png"/>
                 <%}%>
-                <div>
+            <div>
+            <div style="position: relative;display: inline;">
                 <img class="home-profile-image" src="/image/profile/medium/profile-<%=user.regNumber%>" />
+                <div style="position: absolute;right: 7px;top: -25px;">
+                    <h5 type="button" class="text-info" data-toggle="modal" data-target="#profilePicUploadCenter"><i class="fas fa-camera-retro"></i></h5>
+                    <!-- Modal -->
+                    <div class="modal fade" id="profilePicUploadCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Upload Profile Picture</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="/upload-profile-photo" method="post" enctype="multipart/form-data">
+                              <div class="form-group text-left">
+                                <label class="form-label" for="customFile">Choose Profile Photo (jpeg/png)</label>
+                                <input type="file" name="image" class="form-control" id="customFile" />
+                              </div>
+                              <div style="text-align: left;">
+                                <button class="btn btn-success btn-sm ">Upload</button>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- ----------model ends------- -->
+                  </div>
+                </div>
                 <div>
-                    <h5 class="bolder text-secondary d-inline"><strong><%=user.userName%></strong></h5>
+                    <h5 class="bolder text-secondary text-capetalize d-inline"><strong><%=user.userName%></strong></h5>
                     <h5 class="bolder d-inline float-right">
                     <i class="fas fa-user"></i> <%=user.accountType%></h5>
                 </div>  

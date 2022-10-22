@@ -1,17 +1,22 @@
 
 const reportingCollection = require("../db").db().collection("Problem_Reports")
+const { ObjectId } = require("mongodb")
 
-let Reporting=function(data){
+let Reporting=function(data){ 
   this.data=data
   // data={
   //   reportType:{
   //     type:"abc",//"student","activity"
   //     subType:"def"//student-fakeStudent | activity-notParticipant,fakeActivity,badComment 
   //   },
-  //   reportingId:{
-  //    /regNumber,activityId.indexNumbers
+  //   reportingId:{//ids depanded on reporting subTypes
+  //    regNumber:"",
+  //    activityId:"",
+  //    indexNumbers:"",
+  //    userName:""
   //   }
   //   commentIndex:2,//comment index number(if subType is badComment)
+  //   comment:"bad comment taken",//subType:"badComment"
   //   reportBy:{
   //     regNumber:"123",
   //     userName:"123"
@@ -66,6 +71,31 @@ Reporting.prototype.sentReport=function(){
       resolve()
     }catch{
       reject("There is some problem.")
+    }
+  })
+}
+Reporting.getAllUnResolvedReports=function(){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      let allUnresolvedReports=await reportingCollection.find({isResolved:false}).toArray()
+      resolve(allUnresolvedReports)
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+Reporting.markReportAsResolved=function(id){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      await reportingCollection.findOneAndUpdate({_id:new ObjectId(id)},{
+        $set:{
+          isResolved:true
+        }
+      })
+      resolve()
+    }catch{
+      reject()
     }
   })
 }

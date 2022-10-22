@@ -51,7 +51,7 @@ router.post("/doesPhoneNumberExists",userController.doesPhoneNumberExist)
 router.post("/search-student",userController.searchStudent)
 
 //Image upload related routers
-router.post("/upload-profile-photo",upload.single('image'),studentController.studentMustBeLoggedIn,awsS3BucketController.uploadProfilePhoto)
+router.post("/upload-profile-photo",upload.single('image'),userController.userMustBeLoggedIn,awsS3BucketController.uploadProfilePhoto)
 router.post("/upload-cover-photo",upload.single('image'),studentController.studentMustBeLoggedIn,awsS3BucketController.uploadCoverPhoto)
 
 //########################
@@ -79,6 +79,11 @@ router.get('/user-verification-case1-page',officialUserController.societyControl
 router.get('/handle-reporting-page',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.getHandleReportingPage)
 router.get('/verify-user-account-page',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.getVerifyUserAccountPage)
 router.get('/society-handling-page',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.getSocietyHandlingPage)
+router.post("/report-resolved",officialUserController.societyControllerMustBeLoggedIn,reportController.reportResolved)
+
+//########################
+//Reporting related router
+router.post("/sent-report",studentController.studentMustBeLoggedIn,reportController.checkReportType,reportController.checkIfAlreadyReported,reportController.sentReport)
 
 //########################
 //STUDENT related router
@@ -182,10 +187,6 @@ router.post("/leader-voting/:id/nomination",userController.ifUserLoggedIn,voting
 router.post("/leader-voting/:id/give-vote",studentController.studentMustBeLoggedIn,userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.getLeaderVotingStatusAndCheckData,checkingController.checkLeaderVotingData,votingController.giveLeaderVote)
 router.post("/leader-voting/:id/declare-result-by-leader",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.ifVotingResultDeclarable,votingController.declareLeaderResultByLeader)
 router.post("/leader-voting/:id/accept-as-leader",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.newLeaderAcceptableOrNot,votingController.acceptSelfAsLeader)
-
-//########################
-//Reporting related router
-router.post("/sent-report",studentController.studentMustBeLoggedIn,reportController.checkReportType,reportController.checkIfAlreadyReported,reportController.sentReport)
 
 //########################
 //Home tuition related routers

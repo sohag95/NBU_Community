@@ -191,6 +191,8 @@
       </div>
     </div>
 
+    
+
     <hr>
     <%if(checkData.isBatchLeader || user.accountType=="societyController"){%>
       <%if(batchDetails.newMemberRequests.length){%>
@@ -365,6 +367,7 @@
                           <input type="hidden" name="type" value="student">
                           <input type="hidden" name="subType" value="fakeStudent">
                           <input type="hidden" name="reportingId" value="<%=batchDetails.allPresentMembers[0].regNumber%>">
+                          <input type="hidden" name="userName" value="<%=batchDetails.allPresentMembers[0].userName%>">
                           <button class="btn btn-sm btn-info  btn-block">Fake Account?Report!</button>
                         </form>
                       <%}else{%>
@@ -392,6 +395,7 @@
                               <input type="hidden" name="type" value="student">
                               <input type="hidden" name="subType" value="fakeStudent">
                               <input type="hidden" name="reportingId" value="<%=batchDetails.allPresentMembers[i].regNumber%>">
+                              <input type="hidden" name="userName" value="<%=batchDetails.allPresentMembers[i].userName%>">
                               <button class="btn btn-sm btn-info  btn-block">Fake Account?Report!</button>
                             </form>
                           <%}else{%>
@@ -417,6 +421,7 @@
                             <input type="hidden" name="type" value="student">
                             <input type="hidden" name="subType" value="fakeStudent">
                             <input type="hidden" name="reportingId" value="<%=batchDetails.allPresentMembers[j].regNumber%>">
+                            <input type="hidden" name="userName" value="<%=batchDetails.allPresentMembers[j].userName%>">
                             <button class="btn btn-sm btn-info  btn-block">Fake Account?Report!</button>
                           </form>
                         <%}else{%>

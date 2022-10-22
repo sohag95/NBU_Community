@@ -115,6 +115,7 @@
                                       <input type="hidden" name="type" value="activity">
                                       <input type="hidden" name="subType" value="badComment">
                                       <input type="hidden" name="commentIndex" value="<%=index%>">
+                                      <input type="hidden" name="comment" value="<%=comment.comment%>">
                                       <input type="hidden" name="reportingId" value="<%=activityDetails._id%>">
                                       <button class="btn btn-sm btn-info  btn-block">Bad Comment?Report!</button>
                                     </form>
@@ -201,6 +202,9 @@
                         <input type="hidden" name="type" value="activity">
                         <input type="hidden" name="subType" value="notParticipant">
                         <input type="hidden" name="participantIndex" value="<%=index%>">
+                        <input type="hidden" name="regNumber" value="<%=participant.regNumber%>">
+                        <input type="hidden" name="userName" value="<%=participant.userName%>">
+                        
                         <input type="hidden" name="reportingId" value="<%=activityDetails._id%>">
                         <button class="btn btn-sm btn-info  btn-block">Not Participant?Report!</button>
                       </form>
