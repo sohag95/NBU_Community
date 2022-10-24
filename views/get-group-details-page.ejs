@@ -81,22 +81,24 @@
                   <%gotoText="See the voting result"%> 
                   <h6 class="bolder text-warning text-center" style="margin-bottom:0px"><strong>Result has published !!</strong></h6>
                   <%if(groupDetails.leaderVotingData.wonLeader.regNumber==user.regNumber){%>
+                    <%gotoText="See the voting details"%>
                     <strong  class="d-block text-info text-center">Congrats!! You have won the election.Accept yourself as a leader.</strong>
                   <%}else{%>
+                    <%gotoText="See the voting result"%>
                     <strong  class="d-block text-info text-center">New Leader will be added when he/she will accept himself/herself as a new leader.</strong>  
                   <%}%>
-                  <strong  class="d-block text-primary">Won Leader : <span class="text-secondary">Sohag Roy</span></strong> 
-                  <strong  class="d-block text-primary">Result Date : <span class="text-secondary">12/12/2022</span></strong>
+                  <strong  class="d-block text-primary">Won Leader : <span class="text-secondary"><%=groupDetails.leaderVotingData.wonLeader.userName%></span></strong> 
+                  <strong  class="d-block text-primary">Result Date : <span class="text-secondary"><%= groupDetails.leaderVotingData.votingDates.resultDate.getDate() %> <%=groupDetails.leaderVotingData.votingDates.resultDate.toLocaleString('default', { month: 'short' }) %> , <%= groupDetails.leaderVotingData.votingDates.resultDate.getFullYear() %> at <%=groupDetails.leaderVotingData.votingDates.resultDate.getHours()%>:<%=groupDetails.leaderVotingData.votingDates.resultDate.getMinutes()%></span></strong>
                   <hr>
                 <%}%>
-                <strong  class="d-block text-primary">Pole Created Date : <span class="text-secondary">12/12/2022</span> </strong> 
-                <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary">12/12/2022</span></strong>
-                <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary">12/12/2022</span></strong>
+                <strong  class="d-block text-primary">Pole Created Date : <span class="text-secondary"><%= groupDetails.leaderVotingData.votingDates.createdDate.getDate() %> <%=groupDetails.leaderVotingData.votingDates.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= groupDetails.leaderVotingData.votingDates.createdDate.getFullYear() %> at <%=groupDetails.leaderVotingData.votingDates.createdDate.getHours()%>:<%=groupDetails.leaderVotingData.votingDates.createdDate.getMinutes()%></span> </strong> 
+                <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary"><%= groupDetails.leaderVotingData.votingDates.nominationLastDate.getDate() %> <%=groupDetails.leaderVotingData.votingDates.nominationLastDate.toLocaleString('default', { month: 'short' }) %> , <%= groupDetails.leaderVotingData.votingDates.nominationLastDate.getFullYear() %> at <%=groupDetails.leaderVotingData.votingDates.nominationLastDate.getHours()%>:<%=groupDetails.leaderVotingData.votingDates.nominationLastDate.getMinutes()%></span></strong>
+                <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary"><%= groupDetails.leaderVotingData.votingDates.votingLastDate.getDate() %> <%=groupDetails.leaderVotingData.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= groupDetails.leaderVotingData.votingDates.votingLastDate.getFullYear() %> at <%=groupDetails.leaderVotingData.votingDates.votingLastDate.getHours()%>:<%=groupDetails.leaderVotingData.votingDates.votingLastDate.getMinutes()%></span></strong>
               <!--Voting related informations ends-->
               <%}else if(groupDetails.presentActivity){%>
                 <%gotoLink="/activity/"+groupDetails.presentActivity.activityId+"/details"%>
                 <!--Activity related informations starts-->  
-                <h5 class="bolder text-warning text-center"><strong>Department Activity is Going On</strong></h5>
+                <h5 class="bolder text-warning text-center"><strong>Group Activity is Going On</strong></h5>
                 <hr style="margin-bottom: .2rem;margin-top: 0rem;">
                 <%if(groupDetails.presentActivity.isTopicByVote && !groupDetails.presentActivity.isVoteCompleted){%>
                   <h6 class="bolder text-warning text-center" style="margin-bottom:0px"><strong>Topic voting is going on!!</strong></h6>
@@ -175,25 +177,24 @@
         </div>
         <!-- source notification part ends here -->
         <!-- daysOut will be true if present leader selected before 15 days -->
-        <!-- NOT COMPLETED -->
-        <!-- <%let daysOut=true%>
-        <%if(checkData.isBatchLeader && !groupDetails.isVoteGoingOn && !groupDetails.presentActivity && daysOut){%>
+        
+          <%if(checkData.isPresentLeader && !groupDetails.isVoteGoingOn && !groupDetails.presentActivity && checkData.isLeaderMoreThen50Days){%>
             <hr>
             <div class="member-container mt-2">
                 <div>
                   <h5 class="bolder text-primary"><strong>New Leader Selection voting pole creation:</strong></h5>
-                  <h6 class="bolder text-warning"><strong>Present leader activation date : </strong><%=groupDetails.presentLeader.createdDate%></h6>
-                  <h6 class="bolder text-danger">[This section will only work/shown after 15 days of present leader selection.Main leader can create voting pole in case he/she is not interested to lead activity]</h6>
+                  <h6 class="bolder text-warning"><strong>Present leader activation date : </strong><%= groupDetails.presentLeader.createdDate.getDate() %> <%=groupDetails.presentLeader.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= groupDetails.presentLeader.createdDate.getFullYear() %> at <%=groupDetails.presentLeader.createdDate.getHours()%>:<%=groupDetails.presentLeader.createdDate.getMinutes()%></h6>
+                  <h6 class="bolder text-danger">[This section will only work/shown after 50 days of present leader selection.Main leader can create voting pole in case he/she is not interested to lead activity]</h6>
                   <div class="container">
                     <div class="" style="width: 100%;">
-                      <form action="/create/batch/<%=groupDetails.batchId%>/leader-voting-pole" method="post">
+                      <form action="/create/group/<%=groupDetails.groupId%>/leader-voting-pole" method="post">
                         <button class="btn  btn-info btn-sm btn-block">Create New Leader Selection Pole</button>
                       </form>
                     </div>
                   </div> 
                 </div>
             </div>
-            <%}%> -->
+          <%}%>
             <!-- Leader section ends -->
       </div>
     </div>

@@ -67,23 +67,26 @@
               <%if(batchDetails.isVoteGoingOn){%>
               <!--Voting related informations starts--> 
                 <%gotoLink="/leader-voting/"+batchDetails.leaderVotingData.votingPoleId+"/details"%>
+                <%gotoText="Go to voting pole"%>
                 <h5 class="bolder text-warning text-center"><strong>Leader Voting is Going On</strong></h5>
                 <hr style="margin-bottom: .2rem;margin-top: 0rem;">
                 <%if(batchDetails.leaderVotingData.votingDates.resultDate){%>
                   <%gotoText="See the voting result"%> 
                   <h6 class="bolder text-warning text-center" style="margin-bottom:0px"><strong>Result has published !!</strong></h6>
                   <%if(batchDetails.leaderVotingData.wonLeader.regNumber==user.regNumber){%>
+                    <%gotoText="See the voting details"%>
                     <strong  class="d-block text-info text-center">Congrats!! You have won the election.Accept yourself as a leader.</strong>
                   <%}else{%>
+                    <%gotoText="See the voting result"%>
                     <strong  class="d-block text-info text-center">New Leader will be added when he/she will accept himself/herself as a new leader.</strong>  
                   <%}%>
-                  <strong  class="d-block text-primary">Won Leader : <span class="text-secondary">Sohag Roy</span></strong> 
-                  <strong  class="d-block text-primary">Result Date : <span class="text-secondary">12/12/2022</span></strong>
+                  <strong  class="d-block text-primary">Won Leader : <span class="text-secondary"><%=batchDetails.leaderVotingData.wonLeader.userName%></span></strong> 
+                  <strong  class="d-block text-primary">Result Date : <span class="text-secondary"><%= batchDetails.leaderVotingData.votingDates.resultDate.getDate() %> <%=batchDetails.leaderVotingData.votingDates.resultDate.toLocaleString('default', { month: 'short' }) %> , <%= batchDetails.leaderVotingData.votingDates.resultDate.getFullYear() %> at <%=batchDetails.leaderVotingData.votingDates.resultDate.getHours()%>:<%=batchDetails.leaderVotingData.votingDates.resultDate.getMinutes()%></span></strong>
                   <hr>
                 <%}%>
-                <strong  class="d-block text-primary">Pole Created Date : <span class="text-secondary">12/12/2022</span> </strong> 
-                <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary">12/12/2022</span></strong>
-                <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary">12/12/2022</span></strong>
+                <strong  class="d-block text-primary">Pole Created Date : <span class="text-secondary"><%= batchDetails.leaderVotingData.votingDates.createdDate.getDate() %> <%=batchDetails.leaderVotingData.votingDates.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= batchDetails.leaderVotingData.votingDates.createdDate.getFullYear() %> at <%=batchDetails.leaderVotingData.votingDates.createdDate.getHours()%>:<%=batchDetails.leaderVotingData.votingDates.createdDate.getMinutes()%></span> </strong> 
+                <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary"><%= batchDetails.leaderVotingData.votingDates.nominationLastDate.getDate() %> <%=batchDetails.leaderVotingData.votingDates.nominationLastDate.toLocaleString('default', { month: 'short' }) %> , <%= batchDetails.leaderVotingData.votingDates.nominationLastDate.getFullYear() %> at <%=batchDetails.leaderVotingData.votingDates.nominationLastDate.getHours()%>:<%=batchDetails.leaderVotingData.votingDates.nominationLastDate.getMinutes()%></span></strong>
+                <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary"><%= batchDetails.leaderVotingData.votingDates.votingLastDate.getDate() %> <%=batchDetails.leaderVotingData.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= batchDetails.leaderVotingData.votingDates.votingLastDate.getFullYear() %> at <%=batchDetails.leaderVotingData.votingDates.votingLastDate.getHours()%>:<%=batchDetails.leaderVotingData.votingDates.votingLastDate.getMinutes()%></span></strong>
               <!--Voting related informations ends-->
               <%}else if(batchDetails.presentActivity){%>
                 <%gotoLink="/activity/"+batchDetails.presentActivity.activityId+"/details"%>
@@ -168,14 +171,13 @@
         </div>
         <!-- source notification part ends here -->
         <!-- daysOut will be true if present leader selected before 15 days -->
-        <!-- NOT COMPLETED -->
-        <!-- <%let daysOut=true%>
-        <%if(checkData.isBatchLeader && !batchDetails.isVoteGoingOn && !batchDetails.presentActivity && daysOut){%>
+        
+        <%if(checkData.isPresentLeader && !batchDetails.isVoteGoingOn && !batchDetails.presentActivity && checkData.isLeaderMoreThen15Days){%>
             <hr>
             <div class="member-container mt-2">
                 <div>
                   <h5 class="bolder text-primary"><strong>New Leader Selection voting pole creation:</strong></h5>
-                  <h6 class="bolder text-warning"><strong>Present leader activation date : </strong><%=batchDetails.presentLeader.createdDate%></h6>
+                  <h6 class="bolder text-warning"><strong>Present leader activation date : </strong><%= batchDetails.presentLeader.createdDate.getDate() %> <%=batchDetails.presentLeader.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= batchDetails.presentLeader.createdDate.getFullYear() %> at <%=batchDetails.presentLeader.createdDate.getHours()%>:<%=batchDetails.presentLeader.createdDate.getMinutes()%></h6>
                   <h6 class="bolder text-danger">[This section will only work/shown after 15 days of present leader selection.Main leader can create voting pole in case he/she is not interested to lead activity]</h6>
                   <div class="container">
                     <div class="" style="width: 100%;">
@@ -186,8 +188,8 @@
                   </div> 
                 </div>
             </div>
-            <%}%> -->
-            <!-- Leader section ends -->
+          <%}%> 
+          <!-- Leader section ends -->
       </div>
     </div>
 
@@ -348,26 +350,26 @@
 
     <hr>
       <div class="item-container">
-        <strong><h5 class="bolder">All Members (<%=batchDetails.allPresentMembers.length%>)</h5></strong>
+        <strong><h5 class="bolder">All Members (<%=batchDetails.allMembers.length%>)</h5></strong>
         <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-        <%if(!batchDetails.allPresentMembers.length){%>
+        <%if(!batchDetails.allMembers.length){%>
           <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
         <%}else{%>  
-          <%if(batchDetails.allPresentMembers.length==1){%>
+          <%if(batchDetails.allMembers.length==1){%>
             <div class="col">
               <div class="member-container">
-                <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allPresentMembers[0].regNumber%>" alt="">
+                <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allMembers[0].regNumber%>" alt="">
                 <div class="name-container">
-                  <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allPresentMembers[0].regNumber%>/profile"><%=batchDetails.allPresentMembers[0].userName%></a></strong>
+                  <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[0].regNumber%>/profile"><%=batchDetails.allMembers[0].userName%></a></strong>
                   <div class="float-right">    
                     <strong type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><i class="fas fa-ellipsis-h"></i></strong>
                     <div class="dropdown-menu dropdown-menu-right">
-                      <%if(checkData.isBatchMember && user.regNumber!=batchDetails.allPresentMembers[0].regNumber){%>
+                      <%if(checkData.isBatchMember && user.regNumber!=batchDetails.allMembers[0].regNumber){%>
                         <form action="/sent-report" method="post">
                           <input type="hidden" name="type" value="student">
                           <input type="hidden" name="subType" value="fakeStudent">
-                          <input type="hidden" name="reportingId" value="<%=batchDetails.allPresentMembers[0].regNumber%>">
-                          <input type="hidden" name="userName" value="<%=batchDetails.allPresentMembers[0].userName%>">
+                          <input type="hidden" name="reportingId" value="<%=batchDetails.allMembers[0].regNumber%>">
+                          <input type="hidden" name="userName" value="<%=batchDetails.allMembers[0].userName%>">
                           <button class="btn btn-sm btn-info  btn-block">Fake Account?Report!</button>
                         </form>
                       <%}else{%>
@@ -379,23 +381,23 @@
               </div>
             </div>
           <%}else{%>
-            <%let middle=parseInt(batchDetails.allPresentMembers.length/2)%>
+            <%let middle=parseInt(batchDetails.allMembers.length/2)%>
             <div style="display: flex;    flex-wrap: wrap;">
               <div class="col-md-6 left-member-container" >
                 <%for(let i=0;i<middle;i++){%>
                   <div class="member-container">
-                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allPresentMembers[i].regNumber%>" alt="">
+                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allMembers[i].regNumber%>" alt="">
                     <div class="name-container">
-                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allPresentMembers[i].regNumber%>/profile"><%=batchDetails.allPresentMembers[i].userName%></a></strong>
+                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[i].regNumber%>/profile"><%=batchDetails.allMembers[i].userName%></a></strong>
                       <div class="float-right">    
                         <strong type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><i class="fas fa-ellipsis-h"></i></strong>
                         <div class="dropdown-menu dropdown-menu-right">
-                          <%if(checkData.isBatchMember && user.regNumber!=batchDetails.allPresentMembers[i].regNumber){%>
+                          <%if(checkData.isBatchMember && user.regNumber!=batchDetails.allMembers[i].regNumber){%>
                             <form action="/sent-report" method="post">
                               <input type="hidden" name="type" value="student">
                               <input type="hidden" name="subType" value="fakeStudent">
-                              <input type="hidden" name="reportingId" value="<%=batchDetails.allPresentMembers[i].regNumber%>">
-                              <input type="hidden" name="userName" value="<%=batchDetails.allPresentMembers[i].userName%>">
+                              <input type="hidden" name="reportingId" value="<%=batchDetails.allMembers[i].regNumber%>">
+                              <input type="hidden" name="userName" value="<%=batchDetails.allMembers[i].userName%>">
                               <button class="btn btn-sm btn-info  btn-block">Fake Account?Report!</button>
                             </form>
                           <%}else{%>
@@ -408,20 +410,20 @@
                 <%}%>
               </div>
               <div class="col-md-6 right-member-container" >
-                <%for(let j=middle;j<batchDetails.allPresentMembers.length;j++){%>
+                <%for(let j=middle;j<batchDetails.allMembers.length;j++){%>
                 <div class="member-container">
-                  <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allPresentMembers[j].regNumber%>" alt="">
+                  <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.allMembers[j].regNumber%>" alt="">
                   <div class="name-container">
-                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allPresentMembers[j].regNumber%>/profile"><%=batchDetails.allPresentMembers[j].userName%></a></strong>
+                    <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.allMembers[j].regNumber%>/profile"><%=batchDetails.allMembers[j].userName%></a></strong>
                     <div class="float-right">    
                       <strong type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><i class="fas fa-ellipsis-h"></i></strong>
                       <div class="dropdown-menu dropdown-menu-right">
-                        <%if(checkData.isBatchMember && user.regNumber!=batchDetails.allPresentMembers[j].regNumber){%>
+                        <%if(checkData.isBatchMember && user.regNumber!=batchDetails.allMembers[j].regNumber){%>
                           <form action="/sent-report" method="post">
                             <input type="hidden" name="type" value="student">
                             <input type="hidden" name="subType" value="fakeStudent">
-                            <input type="hidden" name="reportingId" value="<%=batchDetails.allPresentMembers[j].regNumber%>">
-                            <input type="hidden" name="userName" value="<%=batchDetails.allPresentMembers[j].userName%>">
+                            <input type="hidden" name="reportingId" value="<%=batchDetails.allMembers[j].regNumber%>">
+                            <input type="hidden" name="userName" value="<%=batchDetails.allMembers[j].userName%>">
                             <button class="btn btn-sm btn-info  btn-block">Fake Account?Report!</button>
                           </form>
                         <%}else{%>

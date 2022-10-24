@@ -9,12 +9,12 @@ const TopicVoting = require("../models/TopicVoting")
 exports.ifStudentPresentLeader=async function(req,res,next){
   try{
     let from=req.params.from.toLowerCase()
-    let id=req.params.id.toUpperCase()
+    let sourceId=req.params.sourceId.toUpperCase()
     let isIdPresent=false
     let isCreatorLeader=false
      req.detailsData=null
     if (from == "batch") {
-      let batchId=id
+      let batchId=sourceId
       let batchDetails=await SessionBatch.findSessionBatchDetailsByBatchId(batchId)
       if(batchDetails){
         if(batchDetails.presentLeader.regNumber==req.regNumber || batchDetails.previousLeader.regNumber==req.regNumber){
@@ -24,7 +24,7 @@ exports.ifStudentPresentLeader=async function(req,res,next){
         }
       }
     }else if(from=="department"){
-      let departmentCode=id
+      let departmentCode=sourceId
       let departmetnDetails=await Department.findDepartmentByDepartmentCode(departmentCode)
       if(departmetnDetails){
         if(departmetnDetails.presentLeader.regNumber==req.regNumber || departmetnDetails.previousLeader.regNumber==req.regNumber){
@@ -34,7 +34,7 @@ exports.ifStudentPresentLeader=async function(req,res,next){
         }
       }
     }else if(from=="group"){
-      let groupId=id
+      let groupId=sourceId
       let groupDetails=await Group.findGroupByGroupId(groupId)
       if(groupDetails){
         if(groupDetails.presentLeader.regNumber==req.regNumber || groupDetails.previousLeader.regNumber==req.regNumber){
@@ -67,7 +67,6 @@ exports.ifStudentPresentLeader=async function(req,res,next){
 
 exports.getActivityCreationPage=async function(req,res){
   try{
-    req.detailsData=undefined//As in this router detailsData is not needed so value initialized as null
     //topics will be changed with the res.params.form value
     let allTopics=await OfficialUsers.getAllActivityTopics()
     let topics
@@ -81,10 +80,10 @@ exports.getActivityCreationPage=async function(req,res){
     console.log("topics:",topics)
     let activityData={
       from:req.params.from,
-      id:req.params.id,
+      sourceId:req.params.sourceId,
       topics:topics
     }
-
+    
     res.render("activity-creation-form",{
       activityData:activityData
     })
@@ -115,7 +114,7 @@ exports.getExtraDataToCreateActivity=function(req,res,next){
   }
   req.neededData={
     from:req.params.from,
-    sourceId:req.params.id,
+    sourceId:req.params.sourceId,
     sourceName:sourceName,
     leaders:{
       mainLead:{
@@ -144,7 +143,7 @@ exports.createNewActivity=function(req,res){
     res.redirect(`/activity/${activityId}/details`)
   }).catch((e)=>{
     req.flash("errors", e)
-    res.redirect(`/activity/${req.params.from}/${req.params.id}/create`)
+    res.redirect(`/activity/${req.params.from}/${req.params.sourceId}/create`)
   })
 }
 

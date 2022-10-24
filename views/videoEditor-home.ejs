@@ -22,7 +22,8 @@
                     <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
                     <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
                     <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
-                    <strong class="d-block">Assigned Date : <%=activity.assignedDate%></strong>
+                    <strong class="d-block">Activity Submission Date : <%= activity.submissionDate.getDate() %> <%=activity.submissionDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.submissionDate.getFullYear() %> at <%=activity.submissionDate.getHours()%>:<%=activity.submissionDate.getMinutes()%></strong>
+                    <strong class="d-block">Editor Assigned Date : <%= activity.assignedDate.getDate() %> <%=activity.assignedDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.assignedDate.getFullYear() %> at <%=activity.assignedDate.getHours()%>:<%=activity.assignedDate.getMinutes()%></strong>
                     <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
                     <p><strong>Note : </strong><%=activity.videoEditorNote%></p>
                     <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
@@ -52,7 +53,8 @@
                     <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
                     <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
                     <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
-                    <strong class="d-block">Assigned Date : <%=activity.assignedDate%></strong>
+                    <strong class="d-block">Activity Submission Date : <%= activity.submissionDate.getDate() %> <%=activity.submissionDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.submissionDate.getFullYear() %> at <%=activity.submissionDate.getHours()%>:<%=activity.submissionDate.getMinutes()%></strong>
+                    <strong class="d-block">Editor Assigned Date : <%= activity.assignedDate.getDate() %> <%=activity.assignedDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.assignedDate.getFullYear() %> at <%=activity.assignedDate.getHours()%>:<%=activity.assignedDate.getMinutes()%></strong>
                     <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
                     <p><strong>Note : </strong><%=activity.videoEditorNote%></p>
                     <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
@@ -83,7 +85,8 @@
                     <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
                     <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
                     <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
-                    <strong class="d-block">Assigned Date : <%=activity.assignedDate%></strong>
+                    <strong class="d-block">Activity Submission Date : <%= activity.submissionDate.getDate() %> <%=activity.submissionDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.submissionDate.getFullYear() %> at <%=activity.submissionDate.getHours()%>:<%=activity.submissionDate.getMinutes()%></strong>
+                    <strong class="d-block">Editor Assigned Date : <%= activity.assignedDate.getDate() %> <%=activity.assignedDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.assignedDate.getFullYear() %> at <%=activity.assignedDate.getHours()%>:<%=activity.assignedDate.getMinutes()%></strong>
                     <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
                     <p><strong>Note : </strong><%=activity.videoEditorNote%></p>
                     <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">

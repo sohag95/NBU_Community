@@ -157,6 +157,11 @@ exports.ifSourcePresent=async function(req,res,next){
   try{
     req.sourceData=null
     let sourcePresent=false
+    let checkData={//checking leader voting pole creation conditions
+      problemPresent:false,
+      votingGoingOn:false,
+      activityGoingOn:false
+    }
     if(req.params.from=="batch"){
       let sourceData=await SessionBatch.findSessionBatchDetailsByBatchId(req.params.id)
       if(sourceData){
@@ -171,6 +176,13 @@ exports.ifSourcePresent=async function(req,res,next){
           req.sourceData.leaders={
             mainLead:sourceData.presentLeader,
             assistantLead:sourceData.previousLeader,
+          }
+          if(sourceData.isVoteGoingOn){
+            checkData.problemPresent=true
+            checkData.votingGoingOn=true
+          }else if(sourceData.presentActivity){
+            checkData.problemPresent=true
+            checkData.activityGoingOn=true
           }
         }
         sourcePresent=true
@@ -191,6 +203,13 @@ exports.ifSourcePresent=async function(req,res,next){
             mainLead:sourceData.presentLeader,
             assistantLead:sourceData.previousLeader,
           }
+          if(sourceData.isVoteGoingOn){
+            checkData.problemPresent=true
+            checkData.votingGoingOn=true
+          }else if(sourceData.presentActivity){
+            checkData.problemPresent=true
+            checkData.activityGoingOn=true
+          }
         }
         sourcePresent=true
       }
@@ -210,6 +229,13 @@ exports.ifSourcePresent=async function(req,res,next){
             mainLead:sourceData.presentLeader,
             assistantLead:sourceData.previousLeader,
           }
+          if(sourceData.isVoteGoingOn){
+            checkData.problemPresent=true
+            checkData.votingGoingOn=true
+          }else if(sourceData.presentActivity){
+            checkData.problemPresent=true
+            checkData.activityGoingOn=true
+          }
         }
         sourcePresent=true
       }
@@ -220,7 +246,21 @@ exports.ifSourcePresent=async function(req,res,next){
       })
     }
     if(sourcePresent){
-      next()
+      if(checkData.problemPresent){
+        next()
+      }else{
+        if(checkData.votingGoingOn){
+          req.flash("errors", "Leader voting is going on.You can't create another voting pole.")
+          req.session.save( ()=> {
+            res.redirect(`/${req.params.from}/${req.params.id}/details`)
+          })
+        }else{
+          req.flash("errors", "Activity is going on,You can't create voting pole on this situation.")
+          req.session.save( ()=> {
+            res.redirect(`/${req.params.from}/${req.params.id}/details`)
+          })
+        }
+      }
     }else{
       res.render("404")
     }
@@ -243,17 +283,24 @@ exports.ifCreatorLeader=function(req,res,next){
 }
 
 
-exports.ifMoreThen15DaysOfLeaderSelection=function(req,res,next){
-  //check if new leader was selected before 15 days or not
+exports.ifMoreThenFixedDaysOfLeaderSelection=function(req,res,next){
+  //check if new leader was selected before source wise fixed days or not
     let createdDate=req.sourceData.leaders.mainLead.createdDate
     let activeDate = new Date(createdDate);
-    let numberOfDaysToAdd = 15;
+    let numberOfDaysToAdd
+    if(req.params.from=="batch"){
+      numberOfDaysToAdd = 15;
+    }else if(req.params.from=="batch"){
+      numberOfDaysToAdd = 30;
+    }else{
+      numberOfDaysToAdd = 50;
+    }
     let result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
     let lastDate=new Date(result1)
     if(lastDate<new Date()){
       next()
     }else{
-      req.flash("errors", "You should wait at least 15 days to create new voting pole.Or complete an activity new voting pole will be created automatically.")
+      req.flash("errors", `You should wait at least ${numberOfDaysToAdd} days to create new voting pole.Or complete an activity new voting pole will be created automatically.`)
       req.session.save( ()=> {
         res.redirect(`/${req.params.from}/${req.params.id}/details`)
       })

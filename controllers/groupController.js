@@ -45,6 +45,7 @@ exports.getGroupDetailsPage =async function (req, res) {
       isGroupLeader:false,
       isPresentLeader:false,
       isPreviousLeader:false,
+      isLeaderMoreThen50Days:false,
       isXstudent:false
     }
 
@@ -71,11 +72,19 @@ exports.getGroupDetailsPage =async function (req, res) {
       if(groupDetails.presentLeader){
         if(groupDetails.presentLeader.regNumber==req.regNumber){
           checkData.isPresentLeader=true
+          let createdDate=groupDetails.presentLeader.createdDate
+          let activeDate = new Date(createdDate);
+          let numberOfDaysToAdd = 50;
+          let result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
+          let lastDate=new Date(result1)
+          if(lastDate<new Date()){
+            checkData.isLeaderMoreThen50Days=true
+          }
         }
       }
       
       if(groupDetails.previousLeader){
-        if(batchDetails.previousLeader.regNumber==req.regNumber){
+        if(groupDetails.previousLeader.regNumber==req.regNumber){
           checkData.isPreviousLeader=true
         }
       }

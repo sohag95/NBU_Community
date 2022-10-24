@@ -1,5 +1,6 @@
 const AWSS3Bucket = require("../models/awsS3Bucket")
 const sharp=require("sharp")
+const Activity = require("../models/Activity")
 
 exports.uploadPhoto=function(req,res){
   console.log("Data",req.file)
@@ -144,8 +145,9 @@ exports.uploadGroupBannerPhoto=function(req,res){
 exports.uploadActivityCoverPhoto=function(req,res){
   let fileName=req.params.id
   let awsS3Bucket=new AWSS3Bucket()
-  awsS3Bucket.uploadBannerPhoto(req.file.buffer,fileName).then(()=>{
-    req.flash("success", "Video cover photo successfully uploaded!!")
+  awsS3Bucket.uploadBannerPhoto(req.file.buffer,fileName).then(async()=>{
+    await Activity.markAsCoverPhotoUploaded(req.activityDetails._id)
+    req.flash("success", "Activity cover photo successfully uploaded!!")
     res.redirect(`/activity/${fileName}/details`)
   }).catch(()=>{
     req.flash("errors", "There is some problem")

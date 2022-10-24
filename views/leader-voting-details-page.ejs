@@ -133,7 +133,7 @@
             <%if(votingDetails.nominateableMembers.includes(user.regNumber)){%>
               <%if(!enrolled){%>
                 <form action="/leader-voting/<%=votingDetails._id%>/nomination" method="post">
-                  <button class="btn btn-sm btn-warning btn-block"><strong>Click to Include Your Name</strong> </button>
+                  <button class="btn btn-sm btn-warning btn-block"><strong>Click to Nominate Yourself</strong> </button>
                 </form>
               <%}else{%>
                 <div class="btn btn-sm btn-block btn-success">Nominated !!</div>
@@ -144,7 +144,9 @@
           <%}%>
           <%if(votingDetails.nominationTakers.length){%>
             <%votingDetails.nominationTakers.forEach((std,index)=>{%> 
-              <div class=" btn btn-outline-info btn-block btn-sm pb-1"><strong><%=index+1%> : </strong><i><%=std.userName%></i></div>
+              <a href="/nominee/<%=std.regNumber%>/details">
+                <div class=" btn btn-outline-info btn-block btn-sm pb-1"><strong><%=index+1%> : </strong><i><%=std.userName%></i></div>
+              </a>
             <%})%>
           <%}else{%>
             <div class=" btn btn-info btn-block btn-sm pb-1"><strong>No Nomination received !!</strong> </div>

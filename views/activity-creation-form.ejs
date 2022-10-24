@@ -8,57 +8,87 @@
     <div class="single-batch-container">
       <div class="single-batch-data pb-4">
         <div style="position: relative;">
-          <img class="single-batch-image"  src="/images/activity-cover.png" alt="">
+          <img class="single-batch-image"  src="/images/sponsor-banner.png" alt="">
         </div>
         <hr>
-        <form action="/activity/<%=activityData.from%>/<%=activityData.id%>/create" method="POST" id="activity-Form" class="container">
-          <div class="text-success"><strong>Create Activity : </strong></div>
-        
-          <div class="form-group">
-            <label for="topic-selected-by" class="text-muted"><small>Select topic selector :-</small></label>
-            <div id="topic-selected-by" class="text-center" style="display: flex;">
-              <div class="col-6 form-control form-control-lg ">
-              By Leader <input name="topicSelectedBy" value="leader" type="radio" required autocomplete="off" />
+        <div class="item-container">
+          <div id="accordion">
+            <div class="card">
+              <div class="colored-container" id="headingOne">
+                <h5 class="mb-0">
+                  <button class="btn btn-lg btn-secondary btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                   <strong> Create Activity (Selecting topic by vote) </strong>
+                  </button>
+                </h5>
               </div>
-              <div class="col-6 form-control form-control-lg ">
-              By Voting <input name="topicSelectedBy" value="voting"  type="radio"  autocomplete="off" />
+          
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="bolder text-warning"><strong>[Activity topics are limited.If activity members are confused to choose next activity topic then create a topic voting pole to select the topic.It will be fun!!]</strong></p>
+                  
+                  <form action="/activity/<%=activityData.from%>/<%=activityData.sourceId%>/create" method="POST"  class="container">
+                    <div class="form-group">
+                      <h6 class="bolder"><strong>Activity topic voting pole :</strong></h6>
+                      <label for="votingLastDate" class="text-muted mb-1"><small>Give Topic Voting Last Date :-</small></label>
+                      <input  name="votingLastDate" id="votingLastDate" class="form-control form-control-lg " type="date" placeholder="Voting last date." required autocomplete="off">
+                    </div>
+                    <input type="hidden" name="topicSelectedBy" value="voting">
+          
+                    <button class="btn btn-primary btn-block btn-sm">Create Topic Voting Pole</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="colored-container" id="headingTwo">
+                <h5 class="mb-0">
+                  <button class="btn btn-lg btn-secondary btn-block" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                   <strong>Create Activity (Topic selected by leader)</strong> 
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                  <form action="/activity/<%=activityData.from%>/<%=activityData.sourceId%>/create" method="POST"  class="container">
+                    <p><strong class="text-warning">[If activity topic is fixed then select the topic and fill up the following form to create the activity handling page.]</strong></p>
+                    
+                    <h6 class="bolder"><strong>Activity handling page creation :</strong></h6>
+                    <div class="form-group">
+                      <label for="topic" class="text-muted mb-1"><small>Select Topic :-</small></label>
+                      <select  id="topic" class="form-control " name="topic" form="activity-Form">
+                        <option value="">----------Select Topic----------</option>
+                        <%activityData.topics.forEach((topic)=>{%>
+                          <option value="<%=topic%>"><%=topic%></option>
+                        <%})%>
+                      </select>
+                    </div>
+          
+                    <div class="form-group">
+                      <label for="title" class="text-muted mb-1"><small>Give a title :-</small></label>
+                      <input  name="title" id="title" class="form-control form-control-lg " type="text" placeholder="Title of the activity." autocomplete="off">
+                    </div>
+                
+                    <div class="form-group">
+                      <label for="activity-body" class="text-muted mb-1"><small>Short details of activity :-</small></label>
+                      <textarea  name="shortDetails" id="activity-body" class="body-content small-textarea form-control" type="text"></textarea>
+                    </div>
+          
+                    <div class="form-group">
+                      <label for="activityDate" class="text-muted mb-1"><small>Activity Date :-</small></label>
+                      <input  name="activityDate" id="activityDate" class="form-control form-control-lg " type="date" placeholder="Activity date." autocomplete="off">
+                    </div>
+                    <input type="hidden" name="topicSelectedBy" value="leader">
+          
+                    <button class="btn btn-primary btn-block btn-small">Create New Activity Handling Page</button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+        
 
-          <div class="form-group">
-            <label for="topic" class="text-muted mb-1"><small>Select Topic :-</small></label>
-            <select  id="topic" class="form-control " name="topic" form="activity-Form">
-              <option value="">----------Select Topic----------</option>
-              <%activityData.topics.forEach((topic)=>{%>
-                <option value="<%=topic%>"><%=topic%></option>
-              <%})%>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="title" class="text-muted mb-1"><small>Give a title :-</small></label>
-            <input  name="title" id="title" class="form-control form-control-lg " type="text" placeholder="Title of the activity." autocomplete="off">
-          </div>
-      
-          <div class="form-group">
-            <label for="activity-body" class="text-muted mb-1"><small>Short details of activity :-</small></label>
-            <textarea  name="shortDetails" id="activity-body" class="body-content tall-textarea form-control" type="text"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="activityDate" class="text-muted mb-1"><small>Activity Date :-</small></label>
-            <input  name="activityDate" id="activityDate" class="form-control form-control-lg " type="date" placeholder="Activity date." autocomplete="off">
-          </div>
-
-          <div class="form-group">
-            <label for="votingLastDate" class="text-muted mb-1"><small>Voting Last Date :-</small></label>
-            <input  name="votingLastDate" id="votingLastDate" class="form-control form-control-lg " type="date" placeholder="Voting last date." autocomplete="off">
-          </div>
-          
-
-          <button class="btn btn-primary btn-color text-center">Create New Activity</button>
-        </form>
+        
       </div>
         
     </div>

@@ -1,0 +1,64 @@
+<%- include('includes/header') %>
+<%- include('includes/flash') %>
+
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+  <div class="col-lg-7 pt-1  pb-2" >
+    <div class="">
+      <div style="width: 100%;position: relative;">
+        <img class="home-cover-image" src="/image/cover/large/cover-<%=nomineeDetails.regNumber%>"/>
+        <div>
+          <picture>
+            <img class="home-profile-image" src="/image/profile/medium/profile-<%=nomineeDetails.regNumber%>" alt="">
+          </picture>
+          <div>
+            <h5 class="bolder text-secondary d-inline"><strong><%=nomineeDetails.userName%></strong></h5>
+            <a href="/student/<%=nomineeDetails.regNumber%>/profile">
+                <h5 class="text-info d-inline float-right"><i class="fas fa-user"></i> Go to Profile</h5>
+            </a>
+          </div>  
+        </div>
+      </div> 
+    <hr>  
+    </div>
+   
+    <div  class="row">
+      <div class="col-lg-6" >
+        <div class="item-container mb-2">
+          <strong><p>Identity</p></strong>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <p><i class="fas fa-user"></i> <strong> Name - </strong> <span class="text-capitalize"><%=nomineeDetails.userName%></span></p>
+          <p><i class="fas fa-graduation-cap"></i><strong> Department - </strong><%=nomineeDetails.departmentName%></p>
+          <p><i class="fas fa-clock"></i><strong> Session Year - </strong><%=nomineeDetails.sessionYear%></p>
+          <p><i class="fas fa-marker"></i><strong> Credit Points - </strong> <strong class="text-success bolder"><%=nomineeDetails.creditPoints%></strong></p>
+        </div>
+      </div>
+      <div class="col-lg-6 " >
+        <div class="item-container mb-2">
+          <strong><p>Leading History</p></strong>
+          <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <p><i class="fas fa-info-circle"></i><strong> Batch Lead - <%=nomineeDetails.batchLead%></strong> <%=nomineeDetails.batchLead>1?"times":"time"%> </p>
+          <p><i class="fas fa-info-circle"></i><strong> Department Lead - <%=nomineeDetails.departmentLead%></strong> <%=nomineeDetails.departmentLead>1?"times":"time"%></p>
+          <p><i class="fas fa-info-circle"></i><strong> Academic Group Lead - <%=nomineeDetails.groupLead%></strong> <%=nomineeDetails.groupLead>1?"times":"time"%></p>
+          <p><i class="fas fa-users"></i><strong> Campus-Group Lead/Member - <%=nomineeDetails.campusGroups%></strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-container">
+      <strong><p><i class="fas fa-running"></i> Activity History</p></strong>
+      <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+      <h5 class="bolder text-warning"><strong class="text-info"><%=nomineeDetails.userName%></strong> has completed <strong class="text-secondary">"<%=nomineeDetails.leadActivities%>"</strong> <%=nomineeDetails.leadActivities>1?"activities":"activity"%> as a leader and <%=nomineeDetails.gender=="male"?"he":"she"%> has participated other <strong class="text-secondary">"<%=nomineeDetails.membershipActivities%>"</strong> <%=nomineeDetails.membershipActivities>1?"activities":"activity"%> as an active member.</h5>
+    </div>
+  </div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+</div>
+
+
+
+
+
+
+<%- include('includes/footer') %>

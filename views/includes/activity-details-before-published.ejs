@@ -13,7 +13,7 @@
             <!-- video will be contain here -->
            
             
-            <img class="single-batch-image" src="/image/activity-banner/large/<%=activity._id%>" alt="">
+            <img class="single-batch-image" src="/image/activity-banner/large/<%=activityDetails._id%>" alt="">
             <!-- ################################### -->
             
             <div style="display: flex;margin-bottom: 5px; border-bottom: 1px solid rgb(126, 124, 124);">
@@ -54,7 +54,6 @@
                     <strong><i class="fas fa-ellipsis-h"></i></strong>
                   </p>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <p class="dropdown-item text-primary" >For Post Owner</p>
                     <%if((activityDetails.status=="created" || activityDetails.status=="voted") && checkData.isActivityLeader){%>
                       <form action="/activity/<%=activityDetails._id%>/delete" method="post">
                         <button class="btn btn-sm btn-danger">Delete</button>
@@ -87,7 +86,7 @@
                 <div class=" student-room-container" >
                   <div style="width: 100%;">
                     <h5  class="bolder text-info">Vote for upcomming activity topic -</h5>
-                    <i><strong class="d-block">Last date of vote : <%= votingDetails.votingDates.votingLastDate.getMonth() + 1 %>/<%= votingDetails.votingDates.votingLastDate.getDate() %>/<%= votingDetails.votingDates.votingLastDate.getFullYear() %></strong></i>
+                    <i><strong class="d-block">Last date of vote :<%= votingDetails.votingDates.votingLastDate.getDate() %> <%=votingDetails.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.votingLastDate.getFullYear() %> at <%=votingDetails.votingDates.votingLastDate.getHours()%>:<%=votingDetails.votingDates.votingLastDate.getMinutes()%></strong></i>
                   </div>  
                   <hr>
                   <h6 class="text-warning"><strong>Received votes : <%=votingDetails.voters.length%></strong></h6>
@@ -135,7 +134,7 @@
                     <div style="width: 100%;">
                       <h5  class="bolder text-info">Topic has been selected by vote : (<a class="text-success" href="/topic-voting/<%=activityDetails.votingId%>/details">Voting Details</a>)</h5>
                       <strong class="d-block">Topic : <%= activityDetails.topic%></strong>
-                      <strong class="d-block">Vote Result Date : <%= activityDetails.activityDates.votingResultDate.getMonth() + 1 %>/<%= activityDetails.activityDates.votingResultDate.getDate() %>/<%= activityDetails.activityDates.votingResultDate.getFullYear() %></strong>
+                      <strong class="d-block">Vote Result Date : <%= activityDetails.activityDates.votingResultDate.getDate() %> <%=activityDetails.activityDates.votingResultDate.toLocaleString('default', { month: 'short' }) %> , <%= activityDetails.activityDates.votingResultDate.getFullYear() %> at <%=activityDetails.activityDates.votingResultDate.getHours()%>:<%=activityDetails.activityDates.votingResultDate.getMinutes()%></strong>
                     </div> 
                     <%if(activityDetails.title){%>
                     <hr>
@@ -200,7 +199,7 @@
                     <div style="width: 100%;">
                       <h4  class="bolder text-info">Topic has been selected by vote :</h4>
                       <strong class="d-block">Topic : <%= activityDetails.topic%></strong>
-                      <strong class="d-block">Vote result date : <%= activityDetails.activityDates.votingResultDate.getMonth() + 1 %>/<%= activityDetails.activityDates.votingResultDate.getDate() %>/<%= activityDetails.activityDates.votingResultDate.getFullYear() %></strong>
+                      <strong class="d-block">Vote result date : <%= activityDetails.activityDates.votingResultDate.getDate() %> <%=activityDetails.activityDates.votingResultDate.toLocaleString('default', { month: 'short' }) %> , <%= activityDetails.activityDates.votingResultDate.getFullYear() %> at <%=activityDetails.activityDates.votingResultDate.getHours()%>:<%=activityDetails.activityDates.votingResultDate.getMinutes()%></strong>
                     </div> 
                     <hr>
                     <h4 class="text-warning text-center"><strong>Set Activity Data </strong></h4>
@@ -211,7 +210,7 @@
                       </div>
                       <div class="form-group">
                         <label for="activity-body" class="text-muted mb-1"><small>Short details of activity :-</small></label>
-                        <textarea  name="shortDetails" id="activity-body" class="body-content tall-textarea form-control" type="text"></textarea>
+                        <textarea  name="shortDetails" id="activity-body" class="body-content small-textarea form-control" type="text"></textarea>
                       </div>
                       <div class="form-group">
                         <label for="activityDate" class="text-muted mb-1"><small>Activity Date :-</small></label>
@@ -289,7 +288,7 @@
                   <%}%>
                   <hr>
                 <%}else if(activityDetails.status=="edited"){%>
-                  <%if(activityDetails.videoCoverPhoto){%>
+                  <%if(activityDetails.isCoverPhotoUploaded){%>
                     <div class=" student-room-container" >
                       <h5 class="text-warning"><strong> Video has been edited by video editor.So collect the video and upload it on youTube ,facebook ,instagram,linkedIn and get the video link from there after that copy-paste the link on respected fields for submission.</strong></h5>
                       <form action="/activity/<%=activityDetails._id%>/publish" method="post">
@@ -317,10 +316,10 @@
                   <%}else{%>
                     <div class=" student-room-container" >
                       <h5 class="bolder">Upload video cover photo :</h5>
-                      <form action="/activity/<%=activityDetails._id%>/upload-cover-photo" method="post">
-                        <div class="form-group">
-                          <label for="videoCoverPhoto" class="text-muted mb-1"><small>Video cover photo upload :-</small></label>
-                          <input  name="videoCoverPhoto" id="videoCoverPhoto" class="form-control form-control-lg " type="text" placeholder="Give video cover photo link." autocomplete="off">
+                      <form action="/activity/<%=activityDetails._id%>/upload-cover-photo" method="post" enctype="multipart/form-data">
+                        <div class="form-group text-left">
+                          <label class="form-label" for="customFile">Upload Activity Cover-photo (jpeg/png)</label>
+                          <input type="file" name="image" class="form-control" id="customFile" />
                         </div>
                         <button class="btn btn-lg btn-block btn-success ">
                           <strong class="bolder">Upload Photo</strong>
@@ -442,27 +441,8 @@
           <%}%>
         </div>
         <!-- end activity state signals -->
-        <!-- all participants section starts -->
-        <%if(activityDetails.participants.length){%>
-          <div class="item-container mb-2">
-            <h6><strong>All Participants (<%=activityDetails.participants.length%>)</strong></h6>
-            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
-            <%activityDetails.participants.forEach((participant)=>{%>
-              <a style="direction: none;" href="/student/<%=participant.regNumber%>/profile">
-                <div class="d-flex align-items-center student-room-container" >
-                  <div >
-                    <img class="avatar-small"  src="/images/sohag.jpg" alt="">
-                  </div>
-                  <div class="ml-4">
-                    <span class="d-block"><strong ><%=participant.userName%></strong></span>
-                  </div>
-                </div>
-              </a>
-            <%})%>
-          </div>
-        <%}%>
-        <!-- all participants section ends -->
-        <div class="item-container">
+       
+        <div class="item-container mb-2">
           <h6><strong>Activity Leaders</strong></h6>
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
     
@@ -494,6 +474,27 @@
             <%}%>
             
         </div>
+
+         <!-- all participants section starts -->
+         <%if(activityDetails.participants.length){%>
+          <div class="item-container mb-2">
+            <h6><strong>All Participants (<%=activityDetails.participants.length%>)</strong></h6>
+            <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+            <%activityDetails.participants.forEach((participant)=>{%>
+              <a style="direction: none;" href="/student/<%=participant.regNumber%>/profile">
+                <div class="d-flex align-items-center student-room-container" >
+                  <div >
+                    <img class="avatar-small"  src="/image/profile/small/profile-<%=participant.regNumber%>" alt="">
+                  </div>
+                  <div class="ml-2">
+                    <span class="d-block"><strong ><%=participant.userName%></strong></span>
+                  </div>
+                </div>
+              </a>
+            <%})%>
+          </div>
+        <%}%>
+        <!-- all participants section ends -->
 
       </div>
       </div>

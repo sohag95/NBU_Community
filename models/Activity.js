@@ -131,7 +131,8 @@ Activity.prototype.getActivityData=async function(){
         lastDate:new Date()
       },
       likes:[],
-      comments:[]
+      comments:[],
+      isCoverPhotoUploaded:false
     }
     // likes=["regNumber","regNumber"]
     // comments=[
@@ -243,7 +244,7 @@ Activity.deleteActivity=function(activityData){
        }
        if(activityData.votingId!=null){
         //if topic selected by vote then delete the voting details
-        await TopicVoting.deleteVotingPole(activityDetails.votingId)
+        await TopicVoting.deleteVotingPole(activityData.votingId)
        }
        //delete the activity details
        await activityCollection.deleteOne({_id:activityData._id})
@@ -360,7 +361,7 @@ Activity.updateActivityDataAfterVoteResult=function(id,wonTopic){
 }
 
 
-Activity.getAllActivityDetailsOfArrayIds=function(activityIds){
+Activity.getAllActivityDetailsOfArrayIds=function(activityIds,from){
   return new Promise(async (resolve, reject) => { 
     try{
       
@@ -379,9 +380,22 @@ Activity.getAllActivityDetailsOfArrayIds=function(activityIds){
           comments:activity.comments.length,
           activityDate:activity.activityDates.activityDate,
           publishedDate:activity.activityDates.publishedDate,
+          status:activity.status
         }
+        
         return activityData
       })
+      resolve(allActivities)
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
+
+Activity.getAllActivityDetailsOfArrayIdsFullData=function(activityIds){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      let allActivities=await activityCollection.find({_id:{ $in:activityIds }}).toArray()
       resolve(allActivities)
     }catch{
       reject("There is some problem.")
@@ -422,15 +436,13 @@ Activity.getAllActivityMember=function(activityData){
     try{
       console.log("Activity data:",activityData)
       let allMembers=[]
-      if(activityData.from=="batch"){
-        allMembers=await SessionBatch.getAllAvailableActivityMemberFromBatch(activityData.sourceId)
-      }
-      if(activityData.from=="department"){
-        allMembers=await Department.getAllAvailableActivityMemberOnDepartment(activityData.sourceId)
-      }
-      if(activityData.from=="group"){
-        allMembers=await Group.getAllAvailableActivityMemberOnGroup(activityData.sourceId)
-      }
+        //OLD function call s
+        //allMembers=await SessionBatch.getAllAvailableActivityMemberFromBatch(activityData.sourceId)
+        //allMembers=await Department.getAllAvailableActivityMemberOnDepartment(activityData.sourceId)
+        //allMembers=await Group.getAllAvailableActivityMemberOnGroup(activityData.sourceId)
+        //new function call
+        allMembers=await GetAllMembers.getAllSourceMembers(activityData.sourceId,activityData.from,"details")
+      
       resolve(allMembers)
     }catch{
       reject("There is some problem.")
@@ -563,21 +575,20 @@ Activity.videoEditingCompletedByEditor=function(id,neededData){
   })
 }
 
-//this function will be changed completely.photo should uploaded on AWS bucket->Added
-// Activity.uploadVideoCoverPhoto=function(id,link){
-//   return new Promise(async (resolve, reject) => { 
-//     try{
-//       await activityCollection.updateOne({_id:id},{
-//         $set:{
-//           "videoCoverPhoto":link,
-//         }
-//       })
-//       resolve()
-//     }catch{
-//       reject("There is some problem.")
-//     }
-//   })
-// }
+Activity.markAsCoverPhotoUploaded=function(id){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      await activityCollection.updateOne({_id:id},{
+        $set:{
+          isCoverPhotoUploaded:true
+        }
+      })
+      resolve()
+    }catch{
+      reject("There is some problem.")
+    }
+  })
+}
 
 Activity.prototype.cleanUpLinkData=function(){
   let videoLinks={
@@ -669,14 +680,15 @@ Activity.prototype.publishActivity=function(activityData,sourceData,editorRegNum
       //---------------------------------------
       //------SENT NOTIFICATION as new voting pole created---------
       await Notification.newLeaderSelectionStartedToAllSourceMembers(allMembers,poleId,sourceData.from)
-      //--sent notification to activity video editor
-      await Notification.activityPublishedToEditor(editorRegNumber,activityData._id)
+      //--sent notification to activity video editor|Not needed now
+      //await Notification.activityPublishedToEditor(editorRegNumber,activityData._id)
      //--sent global notification
      await GlobalNotifications.activityPublished(activityData._id,sourceData.from)
     //--sent source notification
     await SourceNotifications.activityPublished(activityData._id,sourceData.sourceId,sourceData.from)
      resolve()
     }catch{
+      console.log("There is some problem on activity publishing!!!")
       reject("There is some problem.")
     }
   })

@@ -5,7 +5,7 @@ exports.postControllerHome =async function (req, res) {
   try{
     let activityIds=await OfficialUsers.getAllSubmittedActivityIdsFromPostController()
     console.log("Ids :",activityIds)
-    let activities=await Activity.getAllActivityDetailsOfArrayIds(activityIds)
+    let activities=await Activity.getAllActivityDetailsOfArrayIdsFullData(activityIds)
     let allActivities={
       newSubmitted:[],
       received:[],
@@ -13,7 +13,7 @@ exports.postControllerHome =async function (req, res) {
       editingAccepted:[],
       edited:[]
     }
-    
+    console.log("All activities :",activities)
     activities.forEach((activity)=>{
       let activityData={
         _id:activity._id,

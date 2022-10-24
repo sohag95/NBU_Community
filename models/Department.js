@@ -307,37 +307,38 @@ Department.updatePresentActivityField= function(departmentCode,activityData){
   })
 }
 
-Department.getAllAvailableActivityMemberOnDepartment= function(departmentCode){
-  return new Promise(async (resolve, reject) => {
-    try{
-      let departmentDetails=await Department.getDepartmentDataByDepartmentCode(departmentCode)
-      let batchIds=[]
-        if(departmentDetails.activeBatches.firstYear){
-          batchIds.push(departmentDetails.activeBatches.firstYear.batchId)
-        }
-        if(departmentDetails.activeBatches.secondYear){
-          batchIds.push(departmentDetails.activeBatches.secondYear.batchId)
-        }
-        if(departmentDetails.activeBatches.seniours){
-          batchIds.push(departmentDetails.activeBatches.seniours.batchId)
-        }
-        if(departmentDetails.courceDuration=="3"){
-          if(departmentDetails.activeBatches.thirdYear){
-            batchIds.push(departmentDetails.activeBatches.thirdyear.batchId)
-          }
-        }
-      let allMembers=[]
-      for (let batchId of batchIds) {
-        let batchMembers = await SessionBatch.getAllAvailableActivityMemberFromBatch(batchId)
-        allMembers=allMembers.concat(batchMembers)
-      }
+//no need of this function any more
+// Department.getAllAvailableActivityMemberOnDepartment= function(departmentCode){
+//   return new Promise(async (resolve, reject) => {
+//     try{
+//       let departmentDetails=await Department.getDepartmentDataByDepartmentCode(departmentCode)
+//       let batchIds=[]
+//         if(departmentDetails.activeBatches.firstYear){
+//           batchIds.push(departmentDetails.activeBatches.firstYear.batchId)
+//         }
+//         if(departmentDetails.activeBatches.secondYear){
+//           batchIds.push(departmentDetails.activeBatches.secondYear.batchId)
+//         }
+//         if(departmentDetails.activeBatches.seniours){
+//           batchIds.push(departmentDetails.activeBatches.seniours.batchId)
+//         }
+//         if(departmentDetails.courceDuration=="3"){
+//           if(departmentDetails.activeBatches.thirdYear){
+//             batchIds.push(departmentDetails.activeBatches.thirdyear.batchId)
+//           }
+//         }
+//       let allMembers=[]
+//       for (let batchId of batchIds) {
+//         let batchMembers = await SessionBatch.getAllAvailableActivityMemberFromBatch(batchId)
+//         allMembers=allMembers.concat(batchMembers)
+//       }
       
-      resolve(allMembers)
-    }catch{
-      reject()
-    }
-  })
-}
+//       resolve(allMembers)
+//     }catch{
+//       reject()
+//     }
+//   })
+// }
 
 Department.updatePresentActivityFieldAfterResultDeclaration= function(departmentCode,wonTopic){
   return new Promise(async (resolve, reject) => {

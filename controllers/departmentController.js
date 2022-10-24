@@ -45,6 +45,7 @@ exports.getDepartmentDetailsPage =async function (req, res) {
       isDepartmentLeader:false,
       isPresentLeader:false,
       isPreviousLeader:false,
+      isLeaderMoreThen30Days:false,
       isXstudent:null
     }
 
@@ -75,6 +76,14 @@ exports.getDepartmentDetailsPage =async function (req, res) {
       if(departmentDetails.presentLeader){
         if(departmentDetails.presentLeader.regNumber==req.regNumber){
           checkData.isPresentLeader=true
+          let createdDate=departmentDetails.presentLeader.createdDate
+          let activeDate = new Date(createdDate);
+          let numberOfDaysToAdd = 30;
+          let result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
+          let lastDate=new Date(result1)
+          if(lastDate<new Date()){
+            checkData.isLeaderMoreThen30Days=true
+          }
         }
       }
       

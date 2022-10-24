@@ -154,8 +154,8 @@ router.get("/top-activities",activityController.getTopActivitiesPage)
 router.get("/todays-activities",activityController.getTodaysActivitiesPage)
 
 //from=(batch/department/group) || id=(batchId/departmentCode/groupId)
-router.get("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getActivityCreationPage)
-router.post("/activity/:from/:id/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getExtraDataToCreateActivity,activityController.createNewActivity)
+router.get("/activity/:from/:sourceId/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getActivityCreationPage)
+router.post("/activity/:from/:sourceId/create",studentController.studentMustBeLoggedIn,activityController.ifStudentPresentLeader,activityController.getExtraDataToCreateActivity,activityController.createNewActivity)
 router.post("/activity/:id/delete",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,activityController.ifStudentActivityLeader,activityController.ifActivityDeleteable,activityController.deleteActivity)
 router.get("/activity/:id/details",userController.ifUserLoggedIn,activityController.ifActivityPresent,activityController.getActivityDetailsPage)
 router.post("/activity/:id/edit",studentController.studentMustBeLoggedIn,activityController.ifActivityPresent,checkingController.checkActivityLeaderOrNot,activityController.editActivityDetails)
@@ -181,12 +181,13 @@ router.post("/activity/:id/comment",studentController.studentMustBeLoggedIn,acti
 
 //########################
 //Leader selection voting routers
-router.post("/create/:from/:id/leader-voting-pole",studentController.studentMustBeLoggedIn,checkingController.ifSourcePresent,checkingController.ifCreatorLeader,checkingController.ifMoreThen15DaysOfLeaderSelection,votingController.createLeaderVotingPole)
+router.post("/create/:from/:id/leader-voting-pole",studentController.studentMustBeLoggedIn,checkingController.ifSourcePresent,checkingController.ifCreatorLeader,checkingController.ifMoreThenFixedDaysOfLeaderSelection,votingController.createLeaderVotingPole)
 router.get("/leader-voting/:id/details",userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.getLeaderVotingStatusAndCheckData,votingController.getLeaderVotingPage)
 router.post("/leader-voting/:id/nomination",userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.getLeaderVotingStatusAndCheckData,checkingController.ifUserNominateable,votingController.addNameOnNomination)
 router.post("/leader-voting/:id/give-vote",studentController.studentMustBeLoggedIn,userController.ifUserLoggedIn,votingController.ifVotingPoleExists,votingController.getLeaderVotingStatusAndCheckData,checkingController.checkLeaderVotingData,votingController.giveLeaderVote)
 router.post("/leader-voting/:id/declare-result-by-leader",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.ifVotingResultDeclarable,votingController.declareLeaderResultByLeader)
 router.post("/leader-voting/:id/accept-as-leader",studentController.studentMustBeLoggedIn,votingController.ifVotingPoleExists,checkingController.newLeaderAcceptableOrNot,votingController.acceptSelfAsLeader)
+router.get("/nominee/:regNumber/details",userController.ifUserLoggedIn,studentController.ifProfileUserExists,studentController.getProfileOtherData,votingController.getNomineeDetails)
 
 //########################
 //Home tuition related routers

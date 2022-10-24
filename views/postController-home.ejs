@@ -23,7 +23,7 @@
                     <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
                     <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
                     <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
-                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <strong class="d-block">Submission Date : <%= activity.submissionDate.getDate() %> <%=activity.submissionDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.submissionDate.getFullYear() %> at <%=activity.submissionDate.getHours()%>:<%=activity.submissionDate.getMinutes()%></strong>
                     <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
                     <p><strong>Note : </strong><%=activity.postControllerNote%></p>
                     <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
@@ -53,7 +53,7 @@
                     <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
                     <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
                     <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
-                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <strong class="d-block">Submission Date : <%= activity.submissionDate.getDate() %> <%=activity.submissionDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.submissionDate.getFullYear() %> at <%=activity.submissionDate.getHours()%>:<%=activity.submissionDate.getMinutes()%></strong>
                     <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
                     <p><strong>Note : </strong><%=activity.postControllerNote%></p>
                     <a href="/activity/<%=activity._id%>/details" class="btn btn-block btn-sm btn-info">
@@ -83,7 +83,7 @@
                     <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
                     <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
                     <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
-                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <strong class="d-block">Submission Date : <%= activity.submissionDate.getDate() %> <%=activity.submissionDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.submissionDate.getFullYear() %> at <%=activity.submissionDate.getHours()%>:<%=activity.submissionDate.getMinutes()%></strong>
                     <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
                     <hr>
                     <strong>Editor Data :</strong>
@@ -119,7 +119,7 @@
                     <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
                     <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
                     <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
-                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <strong class="d-block">Submission Date : <%= activity.submissionDate.getDate() %> <%=activity.submissionDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.submissionDate.getFullYear() %> at <%=activity.submissionDate.getHours()%>:<%=activity.submissionDate.getMinutes()%></strong>
                     <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
                     <hr>
                     <strong>Editor Data :</strong>
@@ -155,7 +155,7 @@
                     <h5 class="text-warning text-center"><strong>(<%=index+1%>)</strong></h5>
                     <strong class="d-block">Source : <i><%=activity.sourceName%></i> </strong>
                     <strong class="d-block">Source Id : <i><%=activity.activitySourceId%></i> </strong>
-                    <strong class="d-block">Submission Date : <%=activity.submissionDate%></strong>
+                    <strong class="d-block">Submission Date : <%= activity.submissionDate.getDate() %> <%=activity.submissionDate.toLocaleString('default', { month: 'short' }) %> , <%= activity.submissionDate.getFullYear() %> at <%=activity.submissionDate.getHours()%>:<%=activity.submissionDate.getMinutes()%></strong>
                     <h6 class="bolder text-warning"><strong>Status : </strong><%=activity.status%></h6>
                     <hr>
                     <strong>Editor Data :</strong>

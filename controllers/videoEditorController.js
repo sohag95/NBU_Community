@@ -5,7 +5,7 @@ exports.videoEditorHome =async function (req, res) {
   try{
     let assignedIds=await OfficialUsers.getAllAssignedActivityIdsOfEditor()
     console.log("Ids :",assignedIds)
-    let activities=await Activity.getAllActivityDetailsOfArrayIds(assignedIds)
+    let activities=await Activity.getAllActivityDetailsOfArrayIdsFullData(assignedIds)
     let allActivities={
       newAssigned:[],
       accepted:[],
@@ -17,6 +17,7 @@ exports.videoEditorHome =async function (req, res) {
         activitySourceId:activity.activitySourceId,
         sourceName:activity.sourceName,
         status:activity.status,
+        submissionDate:activity.activityDates.submissionDate,
         assignedDate:activity.activityDates.editorAssignedDate,
         videoEditorNote:activity.videoEditorNote
       }

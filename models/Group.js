@@ -248,26 +248,26 @@ Group.updatePresentActivityField= function(groupId,activityData){
     }
   })
 }
-
-Group.getAllAvailableActivityMemberOnGroup= function(groupId){
-  return new Promise(async(resolve, reject) => {
-    try{
-      let allGroupMembers=[]
-      // let groupDetails=await groupsCollection.findOne({groupId:groupId})
-      // let departmentCodes=groupDetails.presentDepartments.map((department)=>{
-      //   return department.departmentCode
-      // })
-      let departmentCodes=OtherOperations.getDepartmentCodesFromGroupId(groupId)
-      for (let departmentCode of departmentCodes) {
-        let departmentMembers = await Department.getAllAvailableActivityMemberOnDepartment(departmentCode)
-        allGroupMembers=allGroupMembers.concat(departmentMembers)
-      }
-      resolve(allGroupMembers)
-    }catch{
-     reject()
-    }
-  })
-}
+//no need of this function any more
+// Group.getAllAvailableActivityMemberOnGroup= function(groupId){
+//   return new Promise(async(resolve, reject) => {
+//     try{
+//       let allGroupMembers=[]
+//       // let groupDetails=await groupsCollection.findOne({groupId:groupId})
+//       // let departmentCodes=groupDetails.presentDepartments.map((department)=>{
+//       //   return department.departmentCode
+//       // })
+//       let departmentCodes=OtherOperations.getDepartmentCodesFromGroupId(groupId)
+//       for (let departmentCode of departmentCodes) {
+//         let departmentMembers = await Department.getAllAvailableActivityMemberOnDepartment(departmentCode)
+//         allGroupMembers=allGroupMembers.concat(departmentMembers)
+//       }
+//       resolve(allGroupMembers)
+//     }catch{
+//      reject()
+//     }
+//   })
+// }
 
 Group.updatePresentActivityFieldAfterResultDeclaration= function(groupId,wonTopic){
   return new Promise(async (resolve, reject) => {

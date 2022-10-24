@@ -196,8 +196,7 @@
       </div>
       </div>
       <div class="float-right notVisibleOnCollapse">
-        <a class="mr-2" href="/test"><strong><i class="fas fa-trophy"></i> Test Page</strong></a>
-        <a class="mr-2" href="/all-departments"><strong><i class="fas fa-address-card fa-lg"></i> Departments</strong></a>
+        <a class="mr-2" href="/all-departments"><strong><i class="fas fa-map-marker-alt fa-lg"></i> All-Departments</strong></a>
         
         <%if(user){%>
           <%if(user.accountType=="student"){%>
@@ -272,24 +271,24 @@
               </div> 
               <div class="text-center">
                 <a href="/batch/<%=user.regNumber.slice(0,9)%>/details">
-                  <span><i class="fas fa-chart-line fa-lg"></i></span>
+                  <span><i class="fas fa-marker fa-lg"></i></span>
                   <span class="d-block menu-text" >Batch</span>
                 </a>
               </div>
               <div class="text-center">
                 <a href="/department/<%=user.regNumber.slice(4,9)%>/details">
-                  <span><i class="fas fa-plus-square fa-lg"></i></span>
+                  <span><i class="fas fa-graduation-cap fa-lg"></i></span>
                   <span class="d-block menu-text" >Department</span>
                   </a>
               </div>
                
               <div class="text-center">
                 <a href="/group/<%=user.otherData.groupId%>/details">
-                  <span><i class="fas fa-running fa-lg"></i></span>
+                  <span><i class="fas fa-users fa-lg"></i></span>
                   <span class="d-block menu-text" >Group</span>
                 </a>
               </div>
-              <div class="text-center">
+              <div class="text-center notVisibleOnCollapse">
                 <a href="/student/<%=user.regNumber%>/profile">
                   <span><i class="fas fa-user-circle fa-lg"></i></span>
                   <span class="d-block menu-text" >Profile</span>

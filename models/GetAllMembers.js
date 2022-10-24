@@ -7,22 +7,30 @@ const departmentsCollection = require("../db").db().collection("Departments")
 let GetAllMembers=function(data){
   this.data=data
 }
-GetAllMembers.getAllMembersFromBatch= function(batchId){
+GetAllMembers.getAllMembersFromBatch= function(batchId,type){
   return new Promise(async(resolve, reject) => {
     try{
       
       let batchDetails=await sessionBatchesCollection.findOne({batchId:batchId})
       
       let allBatchMembers=batchDetails.allMembers.map((member)=>{
-        return member.regNumber
+        if(type=="details"){
+          return{
+            userName:member.userName,
+            regNumber:member.regNumber
+          }
+        }else{
+          return member.regNumber
+        } 
       })
+      console.log("allBatchMembers :",allBatchMembers)
       resolve(allBatchMembers)
     }catch{
      reject()
     }
   })
 }
-GetAllMembers.getAllMembersFromDepartment= function(departmentCode){
+GetAllMembers.getAllMembersFromDepartment= function(departmentCode,type){
   return new Promise(async(resolve, reject) => {
     try{
       let allDepartmentMembers=[]
@@ -43,7 +51,7 @@ GetAllMembers.getAllMembersFromDepartment= function(departmentCode){
         }
       }
       for (let batchId of presentBatchIds) {
-        let batchMembers = await GetAllMembers.getAllMembersFromBatch(batchId)
+        let batchMembers = await GetAllMembers.getAllMembersFromBatch(batchId,type)
         allDepartmentMembers=allDepartmentMembers.concat(batchMembers)
       }
       
@@ -53,7 +61,7 @@ GetAllMembers.getAllMembersFromDepartment= function(departmentCode){
     }
   })
 }
-GetAllMembers.getAllMembersFromGroup= function(groupId){
+GetAllMembers.getAllMembersFromGroup= function(groupId,type){
   return new Promise(async(resolve, reject) => {
     try{
       let allGroupMembers=[]
@@ -63,7 +71,7 @@ GetAllMembers.getAllMembersFromGroup= function(groupId){
       // })
       let departmentCodes=OtherOperations.getDepartmentCodesFromGroupId(groupId)
       for (let departmentCode of departmentCodes) {
-        let departmentMembers = await GetAllMembers.getAllMembersFromDepartment(departmentCode)
+        let departmentMembers = await GetAllMembers.getAllMembersFromDepartment(departmentCode,type)
         allGroupMembers=allGroupMembers.concat(departmentMembers)
       }
       resolve(allGroupMembers)
@@ -73,16 +81,18 @@ GetAllMembers.getAllMembersFromGroup= function(groupId){
   })
 }
 
-GetAllMembers.getAllSourceMembers= function(sourceId,sourceType){
+GetAllMembers.getAllSourceMembers= function(sourceId,sourceType,type){
   return new Promise(async(resolve, reject) => {
     try{
+      //type=details/undefined
+      //here type=details will give users-userName+regNumber otherwise only regNumber
       let allSourceMembers=[]
       if(sourceType=="batch"){
-        allSourceMembers=await GetAllMembers.getAllMembersFromBatch(sourceId)
+        allSourceMembers=await GetAllMembers.getAllMembersFromBatch(sourceId,type)
       }else if(sourceType=="department"){
-        allSourceMembers=await GetAllMembers.getAllMembersFromDepartment(sourceId)
+        allSourceMembers=await GetAllMembers.getAllMembersFromDepartment(sourceId,type)
       }else{
-        allSourceMembers=await GetAllMembers.getAllMembersFromGroup(sourceId)
+        allSourceMembers=await GetAllMembers.getAllMembersFromGroup(sourceId,type)
       }
       resolve(allSourceMembers)
     }catch{

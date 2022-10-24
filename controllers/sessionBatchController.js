@@ -79,6 +79,7 @@ exports.getSessionBatchDetailsPage =async function (req, res) {
       isBatchLeader:false,
       isPresentLeader:false,
       isPreviousLeader:false,
+      isLeaderMoreThen15Days:false,
       isXstudent:null
     }
     
@@ -100,6 +101,14 @@ exports.getSessionBatchDetailsPage =async function (req, res) {
       if(batchDetails.presentLeader){
         if(batchDetails.presentLeader.regNumber==req.regNumber){
           checkData.isPresentLeader=true
+          let createdDate=batchDetails.presentLeader.createdDate
+          let activeDate = new Date(createdDate);
+          let numberOfDaysToAdd = 15;
+          let result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
+          let lastDate=new Date(result1)
+          if(lastDate<new Date()){
+            checkData.isLeaderMoreThen15Days=true
+          }
         }
       }
       

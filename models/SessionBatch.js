@@ -27,7 +27,7 @@ SessionBatch.prototype.cleanUpData=function(){
     //-----------------------
     presentLeader:null,
     // presentLeader:{
-    //   regNumber:"",
+    //   regNumber:"", 
     //   userName:"",
     //   phone:"",
     //   createdDate:"",This date is the activation date forthe present leader
@@ -243,7 +243,7 @@ SessionBatch.addOnBatchPresentMembers= function(batchId,studentData){
           { batchId: batchId },
           {
             $push: {
-              allPresentMembers: studentData
+              allMembers: studentData
             }
           }
         )
@@ -272,22 +272,23 @@ SessionBatch.updatePresentActivityField= function(batchId,activityData){
   })
 }
 
-SessionBatch.getAllAvailableActivityMemberFromBatch= function(batchId){
-  return new Promise(async (resolve, reject) => {
-    try{
-      let batchDetails=await SessionBatch.findSessionBatchDetailsByBatchId(batchId)
-      let allMembers=batchDetails.allMembers.map((member)=>{
-        return {
-          regNumber:member.regNumber,
-          userName:member.userName
-        }
-      })
-      resolve(allMembers)
-    }catch{
-      reject()
-    }
-  })
-}
+///no need of this function any more
+// SessionBatch.getAllAvailableActivityMemberFromBatch= function(batchId){
+//   return new Promise(async (resolve, reject) => {
+//     try{
+//       let batchDetails=await SessionBatch.findSessionBatchDetailsByBatchId(batchId)
+//       let allMembers=batchDetails.allMembers.map((member)=>{
+//         return {
+//           regNumber:member.regNumber,
+//           userName:member.userName
+//         }
+//       })
+//       resolve(allMembers)
+//     }catch{
+//       reject()
+//     }
+//   })
+// }
 
 SessionBatch.updatePresentActivityFieldAfterResultDeclaration= function(batchId,wonTopic){
   return new Promise(async (resolve, reject) => {
@@ -417,4 +418,5 @@ SessionBatch.updateLeaderVotingDataAfterResultDeclaration= function(batchId,wonL
     }
   })
 }
+
 module.exports=SessionBatch

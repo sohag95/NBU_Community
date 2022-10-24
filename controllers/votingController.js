@@ -249,6 +249,28 @@ exports.addNameOnNomination = function (req, res) {
 }
 
 
+exports.getNomineeDetails = function (req, res) {
+  let nomineeDetails={
+    regNumber:req.profileData.regNumber,
+    userName:req.profileData.userName,
+    departmentName:req.profileData.departmentName,
+    sessionYear:req.profileData.sessionYear,
+    gender:req.profileData.gender,
+    creditPoints:req.profileData.creditPoints,
+    batchLead:req.profileOtherData.winningVotingPoles.batchLeader.length,
+    departmentLead:req.profileOtherData.winningVotingPoles.departmentLeader.length,
+    groupLead:req.profileOtherData.winningVotingPoles.groupLeader.length,
+    campusGroups:req.profileOtherData.campusGroupIds.length,
+    leadActivities:req.profileOtherData.activities.leadActivities.length,
+    membershipActivities:req.profileOtherData.activities.participatedActivities.length
+  }
+  console.log("nominee details :",nomineeDetails)
+  res.render("nominee-details-page",{
+    nomineeDetails:nomineeDetails
+  })
+}
+
+
 exports.giveLeaderVote = function (req, res) {
   let errMsg=""
   let hasError=false

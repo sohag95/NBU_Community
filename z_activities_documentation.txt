@@ -33,3 +33,10 @@ Fifth Part:
 
 Sixth Part:
 1.Photo uploading on AWS bucket
+
+
+<picture>
+    <source srcset="image/profile/medium/checkImg" media="(min-width:1200px)">
+    <source srcset="image/profile/medium/sohsag" media="(min-width:760px)">
+    <img class="home-profile-image" src="image/profile/medium/checkMid" alt="">
+</picture>
