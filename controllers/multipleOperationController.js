@@ -12,12 +12,15 @@ const SessionBatch=require('../models/SessionBatch')
 
 exports.checkAccountPosition =async function (req, res, next) {
   try{
+    console.log("req.body:",req.body)
     let batchDetails=await SessionBatch.findSessionBatchDetailsBySignUpData(req.body.sessionYear,req.body.departmentCode)
+    console.log("batch etails :",batchDetails)
     if(batchDetails){
       let batchData={
         batchId:batchDetails.batchId,
         departmentName:batchDetails.departmentName,
         groupId:batchDetails.groupId,
+        batchState:batchDetails.batchState,
         batchLeader:batchDetails.presentLeader,
         departmentLeader:"Set"
       }
@@ -42,6 +45,7 @@ exports.checkAccountPosition =async function (req, res, next) {
       })
     }
   }catch{
+    console.log("Error from checkAccountPosition")
     res.render("404")
   }
 }

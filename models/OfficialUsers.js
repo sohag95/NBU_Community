@@ -280,7 +280,7 @@ OfficialUsers.getCommunityControllerData=function(){
     try {
       let data=await officialUsersCollection.findOne({dataType:"societyControllerAuthData"})
       let neededData={
-        regNumber:null,
+        regNumber:data.regNumber,
         userName:data.userName,
         phone:data.phone
       }

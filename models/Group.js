@@ -14,12 +14,12 @@ Group.prototype.prepareGroupDataField=function(){
     presentDepartments:this.data.presentDepartments,
     presentLeader:null,
     previousLeader:null,
-    allLeaders:[],
+    allPresentLeaders:[],
     allPresentMembers:[],//"present" added later may occure some error,i have to fix that
     allXMembers:[],
     allXLeaders:[],
     presentActivity:null,
-    previosActivity:null,
+    previousActivity:null,
     completedActivities:[],
     groupNotifications:[],
     isVoteGoingOn:false,
@@ -105,7 +105,7 @@ Group.updateXMemberAndXLeaderOnGroup= function(groupId,XBatchId){
           {
             $set: {
               "allPresentMembers":memberAndLeaderData.allPresentMembers,
-              "allLeaders":memberAndLeaderData.allPresentLeaders,
+              "allPresentLeaders":memberAndLeaderData.allPresentLeaders,
               "allXMembers":memberAndLeaderData.allXMembers,
               "allXLeaders":memberAndLeaderData.allXLeaders
             }
@@ -122,21 +122,10 @@ Group.updateXMemberAndXLeaderOnGroup= function(groupId,XBatchId){
 Group.addOnGroupPresentMember= function(groupId,memberData){
   return new Promise(async (resolve, reject) => {
     try{
-      //#########--Need not to check as only new selected leader can fetch this function---#############
-      // let groupDetails=await groupsCollection.findOne({groupId:groupId})
-      // let isAlreadyMember=false
-      // groupDetails.allMembers.forEach((member)=>{
-      //   if(member.regNumber==memberData.regNumber){
-      //     isAlreadyMember=true
-      //   }
-      // })
-      // //if student is already a member then need not to add him/her again
-      
-      // if(!isAlreadyMember){
-      // }
+      console.log("Added member on group")
         await groupsCollection.updateOne({groupId:groupId},{
           $push:{
-            allPresentMembers:memberData
+            "allPresentMembers":memberData
           }
         })
       
@@ -162,8 +151,8 @@ Group.makeGroupPresentLeader=function(groupId,newLeaderData){
       let newLeader=true
       let groupDetails=await groupsCollection.findOne({groupId:groupId})
       let newPreviousLeader=groupDetails.presentLeader
-      if( groupDetails.allLeaders.length){
-        groupDetails.allLeaders.forEach((leader)=>{
+      if( groupDetails.allPresentLeaders.length){
+        groupDetails.allPresentLeaders.forEach((leader)=>{
           if(leader.regNumber==newLeaderData.regNumber){
             newLeader=false
           }
@@ -181,28 +170,30 @@ Group.makeGroupPresentLeader=function(groupId,newLeaderData){
         }
       )
        //in case of same present leader again,previous leader will remain same also
-       if(groupDetails.presentLeader.regNumber!=newLeaderData.regNumber){
-        await groupsCollection.updateOne(
-          { groupId: groupId },
-          {
-            $set: {
-              previousLeader: newPreviousLeader
+      if(groupDetails.presentLeader){
+        if(groupDetails.presentLeader.regNumber!=newLeaderData.regNumber){
+          await groupsCollection.updateOne(
+            { groupId: groupId },
+            {
+              $set: {
+                previousLeader: newPreviousLeader
+              }
             }
-          }
-        )
+          )
+        }
       }
       if(newLeader){
-        console.log("pushing data on department leaders")
+        console.log("pushing data on group leaders")
         let leaderData={
           regNumber:newLeaderData.regNumber,
           userName:newLeaderData.userName,
-          phone:newLeaderData.phone
+          departmentName:newLeaderData.departmentName
         }
         await groupsCollection.updateOne(
           {groupId:groupId},
           {
             $push:{
-              "allLeaders":leaderData
+              "allPresentLeaders":leaderData
             }
           }
         )
@@ -219,8 +210,10 @@ Group.makeGroupPresentLeader=function(groupId,newLeaderData){
 Group.addFirstCase1UserAsDefaultGroupLeader= function(groupId,leaderData){
   return new Promise(async (resolve, reject) => {
     try{
+      console.log("Leader Data :",leaderData)
       let groupDetails=await groupsCollection.findOne({groupId:groupId})
-      if(!groupDetails.presentLeader){
+      if(groupDetails.presentLeader===null){
+        console.log("present leader ran")
         await Group.makeGroupPresentLeader(groupId,leaderData)
       }
       resolve()

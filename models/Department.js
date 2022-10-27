@@ -1,10 +1,9 @@
-
+const departmentsCollection = require("../db").db().collection("Departments")
 const Group = require("./Group")
 const OfficialUsers = require("./OfficialUsers")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
 const SourceNotifications = require("./SourceNotifications")
-const departmentsCollection = require("../db").db().collection("Departments")
 
 let Department=function(data,groupId){
  this.data=data
@@ -39,14 +38,14 @@ Department.prototype.prepareDepartmentDataField=function(){
     groupId:this.groupId,
     presentLeader:null,
     previousLeader:null,
-    allLeaders:[],
+    allPresentLeaders:[],
     allPresentMembers:[],
     allXMembers:[],
     allXLeaders:[],
     activeBatches:activeBatches,
     XBatches:[],
     presentActivity:null,
-    previosActivity:null,
+    previousActivity:null,
     completedActivities:[],
     departmentNotifications:[],
     newBatchMemberRequests:[],
@@ -61,6 +60,30 @@ Department.prototype.createDepartment=function(){
       this.prepareDepartmentDataField()
       await departmentsCollection.insertOne(this.data)
       await SourceNotifications.createSourceNotificationTable(this.data.departmentCode)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+
+Department.updateXMemberAndXLeaderOnDepartment= function(departmentData,XBatchId){
+  return new Promise(async (resolve, reject) => {
+    try{
+      //getting new membership data of department
+      let memberAndLeaderData=OtherOperations.getXstudentsAndXleadersOfDepartment(departmentData,XBatchId)
+        await departmentsCollection.updateOne({departmentCode:departmentData.departmentCode},{
+          $push:{
+            "XBatches":newData.recentXBatch,
+          },
+          $set: {
+            "allPresentMembers":memberAndLeaderData.allPresentMembers,
+            "allPresentLeaders":memberAndLeaderData.allPresentLeaders,
+            "allXMembers":memberAndLeaderData.allXMembers,
+            "allXLeaders":memberAndLeaderData.allXLeaders
+          } 
+        })
       resolve()
     }catch{
       reject()
@@ -87,23 +110,12 @@ Department.updateActiveBatchesSequenceYear=function(dataSet){
       //Update the status of a batch after adding a new batch on department
       await SessionBatch.updateBatchStateAfterAddingNewBatch(newData.newActiveBatches)
       if(newData.recentXBatch){
-        //get X-members and X-leaders to store on department table
-        let memberAndLeaderData=OtherOperations.getXstudentsAndXleadersOfDepartment(departmentData,newData.recentXBatch.batchId)
-        await departmentsCollection.updateOne({departmentCode:dataSet.departmentCode},{
-          $push:{
-            "XBatches":newData.recentXBatch,
-          },
-          $set: {
-            "allPresentMembers":memberAndLeaderData.allPresentMembers,
-            "allLeaders":memberAndLeaderData.allPresentLeaders,
-            "allXMembers":memberAndLeaderData.allXMembers,
-            "allXLeaders":memberAndLeaderData.allXLeaders
-          } 
-        })
         //Mark batch state as "X"
         await SessionBatch.updateBatchState(newData.recentXBatch.batchId,"X")
         //add batchId on admins Data Table to sent each individual member "thank you message"
         await OfficialUsers.addXBatchIdOnAdminsTable(newData.recentXBatch.batchId)
+        //get X-members and X-leaders to store on department table|Removed x-leader/member from present leader/member field
+        await Department.updateXMemberAndXLeaderOnDepartment(departmentData,newData.recentXBatch.batchId)
         //find group's x-members and leaders and update the group table
         await Group.updateXMemberAndXLeaderOnGroup(departmentData.groupId,newData.recentXBatch.batchId)
       }
@@ -132,7 +144,7 @@ Department.findDepartmentByDepartmentCode= function(departmentCode){
   })
 }
 
-
+//This function's activity part shifted to student function as it was creating an error
 Department.sentNewStudentRequestOnDepartment= function(departmentCode,studentData){
   return new Promise(async (resolve, reject) => {
     try{
@@ -141,7 +153,7 @@ Department.sentNewStudentRequestOnDepartment= function(departmentCode,studentDat
         { departmentCode: departmentCode },
         {
           $push: {
-            newBatchMemberRequests: studentData
+            "newBatchMemberRequests": studentData
           }
         }
       )
@@ -174,31 +186,26 @@ Department.getDepartmentDataByDepartmentCode=function(departmentCode){
   })
 }
 
-
+//this function addedon sessionBatch function as it creating some problem after calling the function from here
 Department.addOnDepartmentPresentMember= function(departmentCode,memberData){
   return new Promise(async (resolve, reject) => {
     try{
-      // let departmentDetails=await departmentsCollection.findOne({departmentCode:departmentCode})
-      // //above call is not needed in case of creation of a new batch leader
-      // let isAlreadyMember=false
-      // departmentDetails.allPresentMembers.forEach((member)=>{
-      //   if(member.regNumber==memberData.regNumber){
-      //     isAlreadyMember=true
-      //   }
-      // })
-      // if(!isAlreadyMember){
-      //}
-      //#########--Need not to check as only new selected leader can fetch this function---#############
-        let memberInfo={
-          regNumber:memberData.regNumber,
-          userName:memberData.userName
-        }
-        await departmentsCollection.updateOne({departmentCode:departmentCode},{
-          $push:{
-            allPresentMembers:memberInfo
-          }
-        })
       
+       let memberInfo={
+          regNumber:memberData.regNumber,
+          userName:memberData.userName,
+          createdDate:new Date()
+        }
+        console.log("infobefore:",memberInfo)
+        await departmentsCollection.updateOne(
+          {departmentCode:departmentCode},
+          {
+            $push:{
+              "allPresentMembers":memberInfo
+            }
+          }
+        )
+        console.log("done properly")
       resolve()
     }catch{
       reject()
@@ -228,8 +235,8 @@ Department.makeDepartmentPresentLeader=function(departmentCode,newLeaderData){
       let newLeader=true
       let departmentDetails=await departmentsCollection.findOne({departmentCode:departmentCode})
       let newPreviousLeader=departmentDetails.presentLeader
-      if( departmentDetails.allLeaders.length){
-        departmentDetails.allLeaders.forEach((leader)=>{
+      if(departmentDetails.allPresentLeaders.length){
+        departmentDetails.allPresentLeaders.forEach((leader)=>{
           if(leader.regNumber==newLeaderData.regNumber){
             newLeader=false
           }
@@ -246,29 +253,30 @@ Department.makeDepartmentPresentLeader=function(departmentCode,newLeaderData){
           }
         }
       )
-       //in case of same present leader again,previous leader will remain same also
-       if(departmentDetails.presentLeader.regNumber!=newLeaderData.regNumber){
-        await departmentsCollection.updateOne(
-          { departmentCode: departmentCode },
-          {
-            $set: {
-              previousLeader: newPreviousLeader
+      //in case of same present leader again,previous leader will remain same also
+      if(departmentDetails.presentLeader){
+        if(departmentDetails.presentLeader.regNumber!=newLeaderData.regNumber){
+          await departmentsCollection.updateOne(
+            { departmentCode: departmentCode },
+            {
+              $set: {
+                previousLeader: newPreviousLeader
+              }
             }
-          }
-        )
+          )
+        }
       }
-      if(newLeader){
+      if(newLeader){//checking if selected leader is very first leader on department
         console.log("pushing data on department leaders")
         let leaderData={
           regNumber:newLeaderData.regNumber,
           userName:newLeaderData.userName,
-          phone:newLeaderData.phone
         }
         await departmentsCollection.updateOne(
           {departmentCode:departmentCode},
           {
             $push:{
-              "allLeaders":leaderData
+              "allPresentLeaders":leaderData
             }
           }
         )

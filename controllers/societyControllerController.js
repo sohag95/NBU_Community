@@ -68,6 +68,15 @@ exports.getVerifyUserAccountPage =async function (req, res) {
   }
 }
 
+exports.gotoVerificationPage = function (req, res) {
+  try{
+    let regNumber=req.body.regNumber.toUpperCase()
+    res.redirect(`/verification/${req.body.verificationCase}/${regNumber}/page`)
+  }catch{
+    res.render("404")
+  }
+}
+
 exports.getSocietyHandlingPage =async function (req, res) {
   try{
     res.render('society-handling-page')

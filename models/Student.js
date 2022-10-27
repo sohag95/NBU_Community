@@ -1,6 +1,8 @@
 const studentsCollection = require("../db").db().collection("Students")
 const notificationCollection = require("../db").db().collection("Notifications")
 const studentDataCollection = require("../db").db().collection("Student_Data")
+const departmentsCollection = require("../db").db().collection("Departments")
+const sessionBatchesCollection = require("../db").db().collection("sessionBatches")
 
 const IdCreation = require("./IdCreation")
 const SessionBatch = require("./SessionBatch")
@@ -124,6 +126,7 @@ let Student=function(regData,batchData,communityController){
       isXstudent:false,
       isHomeTutor:false,
       createdDate:new Date(),
+      batchState:this.batchData.batchState,
       creditPoints:0,
       bioStatus:null,
       guestAllowedToViewProfile:false,
@@ -247,26 +250,34 @@ Student.prototype.createNewAccount=function(){
         //sent confirmation message on email id
         //if could not sent email then show error message as not valid email id
         //if sent,show confirmation message to user
-
+        
         let sentEmail=new SentEmail()
-        sentEmail.mailAsAccountCreated(this.data.email,this.data.verification.code,this.data.regNumber,this.data.password).then(async()=>{
+        sentEmail.mailAsAccountCreated(this.data.email,this.data.verification.code,this.data.regNumber,this.data.password,this.communityController.userName).then(async()=>{
           // hash user password
           let salt = bcrypt.genSaltSync(10)
           this.data.password = bcrypt.hashSync(this.data.password, salt)
           await studentsCollection.insertOne(this.data)
           await notificationCollection.insertOne(this.notification)
           await studentDataCollection.insertOne(this.studentData)
-          
+          await OfficialUsers.increaseRegSerialNumber()
           //student's needed data to store request array
           let studentData={
             regNumber:this.data.regNumber,
             userName:this.data.userName,
-            phone:this.data.phone,
             createdDate:new Date()
           }
           if(this.case=="case3"){
             //sent request when batch leader is set
-            await SessionBatch.sentNewStudentRequestOnBatch(this.batchData.batchId,studentData)
+            //await SessionBatch.sentNewStudentRequestOnBatch(this.batchData.batchId,studentData)
+            //this section should call from SessionBatch class function
+            await sessionBatchesCollection.updateOne(
+              { batchId: this.batchData.batchId },
+              {
+                $push: {
+                  "newMemberRequests": studentData
+                }
+              }
+            )
           }else if(this.case=="case2" || this.case=="case1"){
             //sent request when batch leader is not set but department leader is not set
             //sent request when no leader is set
@@ -274,13 +285,20 @@ Student.prototype.createNewAccount=function(){
             //-if department leader is set then the students account 
             //-will be verified by the department leader otherwise by the community controller
             //regNumber(As:2122COMSC0001) contains sessionYear=2021-2022+departmentCode=COMSCS+batchId=2122COMSC
-            
-            await Department.sentNewStudentRequestOnDepartment(this.batchData.batchId.slice(4,9),studentData)
+            //await Department.sentNewStudentRequestOnDepartment(this.batchData.batchId.slice(4,9),studentData)
+            await departmentsCollection.updateOne(
+              { departmentCode: this.batchData.batchId.slice(4,9) },
+              {
+                $push: {
+                  "newBatchMemberRequests": studentData
+                }
+              }
+            )
           }
-          await OfficialUsers.increaseRegSerialNumber()
+          
           resolve()
-        }).catch(()=>{
-          reject("We could not able to sent confirmation message on your email id.Please enter valid email id or try again later.")
+        }).catch(async()=>{
+          reject("There is some problem.")
         })
       } else {
         reject(this.errors)
@@ -291,20 +309,6 @@ Student.prototype.createNewAccount=function(){
   })
 }
 
-
-Student.deleteAccount=function(regNumber){
-  return new Promise(async (resolve, reject) => {
-    try{
-      await studentDataCollection.deleteOne({regNumber:regNumber})
-      await notificationCollection.deleteOne({regNumber:regNumber})
-      await studentDataCollection.deleteOne({regNumber:regNumber})
-      await OfficialUsers.removeRejectedIdFromAdminAccountedArray(regNumber)
-      resolve()
-    }catch{
-      reject()
-    }
-  })
-}
 
 Student.prototype.studentLogIn = function () {
   return new Promise((resolve, reject) => {
@@ -327,6 +331,7 @@ Student.prototype.studentLogIn = function () {
           if(!attemptedUser.isVerified){
             this.data.otherData={
               isVerified:false,
+              groupId:attemptedUser.groupId,
               verifiedBy:attemptedUser.verifiedBy
             }
           }else{
@@ -355,6 +360,41 @@ Student.prototype.studentLogIn = function () {
       })
   })
 }
+
+Student.deleteAccount=function(regNumber){
+  return new Promise(async (resolve, reject) => {
+    try{
+      await studentsCollection.deleteOne({regNumber:regNumber})
+      await notificationCollection.deleteOne({regNumber:regNumber})
+      await studentDataCollection.deleteOne({regNumber:regNumber})
+      await OfficialUsers.removeRejectedIdFromAdminAccountedArray(regNumber)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Student.setStudentsBatchState = function (regNumbers,state) {
+  return new Promise(async(resolve, reject) => {
+    try{
+      
+      await studentsCollection.updateMany(
+        {regNumber:{$in:regNumbers}},
+          {
+            $set:{
+              "batchState":state
+            }
+          },{ multi: true }
+        )
+      //sent notification to students as batch state changed
+      await Notification.batchStateChangedToAllBatchMembers(regNumbers,state)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+} 
 
 Student.checkPresentPassword = function (presentPassword,regNumber) {
   return new Promise(async(resolve, reject) => {

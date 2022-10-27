@@ -16,12 +16,12 @@ exports.checkVerifier=async function(req,res,next){
           verificationDate:new Date()
         }
         next()
-      }else if(req.session.user.accountType=="student"){
+      }else if(req.accountType=="student"){
         if(req.params.case=="case2"){
           //verifier should be a department leader
           let isDepartmentLeader=false
           let departmentDetails=await Department.findDepartmentByDepartmentCode(req.params.regNumber.slice(4,9))
-          departmentDetails.allLeaders.forEach((leader)=>{
+          departmentDetails.allPresentLeaders.forEach((leader)=>{
             if(leader.regNumber==req.regNumber){
               isDepartmentLeader=true
             }

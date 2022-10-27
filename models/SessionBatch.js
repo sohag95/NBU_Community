@@ -1,8 +1,11 @@
+const sessionBatchesCollection = require("../db").db().collection("sessionBatches")
+const departmentsCollection = require("../db").db().collection("Departments")
 const Department = require("./Department")
+const GetAllMembers = require("./GetAllMembers")
 const IdCreation = require("./IdCreation")
 const OtherOperations = require("./OtherOperations")
 const SourceNotifications = require("./SourceNotifications")
-const sessionBatchesCollection = require("../db").db().collection("sessionBatches")
+const Student = require("./Student")
 
 let SessionBatch=function(data){
   this.data=data
@@ -39,7 +42,7 @@ SessionBatch.prototype.cleanUpData=function(){
     allLeaders:[],
     newMemberRequests:[],
     presentActivity:null,
-    previosActivity:null,//contains previous activity id
+    previousActivity:null,//contains previous activity id
     completedActivities:[],
     batchState:"1st",//values will be : 1st/2nd/3rd/seniours/X
     createdDate:new Date()
@@ -90,6 +93,11 @@ SessionBatch.updateBatchState= function(batchId,state){
             }
           }
         )
+        let allMembers=await GetAllMembers.getAllMembersFromBatch(batchId)
+        if(allMembers.length){
+          await Student.setStudentsBatchState(allMembers,state)
+        }
+        
       resolve()
     }catch{
       reject()
@@ -199,22 +207,23 @@ SessionBatch.makeSessionBatchPresentLeader= function(batchId,newLeaderData){
         }
       )
       //in case of same present leader again,previous leader will remain same also
-      if(batchDetails.presentLeader.regNumber!=newLeaderData.regNumber){
-        await sessionBatchesCollection.updateOne(
-          { batchId: batchId },
-          {
-            $set: {
-              previousLeader: newPreviousLeader
+      if(batchDetails.presentLeader){//during case1 verification presentLeader is null
+        if(batchDetails.presentLeader.regNumber!=newLeaderData.regNumber){
+          await sessionBatchesCollection.updateOne(
+            { batchId: batchId },
+            {
+              $set: {
+                previousLeader: newPreviousLeader
+              }
             }
-          }
-        )
-      }
+          )
+        }
+      } 
       if(newLeader){
         //"pushing data on batche's all leaders"
         let leaderData={
           regNumber:newLeaderData.regNumber,
           userName:newLeaderData.userName,
-          phone:newLeaderData.phone
         }
         await sessionBatchesCollection.updateOne(
           { batchId: batchId },
@@ -225,8 +234,22 @@ SessionBatch.makeSessionBatchPresentLeader= function(batchId,newLeaderData){
           }
         )
         //add new leader as a department member
-        await Department.addOnDepartmentPresentMember(batchId.slice(4,9),leaderData)
+        //this section should be called as function from department class 
+        let memberInfo={
+          regNumber:leaderData.regNumber,
+          userName:leaderData.userName,
+          createdDate:new Date()
+        }
+        await departmentsCollection.updateOne(
+          {departmentCode:batchId.slice(4,9)},
+          {
+            $push:{
+              "allPresentMembers":memberInfo
+            }
+          }
+        )
       }
+      console.log("comleted properly")
       resolve()
     }catch{
       reject()
@@ -238,12 +261,16 @@ SessionBatch.makeSessionBatchPresentLeader= function(batchId,newLeaderData){
 SessionBatch.addOnBatchPresentMembers= function(batchId,studentData){
   return new Promise(async (resolve, reject) => {
     try{
-      
+        let studentInfo={
+          regNumber:studentData.regNumber,
+          userName:studentData.userName,
+          createdDate:new Date()
+        }
         await sessionBatchesCollection.updateOne(
           { batchId: batchId },
           {
             $push: {
-              allMembers: studentData
+              "allMembers": studentInfo
             }
           }
         )

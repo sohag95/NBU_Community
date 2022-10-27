@@ -1,4 +1,5 @@
 const Activity = require('../models/Activity')
+const Department = require('../models/Department')
 const GetAllMembers = require('../models/GetAllMembers')
 const OfficialUsers = require('../models/OfficialUsers')
 const OfficialUser=require('../models/OfficialUsers')
@@ -42,6 +43,7 @@ exports.test =async function (req, res) {
   //   //this will execute all the time
   //   console.log("After date :",twentyMinutesLater)
   // }
+  //await Department.sentNewStudentRequestOnDepartment("COMSC","sohag roy")
   let date=new Date()
   res.render('test-page',{
     date:date
@@ -201,9 +203,15 @@ exports.loggingOut = function (req, res) {
 exports.getSignUpForm =async function (req, res) {
   try{
     let data=await OfficialUser.getDepartmentAndSessionData()
+    data.allDepartments.sort(function(a, b){
+      if(a.departmentName < b.departmentName) { return -1; }
+      if(a.departmentName > b.departmentName) { return 1; }
+      return 0;
+    })
+    console.log("data:",data)
      res.render("sign-up-form",{
       allDepartments:data.allDepartments,
-      allSessionYears:data.allSessionYears
+      allSessionYears:data.allSessionYears.reverse()
     })
   }catch{
     res.render("404")

@@ -47,6 +47,20 @@ exports.getStudentHomePage=async function(req,res){
       if(activityIds.length){
         postActivities=await Activity.getAllActivityDetailsOfArrayIds(activityIds)
       }
+    }else{
+      //this section will chenge session field Data | as verifiers changes dynamically
+      let profileInfo=await Student.getStudentDataByRegNumber(req.regNumber)
+      if(!profileInfo.isVerified){
+        req.session.user.otherData.verifiedBy.verifiers=profileInfo.verifiedBy.verifiers
+        req.session.user.otherData.verifiedBy.verificationType=profileInfo.verifiedBy.verificationType
+        req.session.user.otherData.verifiedBy.message=profileInfo.verifiedBy.message
+        if(profileInfo.verifiedBy.verificationType=="rejected"){
+          req.session.user.otherData.verifiedBy.verifiers=profileInfo.verifiedBy.rejectedBy
+        }
+      }else{
+        req.session.user.otherData.isVerified=true
+        req.session.user.otherData.verifiedBy.verifiers=null
+      }
     }
     console.log("Global notifications :",globalNotifications)
     console.log("postActivities :",postActivities)

@@ -178,35 +178,38 @@ Admin.setUpStartingData=function(){
   //   email:"",
   //   phone:"",
   //   password:"",
-  //   presentSession:null,//have to take those data on other table
+  //   presentSession:null,//have to take this data field on other table
   //   allSessionYears:[],
   //   rejectedAccounts:[],
   //   isStartingSetUpDone:false, //have to add
   // }
-  
+  //all controllers should be added by the admin,i have to add it later
   let allNeededDataSets=[
     {
       dataType:"societyControllerAuthData",
       regNumber:"2022UNSCN9999",
-      email:"",
-      phone:"",
-      password:"",
+      userName:"Arindam Sarkar",
+      email:"roysohag95@gmail.com",
+      phone:"7468987072",
+      password:"qwertyqwerty",
     },
     {
       dataType:"postControllerAuthData",
       regNumber:"2022POSTC9999",
-      email:"",
-      phone:"",
-      password:"",
+      userName:"Pranab Sinha",
+      email:"roysohag95@gmail.com",
+      phone:"7468987072",
+      password:"qwertyqwerty",
       submittedActivities:[],
       completedActivities:[]
     },
     {
       dataType:"videoEditorAuthData",
       regNumber:"2022EDITR9999",
-      email:"",
-      phone:"",
-      password:"",
+      userName:"Tanmay Roy",
+      email:"roysohag95@gmail.com",
+      phone:"7468987072",
+      password:"qwertyqwerty",
       assignedActivities:[],
       completedActivities:[]
     },
@@ -221,9 +224,9 @@ Admin.setUpStartingData=function(){
     },
     {
       dataType:"activityTopicsBySource",
-      batchTopics:["Campus Tour","Social Work","Group Study","Having Fun","Tour","Other"],
-      departmentTopics:["Freshers Party","Farewell Party","Get Together","Social Work","Study","Festival Organization","Tour","Others"],
-      groupTopics:["Research Talk","Idea Discussion","Get Together","Others"]
+      batchTopics:["Having Fun","Campus Tour","Social Work","Group Study","Tour","Other"],
+      departmentTopics:["Get Together","Freshers Party","Farewell Party","Social Work","Study","Festival Organization","Tour","Others"],
+      groupTopics:["Get Together","Research Talk","Idea Discussion","Others"]
     },
     {
       dataType:"allActivityHandling",

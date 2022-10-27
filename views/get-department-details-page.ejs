@@ -8,7 +8,7 @@
         <div class="">
           <div style="width: 100%;position: relative;">
             <div>
-            <img class="department-batch-group-cover-image" src="/image/batch-banner/large/<%=departmentDetails.departmentCode%>" width="1000" height="250"/>
+            <img class="department-batch-group-cover-image" src="/image/department-banner/large/<%=departmentDetails.departmentCode%>" width="1000" height="250"/>
             <%if(checkData.isPresentLeader || checkData.isPreviousLeader){%>
               <div style="position: absolute;right: 10px;top: 10px;">
                 <h3 type="button" class="text-info" data-toggle="modal" data-target="#bannerPicUploadCenter"><i class="fas fa-camera-retro"></i></h3>
@@ -133,7 +133,7 @@
                         <h6  class="d-block bolder text-warning mb-0 text-center"><strong>No Activity available!! </strong> </h6>
                         <div class="d-block text-info text-center">Contact with the present leader to create new activity!!</div>
                       <%}else{%>
-                        <div class="d-block text-info text-center">There is no activity going on.</div>
+                        <h5 class=" text-warning text-center"><strong>No Activity Going On!!</strong> </h5>
                       <%}%>
                     <%}%>
                   <%}%> 
@@ -206,7 +206,7 @@
         </div>
 
         <hr>
-    <%if(checkData.isDepartmentLeader || user.accountType=="societyController"){%>
+    <%if(checkData.isDepartmentLeader){%>
       <%if(departmentDetails.newBatchMemberRequests.length){%>
         <div class="item-container path">
           <strong><h5>New Membersip Requests (<%=departmentDetails.newBatchMemberRequests.length%>)</h5></strong>
@@ -230,7 +230,7 @@
                 <div class="col-md-6 left-member-container" >
                   <%for(let i=0;i<middleIndex;i++){%>
                     <div class="member-container align-items-center">
-                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.newBatchMemberRequests[0].regNumber%>">
+                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.newBatchMemberRequests[i].regNumber%>">
                       <div class="name-container">
                         <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=departmentDetails.newBatchMemberRequests[i].regNumber%>/profile"><%=departmentDetails.newBatchMemberRequests[i].userName%></a></strong>
                       </div>
@@ -243,7 +243,7 @@
                 <div class="col-md-6 right-member-container" >
                   <%for(let j=middleIndex;j<departmentDetails.newBatchMemberRequests.length;j++){%>
                     <div class="member-container align-items-center">
-                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.newBatchMemberRequests[0].regNumber%>" alt="">
+                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.newBatchMemberRequests[j].regNumber%>" alt="">
                       <div class="name-container">
                         <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=departmentDetails.newBatchMemberRequests[j].regNumber%>/profile"><%=departmentDetails.newBatchMemberRequests[j].userName%></a></strong>
                       </div>
@@ -280,7 +280,7 @@
                         <span class="d-block"><strong >Phone : </strong><%=departmentDetails.presentLeader.phone%></span>
                       </div>
                     </div>
-                    <%if(departmentDetails.presentLeader.votingPoleId){%>
+                    <%if(departmentDetails.presentLeader.votingPoleId!="auto"){%>
                     <a  href="/leader-voting/<%=departmentDetails.presentLeader.votingPoleId%>/details">
                       <i class="text-info">Go to voting details...</i>
                     </a>
@@ -303,7 +303,7 @@
                         <span class="d-block"><strong >Phone : </strong><%=departmentDetails.previousLeader.phone%></span>
                       </div>
                     </div>
-                    <%if(departmentDetails.previousLeader.votingPoleId){%>
+                    <%if(departmentDetails.previousLeader.votingPoleId!="auto"){%>
                       <a  href="/leader-voting/<%=departmentDetails.previousLeader.votingPoleId%>/details">
                         <i class="text-info">Go to voting details...</i>
                       </a>
@@ -317,12 +317,12 @@
               </div>
     
               <div class="item-container mb-2 allLeadersContainer" >
-                <strong><h5 class="bolder">All Present Leaders (<%=departmentDetails.allLeaders.length%>)</h5></strong>
+                <strong><h5 class="bolder">All Present Leaders (<%=departmentDetails.allPresentLeaders.length%>)</h5></strong>
                 <hr style="margin-bottom: .55rem;margin-top: 0rem;">
-                <%if(!departmentDetails.allLeaders.length){%>
+                <%if(!departmentDetails.allPresentLeaders.length){%>
                   <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>
                 <%}else{%>
-                  <%departmentDetails.allLeaders.forEach((leader)=>{%>
+                  <%departmentDetails.allPresentLeaders.forEach((leader)=>{%>
                     <div class="d-flex align-items-center student-room-container" >
                       <div >
                         <img class="avatar-small"  src="/image/profile/small/profile-<%=leader.regNumber%>" alt="">

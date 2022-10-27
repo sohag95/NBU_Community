@@ -53,7 +53,7 @@ exports.getDepartmentDetailsPage =async function (req, res) {
       
       checkData.isXstudent=req.session.user.otherData.isXstudent
 
-      departmentDetails.allLeaders.forEach((leader)=>{
+      departmentDetails.allPresentLeaders.forEach((leader)=>{
         if(leader.regNumber==req.regNumber){
           checkData.isDepartmentLeader=true
         }

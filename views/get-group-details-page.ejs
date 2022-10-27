@@ -127,7 +127,7 @@
                     <h6  class="d-block bolder text-warning mb-0 text-center"><strong>No Activity available!! </strong> </h6>
                     <div class="d-block text-info text-center">Contact with the present leader to create new activity!!</div>
                   <%}else{%>
-                    <div class="d-block text-info text-center">There is no activity going on.</div>
+                    <h5 class=" text-warning text-center"><strong>Not Activity Going On !!</strong></h5>
                   <%}%>
                 <%}%>
               <%}%> 
@@ -220,7 +220,7 @@
                         <span class="d-block"><strong >Phone : </strong><%=groupDetails.presentLeader.phone%></span>
                       </div>
                     </div>
-                    <%if(groupDetails.presentLeader.votingPoleId){%>
+                    <%if(groupDetails.presentLeader.votingPoleId!="auto"){%>
                     <a  href="/leader-voting/<%=groupDetails.presentLeader.votingPoleId%>/details">
                       <i class="text-info">Go to voting details...</i>
                     </a>
@@ -244,7 +244,7 @@
                         <span class="d-block"><strong >Phone : </strong><%=groupDetails.previousLeader.phone%></span>
                       </div>
                     </div>
-                    <%if(groupDetails.previousLeader.votingPoleId){%>
+                    <%if(groupDetails.previousLeader.votingPoleId!="auto"){%>
                       <a  href="/leader-voting/<%=groupDetails.previousLeader.votingPoleId%>/details">
                         <i class="text-info">Go to voting details...</i>
                       </a>
@@ -258,12 +258,12 @@
           </div>
 
           <div class="item-container mb-2 allLeadersContainer" >
-            <strong><h5 class="bolder">All Present Leaders (<%=groupDetails.allLeaders.length%>)</h5></strong>
+            <strong><h5 class="bolder">All Present Leaders (<%=groupDetails.allPresentLeaders.length%>)</h5></strong>
             <hr style="margin-bottom: .55rem;margin-top: 0rem;">
-            <%if(!groupDetails.allLeaders.length){%>
+            <%if(!groupDetails.allPresentLeaders.length){%>
               <div class="btn btn-lg btn-block btn-info">There is no leader available!!</div>
             <%}else{%>
-              <%groupDetails.allLeaders.forEach((leader)=>{%>
+              <%groupDetails.allPresentLeaders.forEach((leader)=>{%>
                 <div class="d-flex align-items-center student-room-container" >
                   <div >
                     <img class="avatar-small"  src="/image/profile/small/profile-<%=leader.regNumber%>" alt="">

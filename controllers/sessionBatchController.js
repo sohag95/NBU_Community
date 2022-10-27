@@ -22,13 +22,13 @@ exports.createNewSessionBatch=async function(req,res){
       await Department.updateActiveBatchesSequenceYear(dataSetToDept)
       req.flash("success", "New batch added successfully!!")
       req.session.save(function () {
-        res.redirect("/admin-home")
+        res.redirect("/add-new-session-batch")
       })
       
     }).catch((error)=>{
       req.flash("errors", error)
       req.session.save(function () {
-        res.redirect("/admin-home")
+        res.redirect("/add-new-session-batch")
       })
     })
   }catch{

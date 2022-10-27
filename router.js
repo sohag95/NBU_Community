@@ -80,6 +80,7 @@ router.get('/handle-reporting-page',officialUserController.societyControllerMust
 router.get('/verify-user-account-page',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.getVerifyUserAccountPage)
 router.get('/society-handling-page',officialUserController.societyControllerMustBeLoggedIn,societyControllerController.getSocietyHandlingPage)
 router.post("/report-resolved",officialUserController.societyControllerMustBeLoggedIn,reportController.reportResolved)
+router.post("/goto-verification-page",officialUserController.societyControllerMustBeLoggedIn,societyControllerController.gotoVerificationPage)
 
 //########################
 //Reporting related router

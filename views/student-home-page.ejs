@@ -3,59 +3,75 @@
 <%- include('includes/flash') %>
 
 
-  
-  <!-- ######################################### -->
+<!-- ######################################### -->
 
   
 <div style="display: flex;flex-wrap: wrap;">
   <%- include('includes/designs/student-home-screen-left-part') %>
   <div class="col-lg-6 pt-2 "  >
     
-    
+    <div class="row text-center" >
+      <div class="col-sm-6 mb-2">
+        <a href="/top-activities">
+          <div class="student-home-link-btn" style="background-color: rgb(91, 126, 126);">
+            <strong>See Top Activities</strong>
+          </div>
+        </a>
+      </div>
+      <div class="col-sm-6 mb-2">
+        <a href="/todays-activities">
+          <div class="student-home-link-btn" style="background-color:  rgb(224, 166, 31);">
+            <strong>Today's Activities</strong>
+          </div>
+        </a>
+      </div>
+    </div>
+    <hr class="mb-2" style="margin-top: 0px;">
       <%if(!user.otherData.isVerified){%>
         <div class="ml-2 mr-2 mb-1">
-          <h5 ><strong class="text-success bolder">Hayy, <%=user.userName%> Your Registration number is : <%=user.regNumber%></strong> </h5>
-          <h5 ><strong class="text-info bolder">Your verification type is : <%=user.otherData.verifiedBy.verificationType%></strong> </h5>
-          <hr>
-          <h5 class="text-warning bolder"><%=user.otherData.verifiedBy.message%> Please contact following leaders to verify your account sooner . Or wait few days , verifier will call you for verifing your account.</h5>
-          <%user.otherData.verifiedBy.verifiers.forEach((leader)=>{%>
+          <h5 ><strong class="text-primary bolder">Hayy, <span class="text-success"><%=user.userName%></span> Your Registration number is : <%=user.regNumber%></strong> </h5>
+          <%if(user.otherData.verifiedBy.verificationType=="rejected"){%>
+            <hr>
+            <h5 class="text-danger text-center bolder"><strong >Your Account has been rejected!!</strong> </h5>
+            <hr>
+            <h5 class="text-warning bolder"><strong class="bolder">Reason : </strong><%=user.otherData.verifiedBy.message%></h5>
+            <strong class="bolder d-block">Account Rejected By :</strong>
             <div class="student-room-container" style="display: flex;width: 100%;">
               <div class="mr-2" >
-                <img class="member-avatar"  src="/image/profile/medium/profile-<%=leader.regNumber%>" alt="">
+                <img class="member-avatar"  src="/image/profile/medium/profile-<%=user.otherData.verifiedBy.verifiers.regNumber%>" alt="">
               </div>
               <div class="ml-2">
-                <strong class="d-block">Verifier : <%=leader.type%></strong>
-                <strong class="d-block">Name : <%=leader.userName%></strong>
-                <strong class="d-block">Phone : <%=leader.phone%></strong>          
+                <strong class="d-block">Verifier : <%=user.otherData.verifiedBy.verifiers.verifierType%></strong>
+                <strong class="d-block">Name : <%=user.otherData.verifiedBy.verifiers.userName%></strong>
+                <strong class="d-block">Rejected on : <%= user.otherData.verifiedBy.verifiers.verificationDate.getDate() %> <%=user.otherData.verifiedBy.verifiers.verificationDate.toLocaleString('default', { month: 'long' }) %> , <%= user.otherData.verifiedBy.verifiers.verificationDate.getFullYear() %> at <%=user.otherData.verifiedBy.verifiers.verificationDate.getHours()%>:<%=user.otherData.verifiedBy.verifiers.verificationDate.getMinutes()%></strong>          
               </div>
             </div>
-          <%})%>
+            <hr>
+          <%}else{%>
+            <h5 ><strong class="text-info bolder">Your verification type is : <%=user.otherData.verifiedBy.verificationType%></strong> </h5>
+            <h6 ><strong class="text-secondary bolder">[Your "Verification Code" has been sent to your given email id.]</strong> </h6>
+            <hr>
+            <h5 class="text-warning bolder"><%=user.otherData.verifiedBy.message%> Please contact following leaders to verify your account sooner . Or wait few days , verifier will call you for verifing your account.</h5>
+            <%user.otherData.verifiedBy.verifiers.forEach((leader)=>{%>
+              <div class="student-room-container" style="display: flex;width: 100%;">
+                <div class="mr-2" >
+                  <img class="member-avatar"  src="/image/profile/medium/profile-<%=leader.regNumber%>" alt="">
+                </div>
+                <div class="ml-2">
+                  <strong class="d-block">Verifier : <%=leader.type%></strong>
+                  <strong class="d-block">Name : <%=leader.userName%></strong>
+                  <strong class="d-block">Phone : <%=leader.phone%></strong>          
+                </div>
+              </div>
+            <%})%>
+          
+          <%}%>
         </div>
         <div class="colored-container mt-4">
           <p><strong>This section will contain published activities from different departments.Now this section is locked as your account is not verified yet.</strong></p>
-          <hr>
-          <p class="text-warning">[If your account has been verified but still this section is showed,please log-out the account and log-in again.]</p>
         </div>
       <%}else{%>
       <div>
-        
-          <div class="row text-center" >
-            <div class="col-sm-6 mb-2">
-              <a href="/top-activities">
-                <div class="student-home-link-btn" style="background-color: rgb(91, 126, 126);">
-                  <strong>See Top Activities</strong>
-                </div>
-              </a>
-            </div>
-            <div class="col-sm-6 mb-2">
-              <a href="/todays-activities">
-                <div class="student-home-link-btn" style="background-color:  rgb(224, 166, 31);">
-                  <strong>Today's Activities</strong>
-                </div>
-              </a>
-            </div>
-          </div>
-        <hr class="mb-2" style="margin-top: 0px;">
         <%if(!postActivities.length){%>
           <%- include('includes/no-activity-banner') %>
         <%}else{%>

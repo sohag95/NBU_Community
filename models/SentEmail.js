@@ -46,7 +46,7 @@ SentEmail.prototype.sentEmailToMultipleAccount=function(emailIds){
   })
 }
 
-SentEmail.prototype.mailAsAccountCreated=function(emailId,verificationCode,regNumber,password){
+SentEmail.prototype.mailAsAccountCreated=function(emailId,verificationCode,regNumber,password,communityControllerName){
   return new Promise(async (resolve, reject) => {
     try{
       let message=`  
@@ -63,10 +63,10 @@ SentEmail.prototype.mailAsAccountCreated=function(emailId,verificationCode,regNu
         <hr>
         <p><strong>Thanking You</strong></p>
         <p><strong>Behalf of NBU Community</strong></p>
-        <p><strong>-Sohag Roy (Community Controller)</strong></p>
+        <p><strong>-${communityControllerName} (Community Controller)</strong></p>
       </div>`
       //let message="Sorry i am using random email id to learn sending email through node application."
-      this.mailOptions.subject="test",
+      this.mailOptions.subject="NBU Community Account verification code received",
       this.mailOptions.html=message
       await this.sentEmailToSingleAccount(emailId)
       resolve()

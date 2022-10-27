@@ -39,7 +39,7 @@ Verification.prototype.validateData=function(){
   console.log("Verifier Data :",this.verifierData)
 }
 
-Verification.prototype.markAsVerfiedAccount=function(){
+Verification.prototype.markAsVerifiedAccount=function(){
   return new Promise(async (resolve, reject) => { 
     try{
       await studentsCollection.findOneAndUpdate({regNumber:this.studentData.regNumber},{
@@ -58,38 +58,40 @@ Verification.prototype.markAsVerfiedAccount=function(){
   })
 }
 
-Verification.prototype.setAccountAsGroupMember=function(){
-  return new Promise(async (resolve, reject) => { 
-    try{
-      let memberData={
-        regNumber:this.studentData.regNumber,
-        userName:this.studentData.userName,
-        departmentName:this.studentData.departmentName,
-        createdDate:new Date()
-      }
-      await Group.addOnGroupPresentMember(this.studentData.groupId,memberData)
-      resolve()
-    }catch{
-      reject()
-    }
-  })
-}
+//group member will be added after becoming department leader
+// Verification.prototype.setAccountAsGroupMember=function(){
+//   return new Promise(async (resolve, reject) => { 
+//     try{
+//       let memberData={
+//         regNumber:this.studentData.regNumber,
+//         userName:this.studentData.userName,
+//         departmentName:this.studentData.departmentName,
+//         createdDate:new Date()
+//       }
+//       await Group.addOnGroupPresentMember(this.studentData.groupId,memberData)
+//       resolve()
+//     }catch{
+//       reject()
+//     }
+//   })
+// }
 
-Verification.prototype.setAccountAsDepartmentMember=function(){
-  return new Promise(async (resolve, reject) => { 
-    try{
-      let memberData={
-        regNumber:this.studentData.regNumber,
-        userName:this.studentData.userName,
-        createdDate:new Date()
-      }
-      await Department.addOnDepartmentPresentMember(this.studentData.departmentCode,memberData)
-      resolve()
-    }catch{
-      reject()
-    }
-  })
-}
+//department member will be added after becoming batch leader
+// Verification.prototype.setAccountAsDepartmentMember=function(){
+//   return new Promise(async (resolve, reject) => { 
+//     try{
+//       let memberData={
+//         regNumber:this.studentData.regNumber,
+//         userName:this.studentData.userName,
+//         createdDate:new Date()
+//       }
+//       await Department.addOnDepartmentPresentMember(this.studentData.departmentCode,memberData)
+//       resolve()
+//     }catch{
+//       reject()
+//     }
+//   })
+// }
 
 Verification.prototype.getRemainingRequestsData=function(newBatchMemberRequests){
 
@@ -108,8 +110,6 @@ Verification.prototype.updateRemainAccountsVerificationMessage=function(){
     try{
       let communityController=await OfficialUsers.getCommunityControllerData()
       
-      //have to work on this page
-      //have to collect community controller details
       let verifiedBy={
         verificationType:"case3",
         message:"After your verification you would consider as batch student.",
@@ -128,9 +128,7 @@ Verification.prototype.updateRemainAccountsVerificationMessage=function(){
           }
         ]
       }
-      // this.remainingRequests.forEach(async(member)=>{
-      //   await Student.updateVerificationMessage(member.regNumber,verifiedBy)
-      // })
+      
       for( let member of this.remainingRequests){
         await Student.updateVerificationMessage(member.regNumber,verifiedBy)
       }
@@ -147,9 +145,6 @@ Verification.prototype.pushAllRemainAccountsOnBatch=function(){
       for(let memberData of this.remainingRequests){
         await SessionBatch.sentNewStudentRequestOnBatch(this.studentData.batchId,memberData)
       }
-      // this.remainingRequests.forEach(async(memberData)=>{
-      //   await SessionBatch.sentNewStudentRequestOnBatch(this.studentData.batchId,memberData)
-      // })
       resolve()
     }catch{
       reject()
@@ -171,7 +166,7 @@ Verification.prototype.case1andcase2LeadOperations=function(){
         console.log("functions ran.")
       }
       await SessionBatch.addOnBatchPresentMembers(this.studentData.batchId,this.studentShortInfo)
-      await this.setAccountAsDepartmentMember()
+      //await this.setAccountAsDepartmentMember()
       await Department.updateDepartmentRequestFieldEmpty(this.studentData.departmentCode)
       resolve()
     }catch{
@@ -196,22 +191,18 @@ Verification.prototype.case1Verification=function(){
   //if there are multiple requests,then remaining accounts verifiedBy data should change and push all those account on sessionBatche's member request field
   return new Promise(async (resolve, reject) => { 
     try{
-      await this.markAsVerfiedAccount()
-      await this.setAccountAsGroupMember()
+      await this.markAsVerifiedAccount()
+      //await this.setAccountAsGroupMember()
       await this.case1andcase2LeadOperations()
       await Department.makeDepartmentPresentLeader(this.studentData.departmentCode,this.studentShortInfo)
-      await SessionBatch.makeSessionBatchPresentLeader(this.studentData.batchId,this.studentShortInfo)
       //make groups 1st case1 user as group leader,and other user as group member
-      let leaderData={
-        regNumber:this.studentData.regNumber,
-        userName:this.studentData.userName,
-        departmentName:this.studentData.departmentName,
-        phone:this.studentData.phone,
-        createdDate:new Date(),
-        aim:"Making the community strong.",
-        votingPoleId:"auto"
-      }
-      await Group.addFirstCase1UserAsDefaultGroupLeader(this.studentData.groupId,leaderData)
+      console.log("Check 1 ran")
+      let batchLeaderData=this.studentShortInfo
+      this.studentShortInfo.departmentName=this.studentData.departmentName
+      console.log("Check 2 ran")
+      await Group.addFirstCase1UserAsDefaultGroupLeader(this.studentData.groupId,this.studentShortInfo)
+      await SessionBatch.makeSessionBatchPresentLeader(this.studentData.batchId,batchLeaderData)
+      console.log("DONE")
       resolve()
     }catch{
       reject()
@@ -254,7 +245,7 @@ Verification.prototype.case3Verification=function(){
   //remove account data from newMemberRequests
   return new Promise(async (resolve, reject) => { 
     try{
-      await this.markAsVerfiedAccount()
+      await this.markAsVerifiedAccount()
       await SessionBatch.addOnBatchPresentMembers(this.studentData.batchId,this.studentShortInfo)
       await this.updateNewMemberRequestsFieldOnBatch()
       resolve()
@@ -272,7 +263,7 @@ Verification.prototype.case2Verification=function(){
   //if there are multiple requests,then remaining accounts verifiedBy data should change and push all those account on sessionBatche's member request field
   return new Promise(async (resolve, reject) => { 
     try{
-      await this.markAsVerfiedAccount()
+      await this.markAsVerifiedAccount()
       await this.case1andcase2LeadOperations()
       await SessionBatch.makeSessionBatchPresentLeader(this.studentData.batchId,this.studentShortInfo)
       resolve()
@@ -315,7 +306,7 @@ Verification.prototype.markAsRejectedAccount=function(reason){
           "verifiedBy.rejectedBy":this.verifierData
         }
       })
-      await Notification.accountVerifiedToAccountHolder(this.studentData.regNumber)
+      await Notification.accountRejectedToAccountHolder(this.studentData.regNumber)
       resolve()
     }catch{
       reject()

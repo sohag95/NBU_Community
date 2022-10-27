@@ -83,7 +83,7 @@ Notification.accountVerifiedToAccountHolder=function(regNumber){
     try{
         let gotoLink="/batch/"+regNumber.slice(0,9)+"/details"
         let notification={
-        message:"Congratulations , your account has been verified!!.No you are an active member of NBU Community.",
+        message:"Congratulations , your account has been verified!!.Now you are an active member of NBU Community.",
         gotoText:"Check your batch details",
         gotoLink:gotoLink,
         createdDate:new Date()
@@ -96,6 +96,23 @@ Notification.accountVerifiedToAccountHolder=function(regNumber){
   })
 }
 
+//done
+Notification.accountRejectedToAccountHolder=function(regNumber){
+  return new Promise(async (resolve, reject) => {
+    try{
+        let notification={
+        message:"Sorry!! Your account has been rejected!!Your account will be deleted soon.",
+        gotoText:null,
+        gotoLink:null,
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToOneUser(regNumber,notification)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
 //done
 Notification.activityCreatedToAllSourceMembers=function(regNumbers,activityId,activityType,isTopicByVote){
   return new Promise(async (resolve, reject) => {
@@ -114,6 +131,23 @@ Notification.activityCreatedToAllSourceMembers=function(regNumbers,activityId,ac
         message:message,
         gotoText:gotoText,
         gotoLink:gotoLink,
+        createdDate:new Date()
+      }
+      await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
+      resolve()
+    }catch{
+      reject()
+    }
+  })
+}
+
+Notification.batchStateChangedToAllBatchMembers=function(regNumbers,state){
+  return new Promise(async (resolve, reject) => {
+    try{
+        let notification={
+        message:"Congratulations!! Your batch state has upgraded!! Now you will be considered as - "+state+" Year Batch Student.",
+        gotoText:null,
+        gotoLink:null,
         createdDate:new Date()
       }
       await Notification.sentNotificationToMultipleUsers(regNumbers,notification)

@@ -28,7 +28,7 @@ exports.setUpStartingData =async function (req, res) {
       })
     })
 }
-
+ 
 exports.addNewSessionBatchPage =async function (req, res) {
   try{
     let getAllGroups=await Group.getAllGroups()
@@ -188,13 +188,13 @@ exports.setPresentSessionYear = function (req, res) {
       req.session.user.otherData.presentSession=req.body.sessionYear
       req.flash("success", "Present session year added successfully!!")
       req.session.save(function () {
-        res.redirect("/admin-home")
+        res.redirect("/add-new-session-batch")
       })
     })
     .catch(error => {
       req.flash("errors", error)
       req.session.save(function () {
-        res.redirect("/admin-home")
+        res.redirect("/add-new-session-batch")
       })
     })
   }else{

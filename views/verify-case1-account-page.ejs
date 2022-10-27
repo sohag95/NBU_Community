@@ -38,13 +38,12 @@
                       <%department.newBatchMemberRequests.forEach((student)=>{%>
                         <div class="student-room-container bg-warning" style="display: flex;width: 100%;">
                           <div class="mr-2" >
-                            <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="" alt="">
+                            <img class="avatar-small" style="top:2px ;margin-left: 0rem;margin-right: 2px;" src="/image/profile/small/profile-<%=student.regNumber%>"alt="">
                           </div>
                           <div class="row"  style="width: 100%;">
                             <div class="col-sm-6"  style="width: 100%;display: flex;">
                               <div style="width: 100%;">
                                 <strong class="d-block">Name : <%=student.userName%></strong>
-                                <strong class="d-block">Phone : <%=student.phone%></strong>
                               </div>
                             </div>
                             <div class="col-sm-6 " style="margin: auto;">

@@ -51,7 +51,7 @@ exports.getGroupDetailsPage =async function (req, res) {
 
     if(checkData.isUserLoggedIn){
       isXstudent=req.session.user.otherData.isXstudent
-      groupDetails.allLeaders.forEach((leader)=>{
+      groupDetails.allPresentLeaders.forEach((leader)=>{
         if(leader.regNumber==req.regNumber){
           checkData.isGroupLeader=true
         }

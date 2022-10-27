@@ -46,7 +46,7 @@
           <h5>
             <strong>
               <span class="text-primary d-block" > Department :<a href="/department/<%=batchDetails.batchId.slice(4,9)%>/details"> <%=batchDetails.departmentName%></a></span>
-              <span class="text-primary d-block"> Batch Session : 20<%=batchDetails.batchId.slice(0,2)%>-20<%=batchDetails.batchId.slice(2,4)%></span>
+              <span class="text-primary d-block"> Batch Session : 20<%=batchDetails.batchId.slice(0,2)%>-20<%=batchDetails.batchId.slice(2,4)%> <span class="text-warning">(<%=batchDetails.batchState%> Year)</span></span>
             </strong>
           </h5>  
         </div>
@@ -120,7 +120,7 @@
                     <h6  class="d-block bolder text-warning mb-0 text-center"><strong>No Activity available!! </strong> </h6>
                     <div class="d-block text-info text-center">Contact with the present leader to create new activity!!</div>
                   <%}else{%>
-                    <div class="d-block text-info text-center">There is no activity going on.</div>
+                    <h5 class=" text-warning text-center"><strong>Not Activity Going On !!</strong></h5>
                   <%}%>
                 <%}%>
               <%}%> 
@@ -193,10 +193,8 @@
       </div>
     </div>
 
-    
-
     <hr>
-    <%if(checkData.isBatchLeader || user.accountType=="societyController"){%>
+    <%if(checkData.isBatchLeader){%>
       <%if(batchDetails.newMemberRequests.length){%>
         <div class="item-container path">
           <strong><h5>New Membersip Requests (<%=batchDetails.newMemberRequests.length%>)</h5></strong>
@@ -207,7 +205,6 @@
                   <img class="member-avatar"  src="/image/profile/medium/profile-<%=batchDetails.newMemberRequests[0].regNumber%>" alt="">
                   <div class="name-container">
                     <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=batchDetails.newMemberRequests[0].regNumber%>/profile"><%=batchDetails.newMemberRequests[0].userName%></a></strong>
-                    <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
                   </div>
                   <a class="d-block" href="/verification/case3/<%=batchDetails.newMemberRequests[0].regNumber%>/page">
                     <div class="btn btn-warning btn-sm mr-1">Verify Account</div>
@@ -271,7 +268,7 @@
                     <span class="d-block"><strong >Phone : </strong><%=batchDetails.presentLeader.phone%></span>
                   </div>
                 </div>
-                <%if(batchDetails.presentLeader.votingPoleId){%>
+                <%if(batchDetails.presentLeader.votingPoleId!="auto"){%>
                 <a  href="/leader-voting/<%=batchDetails.presentLeader.votingPoleId%>/details">
                   <i class="text-info">Go to voting details...</i>
                 </a>
@@ -294,7 +291,7 @@
                     <span class="d-block"><strong >Phone : </strong><%=batchDetails.previousLeader.phone%></span>
                   </div>
                 </div>
-                <%if(batchDetails.previousLeader.votingPoleId){%>
+                <%if(batchDetails.previousLeader.votingPoleId!="auto"){%>
                   <a  href="/leader-voting/<%=batchDetails.previousLeader.votingPoleId%>/details">
                     <i class="text-info">Go to voting details...</i>
                   </a>
@@ -320,9 +317,6 @@
                   </div>
                   <div class="ml-2">
                     <span class="d-block"><strong >Name : </strong><%=leader.userName%></span>
-                    <%if(checkData.isBatchMember){%>
-                      <span class="d-block"><strong >Phone : </strong><%=leader.phone%></span>
-                    <%}%>
                   </div>
                 </div>
               <%})%>
