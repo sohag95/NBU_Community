@@ -412,7 +412,11 @@
     </div>
   
     
-    
+    <%if(user){%>
+      <%if(user.regNumber.slice(4,9)==departmentDetails.departmentCode){%>
+        <span id="student-department-page"></span>
+      <%}%>
+    <%}%>
     <!-- New design from upper section -->
   
 <%- include('includes/footer') %>

@@ -438,7 +438,11 @@
   <div class="col-lg notVisibleOnCollapse" >
   </div>
 </div>
-
+<%if(user){%>
+  <%if(user.regNumber.slice(0,9)==batchDetails.batchId){%>
+    <span id="student-batch-page"></span>
+  <%}%>
+<%}%>
 
 
 <!-- New design from upper section -->

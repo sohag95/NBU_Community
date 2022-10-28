@@ -60,7 +60,12 @@
 
             <div class="item-container mb-2">
               <a href="/campus-group/student/<%=profileInfo.regNumber%>">
-                <div class="btn btn-success btn-block"><%=profileInfo.userName%>'s Campus Groups(<%=profileInfo.actionData.noOfCampusGroup%>) <i class="fas fa-arrow-right"></i></div>
+                <div class="btn btn-success btn-block">
+                  <%if(checkData.isProfileOwner){%>
+                  Your
+                  <%}else{%>
+                    <%=profileInfo.userName%>'s
+                  <%}%> Campus Groups(<%=profileInfo.actionData.noOfCampusGroup%>) <i class="fas fa-arrow-right"></i></div>
               </a>
             </div>
             
@@ -153,8 +158,10 @@
         </div>
       </div>
     <%}%>
+    <%if(checkData.isProfileOwner){%>
+      <span id="student-profile-page"></span>
+    <%}%>
     
-
     <!-- **************************************************** -->
 <%- include('includes/designs/profile-related-footer') %>
 

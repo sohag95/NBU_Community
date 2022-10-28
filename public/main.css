@@ -526,7 +526,7 @@ label.star:before {
   flex-wrap: wrap;
   align-items: center;
   background-color: #FFF;
-  padding: .35rem 1rem;
+  padding: 0;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 8%);
  }
 
@@ -1298,3 +1298,12 @@ div.feedbackButton{
   border-radius: 10px;
   margin: auto;
 }
+
+.navigate-icon{
+  padding: .35rem 1rem;
+}
+
+.navigate-mark{
+  background: #b9cada;
+}
+

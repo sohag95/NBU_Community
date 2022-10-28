@@ -247,13 +247,13 @@
           </div>  
          <div class="col-lg-6" style="padding-left: 0px;padding-right: 0px;">
             <div class=" d-flex justify-content-between ">
-              <div class="text-center">
+              <div class="text-center navigate-icon" id="home-icon">
                 <a  href="/student-home">
                   <span ><i class="fas fa-home fa-lg"></i></span>
                  <span class="d-block menu-text" >Home</span>
                 </a>
               </div>
-              <div class="text-center">
+              <div class="text-center navigate-icon" id="notification-icon">
                 <a href="/notifications">
                   <span>
                     <i class="fas fa-bell fa-lg"></i>
@@ -270,26 +270,26 @@
                   <span class="d-block menu-text" >Notifications</span>
                   </a>
               </div> 
-              <div class="text-center">
+              <div class="text-center navigate-icon" id="batch-icon">
                 <a href="/batch/<%=user.regNumber.slice(0,9)%>/details">
                   <span><i class="fas fa-marker fa-lg"></i></span>
                   <span class="d-block menu-text" >Batch</span>
                 </a>
               </div>
-              <div class="text-center">
+              <div class="text-center navigate-icon" id="department-icon">
                 <a href="/department/<%=user.regNumber.slice(4,9)%>/details">
                   <span><i class="fas fa-graduation-cap fa-lg"></i></span>
                   <span class="d-block menu-text" >Department</span>
                   </a>
               </div>
                
-              <div class="text-center">
+              <div class="text-center navigate-icon" id="group-icon">
                 <a href="/group/<%=user.otherData.groupId%>/details">
                   <span><i class="fas fa-users fa-lg"></i></span>
                   <span class="d-block menu-text" >Group</span>
                 </a>
               </div>
-              <div class="text-center notVisibleOnCollapse">
+              <div class="text-center navigate-icon notVisibleOnCollapse" id="profile-icon">
                 <a href="/student/<%=user.regNumber%>/profile">
                   <span><i class="fas fa-user-circle fa-lg"></i></span>
                   <span class="d-block menu-text" >Profile</span>
