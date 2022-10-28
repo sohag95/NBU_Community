@@ -7,7 +7,6 @@ exports.societyControllerHome =async function (req, res) {
   }catch{
     res.render("404")
   }
-  
 }
 
 exports.getVerifyCase1AccountPage =async function (req, res) {

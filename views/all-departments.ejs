@@ -9,7 +9,13 @@
     <img class="home-cover-image" src="/images/allDepartments-cover.png"/>
     <hr>
     <div class="row">
-      
+      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
+        <a href="/all-academic-groups" style="display: block; text-decoration: none;">
+          <div class="department-container" style=" background-color:rgb(6, 66, 66)">
+            <div class="department-title" style="font-size: 1rem;"> <i class="fas fa-users fa-lg"></i> See All Academic Groups <i class="fas fa-arrow-right"></i></div>
+          </div>
+        </a>
+      </div>
       <%departments.forEach((department)=>{%>
         <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
           <a href="/department/<%=department.departmentCode%>/details" style="display: block; text-decoration: none;">

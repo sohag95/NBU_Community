@@ -1196,14 +1196,15 @@ div.feedbackButton{
   height: 6rem;
   width: 100%;
   border-radius: 10px;
-  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .department-title{
   font-size: 1.5rem;
   font-weight: 600;
   text-align: center;
-  padding-top: 1rem;
   color: #fff;
   letter-spacing: 0px;
   line-height: 1.6rem;
@@ -1281,4 +1282,19 @@ div.feedbackButton{
   line-height: 12px;
   padding-bottom: 0.3rem;
   color: #3c3b37;
+}
+
+.group-small-banner{
+  height: 5rem;
+  width: 100%;
+  object-fit: cover;
+  vertical-align: middle;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.small-group-container{
+  width: 100%;
+  border-radius: 10px;
+  margin: auto;
 }

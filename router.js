@@ -42,6 +42,7 @@ router.get('/image/:from/:size/:key',awsS3BucketController.getPhoto)
 //guest-user related routers
 router.get('/',userController.guestHomePage)
 router.get("/all-departments",  userController.allDepartments)
+router.get("/all-academic-groups",  userController.allAcademicGroups)
 
 //checking data during sign up of an account
 router.post("/doesEmailExists",userController.doesEmailExist)

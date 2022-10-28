@@ -1,6 +1,7 @@
 const Activity = require('../models/Activity')
 const Department = require('../models/Department')
 const GetAllMembers = require('../models/GetAllMembers')
+const Group = require('../models/Group')
 const OfficialUsers = require('../models/OfficialUsers')
 const OfficialUser=require('../models/OfficialUsers')
 const SentEmail = require('../models/SentEmail')
@@ -276,6 +277,28 @@ exports.allDepartments=async function(req,res){
     })
     res.render("all-departments",{
       departments:departments
+    })
+  } catch {
+    res.render("404")
+  }
+}
+
+exports.allAcademicGroups=async function(req,res){
+  try {
+    let allGroups=await Group.getAllGroups()
+    console.log(allGroups)
+    allGroups=allGroups.map((group)=>{
+      let groupData={
+        groupId:group.groupId,
+        groupName:group.groupName,
+        departments:group.presentDepartments
+      }
+      return groupData
+    })
+
+    console.log("GroupData :",allGroups)
+    res.render("all-academic-groups",{
+      allGroups:allGroups
     })
   } catch {
     res.render("404")
