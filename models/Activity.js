@@ -63,8 +63,8 @@ Activity.prototype.validate=function(){
   if (this.data.title.lenth>60) {
     this.errors.push("You should write title within 60 characters.")
   }
-  if (this.data.shortDetails.lenth>120) {
-    this.errors.push("You should write short details within 120 characters.")
+  if (this.data.shortDetails.lenth>200) {
+    this.errors.push("You should write short details within 200 characters.")
   }
   if (this.data.activityDate=="") {
     this.errors.push("You should give activity date.")
@@ -211,7 +211,11 @@ Activity.prototype.createNewActivity=function(){
             await GlobalNotifications.activityCreated(createdActivity.insertedId,this.activityData.activitySourceId,this.activityData.sourceName,this.activityData.activityType)
             //--notification to souce---
             await SourceNotifications.activityCreated(createdActivity.insertedId,this.activityData.activitySourceId,this.activityData.activityType,activityData.isTopicByVote)
-            
+            //store activityId on voting pole detaile
+            if(activityData.isTopicByVote){
+              await TopicVoting.storeActivityIdOnVotingPole(this.activityData.votingId,createdActivity.insertedId)
+            }
+
             resolve(createdActivity.insertedId)
           }else{
             reject("Activity not created!")
@@ -242,7 +246,7 @@ Activity.deleteActivity=function(activityData){
         console.log("ran on group")
         await Group.updatePresentActivityFieldAfterDeletion(activityData.sourceId)
        }
-       if(activityData.votingId!=null){
+       if(activityData.votingId){
         //if topic selected by vote then delete the voting details
         await TopicVoting.deleteVotingPole(activityData.votingId)
        }
@@ -250,7 +254,7 @@ Activity.deleteActivity=function(activityData){
        await activityCollection.deleteOne({_id:activityData._id})
        
        //--source notification
-       await SourceNotifications.activityDeleted(activityData.sourceId,activityData.source)
+       await SourceNotifications.activityDeleted(activityData.sourceId)
       resolve()
     }catch{
       reject()
@@ -299,7 +303,7 @@ Activity.prototype.updateEditData=function(id){
       })
       await this.updateSourcePresentActivityFieldData()
       //sent source notification
-      await SourceNotifications.activityFieldsUpdated(new ObjectId(id),this.neededData.sourceId,this,neededData.source)
+      await SourceNotifications.activityFieldsUpdated(String(id),this.neededData.sourceId)
       resolve()
     }catch{
       console.log("I am from editActivityDetails")
@@ -465,14 +469,11 @@ Activity.submitActivityByLeader=function(id,activityParticipants,submittedBy,nee
       })
       //sent activity id to postController to control states of activity
       await OfficialUsers.addSubmittedAcivityIdOnPostControllerAccount(new ObjectId(id))
-      //add activityId on all participants account
-      //get all participants regNumber array
-      let participantsRegNumbers=OtherOperations.getParticipantsRegNumbers(activityParticipants)
-      await StudentDataHandle.addActivityIdOnAllParticipantsAccount(participantsRegNumbers,new ObjectId(id))
       //----notification to post controller-----
-      await Notification.newActivitySubmittedToPostController(new ObjectId(id))
+      //Notification should go on post controller's email id
+      await Notification.newActivitySubmittedToPostController(id)
       //sent notification to source
-      await SourceNotifications.ActivitySubmitted(new ObjectId(id),neededData.sourceId,neededData.source)
+      await SourceNotifications.ActivitySubmitted(id,neededData.sourceId)
       resolve()
     }catch{
       reject("There is some problem.")
@@ -481,7 +482,7 @@ Activity.submitActivityByLeader=function(id,activityParticipants,submittedBy,nee
 }
 
 
-Activity.receiveActivityByPostController=function(id,note,neededData){
+Activity.receiveActivityByPostController=function(id,note,neededData,allParticipants){
   return new Promise(async (resolve, reject) => { 
     try{
       //update state and date
@@ -492,8 +493,13 @@ Activity.receiveActivityByPostController=function(id,note,neededData){
           "postControllerNote":note
         }
       })
+      //add activityId on all participants account
+      //get all participants regNumber array
+      let participantsRegNumbers=OtherOperations.getParticipantsRegNumbers(allParticipants)
+      await StudentDataHandle.addActivityIdOnAllParticipantsAccount(participantsRegNumbers,new ObjectId(id))
+      
       //sent source notification
-      await SourceNotifications.activityReceived(new ObjectId(id),neededData.sourceId,neededData.source)
+      await SourceNotifications.activityReceived(id,neededData.sourceId)
       resolve()
     }catch{
       reject("There is some problem.")
@@ -674,10 +680,6 @@ Activity.prototype.publishActivity=function(activityData,sourceData,editorRegNum
       //update activity id on leaders account
       await StudentDataHandle.addActivityIdOnLeadersAccount(leadRegNumbers,activityData._id)
       //---------------------------------------
-      //create voting pole to select new leader as after each activity there should have new leader
-      let leaderVoting=new LeaderVoting(sourceData,"auto")
-      let poleId=await leaderVoting.createLeaderVotingPole("autoGenerated")
-      //---------------------------------------
       //------SENT NOTIFICATION as new voting pole created---------
       await Notification.newLeaderSelectionStartedToAllSourceMembers(allMembers,poleId,sourceData.from)
       //--sent notification to activity video editor|Not needed now
@@ -686,7 +688,11 @@ Activity.prototype.publishActivity=function(activityData,sourceData,editorRegNum
      await GlobalNotifications.activityPublished(activityData._id,sourceData.from)
     //--sent source notification
     await SourceNotifications.activityPublished(activityData._id,sourceData.sourceId,sourceData.from)
-     resolve()
+    //create voting pole to select new leader as after each activity there should have new leader
+    let leaderVoting=new LeaderVoting(sourceData,"auto")
+    let poleId=await leaderVoting.createLeaderVotingPole("autoGenerated")
+    //--------------------------------------- 
+    resolve()
     }catch{
       console.log("There is some problem on activity publishing!!!")
       reject("There is some problem.")

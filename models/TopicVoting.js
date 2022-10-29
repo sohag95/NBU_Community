@@ -45,6 +45,7 @@ TopicVoting.prototype.getTopicVotingData=async function(){
     console.log("Topics :",topics)
     this.data={
       voteType:"topic_selection",
+      activityId:this.data.activityId,
       from:this.data.from,//should be voteFrom
       sourceId:this.data.sourceId,
       sourceName:this.data.sourceName,
@@ -99,6 +100,24 @@ TopicVoting.getVotingDetailsById=function(id){
         reject()
       }
     }catch{
+      reject()
+    }
+  })
+}
+
+
+TopicVoting.storeActivityIdOnVotingPole=function(poleId,activityId){
+  return new Promise(async (resolve, reject) => { 
+    try{
+      console.log("Pole id :",poleId," | activity id :",activityId)
+      await votingCollection.updateOne({_id: new ObjectId(poleId)},{
+        $set:{
+          activityId:activityId
+        }
+      })
+      resolve()
+    }catch{
+      crossOriginIsolated.log("error from storeActivityIdOnVotingPole")
       reject()
     }
   })
@@ -191,9 +210,9 @@ TopicVoting.declareTopicResult=function(votingDetails,resultData,declaredBy,acti
         })
       //get all members regNumber array to sent NOTIFICATION
       let allMembers=await GetAllMembers.getAllSourceMembers(this.activityData.activitySourceId,this.activityData.activityType)
-      await Notification.activityTopicSelectionResultPublishedToAllSourceMembers(allMembers,new ObjectId(activityId),data.source,data.wonTopic)
+      await Notification.activityTopicSelectionResultPublishedToAllSourceMembers(allMembers,activityId,data.source,data.wonTopic)
       //sent source notification
-      await SourceNotifications.topicResultPublished(new ObjectId(activityId),this.activityData.activitySourceId,this.activityData.activityType)
+      await SourceNotifications.topicResultPublished(String(votingDetails._id),this.activityData.activitySourceId)
       resolve()
     }catch{
       reject()

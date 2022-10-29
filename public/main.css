@@ -30,6 +30,18 @@ body, .tooltip
   top: 3px;
 }
 
+.banner{
+  width: 100%;
+  height: 50vh;
+  object-fit: cover;
+}
+@media (max-width: 720.98px) {
+  .banner{
+    height: 32vh;
+  }
+}
+
+
 .avatar-small {
   width: 32px;
   height: 32px;
@@ -609,10 +621,7 @@ label.star:before {
 
 
  /*  css */
- .banner{
-   width: 100%;
-   height: auto;
- }
+ 
  .banner-batch{
   position: absolute;
   background: #fff;
@@ -668,20 +677,29 @@ label.star:before {
  .teacher-banner-container::-webkit-scrollbar{
    width: 0px;
  }
- .path{
+ .designed-container{
   background: url(https://s.udemycdn.com/browse_components/shared-assets/purple-intersect.svg) repeat-x #003640;
   background-size: auto 120%;
   background-position: 0 -2.4rem;
-  padding: 2.4rem;
+  padding: 1.4rem;
   border: 1px solid #dcdacb;
   border-radius: 4px;
   color: #FFF;
  }
+ .add-padding-on-collups{
+  padding-top: 0;
+ }
  @media (max-width: 720.98px) {
-  .path{
-    padding: 1.85rem;
+  .designed-container{
+    padding: 6px 0rem 13px;
   }
 }
+@media (max-width: 991.20px) {
+  .add-padding-on-collups{
+    padding-top: 8px;
+   }
+}
+
 
  /* message rooms css */
  .message-room-container,.student-room-container,.notification-container{
@@ -1306,4 +1324,3 @@ div.feedbackButton{
 .navigate-mark{
   background: #b9cada;
 }
-

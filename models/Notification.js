@@ -141,6 +141,7 @@ Notification.activityCreatedToAllSourceMembers=function(regNumbers,activityId,ac
   })
 }
 
+//done
 Notification.batchStateChangedToAllBatchMembers=function(regNumbers,state){
   return new Promise(async (resolve, reject) => {
     try{
@@ -169,9 +170,11 @@ Notification.activityTopicSelectionResultPublishedToAllSourceMembers=function(re
         gotoLink:gotoLink,
         createdDate:new Date()
       }
+      console.log("Notification :",notification)
       await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
+      console.log("Error from activityTopicSelectionResultPublishedToAllSourceMembers")
       reject()
     }
   })
@@ -238,13 +241,15 @@ Notification.newLeaderSelectionResultPublishedToAllSourceMembers=function(regNum
 }
 //-----------credit added notifications--------
 //done all functionalities on this section
-Notification.creditToActivityLeaders=function(regNumbers,creditPoints){
+Notification.creditToActivityLeaders=function(regNumbers,creditPoints,activityId){
   return new Promise(async (resolve, reject) => {
     try{
+      let gotoText="Go to the activity"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
-        message:"Congratulations!! Credit points - "+creditPoints+" added.As one activity is published, lead by you. ",
-        gotoText:null,
-        gotoLink:null,
+        message:"Congratulations!!Extra Credit points : "+creditPoints+" added.As one activity has published, lead by you. ",
+        gotoText:gotoText,
+        gotoLink:gotoLink,
         createdDate:new Date()
       }
       await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
@@ -255,14 +260,15 @@ Notification.creditToActivityLeaders=function(regNumbers,creditPoints){
   })
 }
 
-Notification.creditToAllActivityParticipants=function(regNumbers,creditPoints){
+Notification.creditToAllActivityParticipants=function(regNumbers,creditPoints,activityId){
   return new Promise(async (resolve, reject) => {
     try{
-
+      let gotoText="Go to the activity"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
-        message:"Congratulations!! Credit points - "+creditPoints+" added.As one activity is published, participated by you. ",
-        gotoText:null,
-        gotoLink:null,
+        message:"Congratulations!! Credit points : "+creditPoints+" added.As one activity is accepted by post controller, participated by you. ",
+        gotoText:gotoText,
+        gotoLink:gotoLink,
         createdDate:new Date()
       }
       await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
@@ -279,7 +285,7 @@ Notification.creditToWinningLeaderByVote=function(regNumber,leaderType,creditPoi
     try{
 
       let notification={
-        message:"Congratulations!! Credit points - "+creditPoints+" added. As you are selected as a new "+leaderType+" leader.",
+        message:"Congratulations!! Credit points : "+creditPoints+" added. As you are selected as a new "+leaderType+" leader.",
         gotoText:null,
         gotoLink:null,
         createdDate:new Date()
@@ -299,7 +305,7 @@ Notification.creditAfterLeaderVoteToVoter=function(regNumber,creditPoints){
     try{
 
       let notification={
-        message:"Congratulations!! Credit points - "+creditPoints+" added. As you have voted to select new leader.",
+        message:"Congratulations!! Credit points : "+creditPoints+" added. As you have voted to select new leader.",
         gotoText:null,
         gotoLink:null,
         createdDate:new Date()
@@ -317,7 +323,7 @@ Notification.creditAfterGattingNominationToNominator=function(regNumber,leaderTy
   return new Promise(async (resolve, reject) => {
     try{
       let notification={
-        message:"Congratulations!! Credit points - "+creditPoints+" added. As you got nominated by yourself to become a leader.",
+        message:"Congratulations!! Credit points : "+creditPoints+" added. As you got nominated by yourself to become a leader.",
         gotoText:null,
         gotoLink:null,
         createdDate:new Date()
@@ -334,7 +340,7 @@ Notification.creditAfterTopicVoteToVoter=function(regNumber,creditPoints){
   return new Promise(async (resolve, reject) => {
     try{
       let notification={
-        message:"Congratulations!! Credit points - "+creditPoints+" added. As you give your vote to select next activity topic.",
+        message:"Congratulations!! Credit points : "+creditPoints+" added. As you give your vote to select next activity topic.",
         gotoText:null,
         gotoLink:null,
         createdDate:new Date()
@@ -351,7 +357,7 @@ Notification.creditToCampusGroupMember=function(regNumber,creditPoints){
   return new Promise(async (resolve, reject) => {
     try{
       let notification={
-        message:"Congratulations!! Credit points - "+creditPoints+" added. As you are a new member of a campus group.",
+        message:"Congratulations!! Credit points : "+creditPoints+" added. As you are a new member of a campus group.",
         gotoText:null,
         gotoLink:null,
         createdDate:new Date()

@@ -1,10 +1,13 @@
 const Activity = require('../models/Activity')
 const Department = require('../models/Department')
 const GetAllMembers = require('../models/GetAllMembers')
+const GlobalNotifications = require('../models/GlobalNotifications')
 const Group = require('../models/Group')
+const Notification = require('../models/Notification')
 const OfficialUsers = require('../models/OfficialUsers')
 const OfficialUser=require('../models/OfficialUsers')
 const SentEmail = require('../models/SentEmail')
+const SourceNotifications = require('../models/SourceNotifications')
 const Student = require('../models/Student')
 
 
@@ -45,6 +48,10 @@ exports.test =async function (req, res) {
   //   console.log("After date :",twentyMinutesLater)
   // }
   //await Department.sentNewStudentRequestOnDepartment("COMSC","sohag roy")
+  let allMembers=await GetAllMembers.getAllSourceMembers("2122COMSC","batch")
+  console.log("All Members :",allMembers)
+  //await Notification.activityTopicSelectionResultPublishedToAllSourceMembers(allMembers,"635ce4b869bcf8e60a8ced4f","batch","Social Work")
+  await SourceNotifications.topicResultPublished("635ce4b869bcf8e60a8ced4f","2122COMSC")      
   let date=new Date()
   res.render('test-page',{
     date:date
@@ -305,6 +312,16 @@ exports.allAcademicGroups=async function(req,res){
   }
 }
 
+exports.globalNotifications=async function(req,res){
+  try {
+    let globalNotifications=await GlobalNotifications.getGlobalNotifications()
+    res.render("global-notification-page",{
+      globalNotifications:globalNotifications.reverse()
+    })
+  } catch {
+    res.render("404")
+  }
+}
 
 exports.searchStudent=function(req,res){
   Student.searchStudent(req.body.searchTerm).then(posts => {

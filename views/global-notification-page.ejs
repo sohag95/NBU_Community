@@ -1,0 +1,49 @@
+<%- include('includes/header') %> 
+<%- include('includes/flash') %>
+<div style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+  <div class="col-lg-9 pt-1" >
+    <div class="">
+      <div style="width: 100%;position: relative;">
+        <img class="home-cover-image" src="/images/allDepartments-cover.png"/>
+      </div>  
+    </div>
+    <hr>
+    <h4 class="bolder ml-1"><strong>Global Notifications : (<%=globalNotifications.length%>)</strong></h4>
+    <div class="item-container">
+      <div class="ml-2 mr-2">
+        <%if(!globalNotifications.length){%>
+          <div class="btn btn-block btn-info">No notification available!!</div>
+        <%}else{%>
+        <%globalNotifications.forEach((notification)=>{%>
+          <div class="notification-container mb-1 not-viewed">
+            <div style="display: flex;width: 100%;">
+                <div class="row"  style="width: 100%;">
+                  <div class="col"  style="width: 100%;">
+                    <div style="width: 100%;">
+                      <strong class="bolder"><%=notification.message%></strong>  
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <%if(notification.gotoText){%>
+              <hr style="padding: 0;margin: 0;">
+              <div class="ml-1" >
+                <a class="d-inline bolder text-primary mr-3" href="<%=notification.gotoLink%>"> <%=notification.gotoText%></a>
+                <strong class="float-right"><i><%= notification.createdDate.getDate() %> <%=notification.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= notification.createdDate.getFullYear() %> at <%=notification.createdDate.getHours()%>:<%=notification.createdDate.getMinutes()%></i></strong> 
+              </div>
+            <%}%>
+          </div>
+        <%})%>
+        <%}%>
+            
+              
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg notVisibleOnCollapse" >
+  </div>
+</div>
+<%- include('includes/footer') %>

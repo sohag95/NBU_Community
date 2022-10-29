@@ -18,20 +18,28 @@
             
             <div style="display: flex;margin-bottom: 5px; border-bottom: 1px solid rgb(126, 124, 124);">
               <div class="text-center">
-                <img class="activity-avatar-small" src="/images/group.jpg" alt="">
+                <%let logoLink=""%>
+                <%if(activityDetails.activityType=="batch"){%>
+                  <% logoLink="/images/batch.jpg"%>
+                <%}else if(activityDetails.activityType=="department"){%>
+                  <% logoLink="/images/department.jpg"%>
+                <%}else{%>
+                  <% logoLink="/images/group.jpg"%>
+                <%}%>
+                <img class="activity-avatar-small" src="<%=logoLink%>" alt="">
               </div>
               <div class="post-header" style="width: 100%;display: flex;">
                 <div class="mr-auto" style="padding-left: 5px;">
                   <div style="margin: 0;padding: 0;">
-                    <a href="#"><strong>
+                    <a href="/<%=activityDetails.activityType%>/<%=activityDetails.activitySourceId%>/details"><strong>
                       <span class="text-capitalize"><%=activityDetails.activityType%></span>  
                       | <%=activityDetails.sourceName%> 
                       <%if(activityDetails.activityType=="batch"){%>
                         (20<%=activityDetails.activitySourceId.slice(0,2)%>-20<%=activityDetails.activitySourceId.slice(2,4)%>)
                       <%}%>
                        | 
-                      <i><span>Created on <%= activityDetails.activityDates.createdDate.getMonth() + 1 %>/<%= activityDetails.activityDates.createdDate.getDate() %>/<%= activityDetails.activityDates.createdDate.getFullYear() %></span></i></strong>
-                    </a>
+                      </a><i><span>Created on <%= activityDetails.activityDates.createdDate.getDate() %> <%=activityDetails.activityDates.createdDate.toLocaleString('default', { month: 'long' }) %> , <%= activityDetails.activityDates.createdDate.getFullYear() %></span></i></strong>
+                    
                   </div>
                   <div style="margin: 0;padding: 0;">
                     <h5 class="bolder">
@@ -54,15 +62,63 @@
                     <strong><i class="fas fa-ellipsis-h"></i></strong>
                   </p>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <%if((activityDetails.status=="created" || activityDetails.status=="voted") && checkData.isActivityLeader){%>
-                      <form action="/activity/<%=activityDetails._id%>/delete" method="post">
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                      </form>
-                    <%}%> 
+                    <%if(checkData.isActivityLeader){%>
+                      <%if(activityDetails.status=="created" || activityDetails.status=="voted"){%>
+                        <form action="/activity/<%=activityDetails._id%>/delete" method="post">
+                          <button class="btn btn-sm btn-danger btn-block">Delete Activity</button>
+                        </form>
+                      <%}%> 
+                      <%if(activityDetails.status!="published"){%>
+                        <div class="btn btn-sm btn-warning btn-block">
+                          <span type="button" class=" text-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit Activity Data</span>
+                        </div>
+                      <%}%>
+                    <%}else{%>
+                      <strong>For activity leader</strong>
+                    <%}%>
                   </div>
                 </div>
               </div>
             </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Activity Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/activity/<%=activityDetails._id%>/edit" method="post">
+                      <div class="form-group">
+                        <label for="topic" class="text-muted mb-1"><small>Activity Topic :- <strong class="text-danger">[Can't Change]</strong> </small></label>
+                        <input  name="topic" id="topic" value="<%=activityDetails.topic%>" class="form-control form-control-lg " type="text" required placeholder="Title of the activity." autocomplete="off">
+                      </div>
+                      <div class="form-group">
+                        <label for="title" class="text-muted mb-1"><small>Give a title :- <span class="text-warning">[Within 60 characters]</span></small></label>
+                        <input  name="title" id="title" value="<%=activityDetails.title%>" class="form-control form-control-lg " type="text" required placeholder="Title of the activity." autocomplete="off">
+                      </div>
+                      <div class="form-group">
+                        <label for="activity-body" class="text-muted mb-1"><small>Short details of activity :- <span class="text-warning">[Within 200 characters]</span></small></label>
+                        <textarea  name="shortDetails" id="activity-body" class="body-content small-textarea form-control" type="text" required><%=activityDetails.shortDetails%></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="activityDate" class="text-muted mb-1"><small>Activity Date :- <span class="text-info">[<%= activityDetails.activityDates.activityDate.getDate() %> <%=activityDetails.activityDates.activityDate.toLocaleString('default', { month: 'long' }) %> , <%= activityDetails.activityDates.activityDate.getFullYear() %>] </span> </small></label>
+                        <input  name="activityDate" id="activityDate" class="form-control form-control-lg " type="date" placeholder="Activity date." required autocomplete="off">
+                      </div>
+                      <button class="btn btn-primary btn-color text-center">Update Activity Data</button>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ------------------ -->
             </p> 
               <strong class="text-primary">Activity Short Details : </strong>
               <strong>
@@ -139,9 +195,16 @@
                     <%if(activityDetails.title){%>
                     <hr>
                       <%if(checkData.isActivityMember){%>
-                        <h5 class="text-warning text-center"><strong>Let's start the activity with full energy!!</strong></h5>
-                      <%}else{%>
-                        <h5 class="text-warning text-center"><strong>Activity is going on with full energy!!</strong></h5>
+                        <h5 class="text-warning text-center"><strong>Let's get prepared for the activity with full energy!!</strong></h5>
+                          <%if(activityDetails.activityDates.activityDate){%>
+                            <i class="d-block text-center"><strong>Activity Date : 
+                            <%= activityDetails.activityDates.activityDate.getDate() %> <%=activityDetails.activityDates.activityDate.toLocaleString('default', { month: 'long' }) %> , <%= activityDetails.activityDates.activityDate.getFullYear() %></strong></i>
+                          <%}%>
+                        <%}else{%>
+                        <h5 class="text-warning text-center"><strong>Activity Preparation is going on !!</strong></h5>
+                        <%if(activityDetails.activityDates.activityDate){%>
+                          <%= activityDetails.activityDates.activityDate.getDate() %> <%=activityDetails.activityDates.activityDate.toLocaleString('default', { month: 'long' }) %> , <%= activityDetails.activityDates.activityDate.getFullYear() %></strong></i>
+                        <%}%>
                       <%}%>
                     <%}%>
                   <%}else{%>
@@ -157,16 +220,23 @@
                 <div style="width: 100%;">
                   <%if(activityDetails.status=="created" || activityDetails.state=="voted"){%>
                     <%if(checkData.isActivityMember){%>
-                      <h5 class="text-warning text-center"><strong>Let's start the activity with full energy!!</strong></h5>
+                      <h5 class="text-warning text-center"><strong>Let's get prepared for the activity with full energy!!</strong></h5>
+                      <%if(activityDetails.activityDates.activityDate){%>
+                        <i class="d-block text-center"><strong>Activity Date : 
+                        <%= activityDetails.activityDates.activityDate.getDate() %> <%=activityDetails.activityDates.activityDate.toLocaleString('default', { month: 'long' }) %> , <%= activityDetails.activityDates.activityDate.getFullYear() %></strong></i>
+                      <%}%>
                     <%}else{%>
-                      <h5 class="text-warning text-center"><strong>Activity is going on with full energy!!</strong></h5>
+                      <h5 class="text-warning text-center"><strong>Activity preparation is going on !!</strong></h5>
+                      <%if(activityDetails.activityDates.activityDate){%>
+                        <i class="d-block text-center"><strong>Activity Date : 
+                        <%= activityDetails.activityDates.activityDate.getDate() %> <%=activityDetails.activityDates.activityDate.toLocaleString('default', { month: 'long' }) %> , <%= activityDetails.activityDates.activityDate.getFullYear() %></strong></i>
+                      <%}%>
                     <%}%>
                   <%}else{%>
-                    <h5 class="text-warning text-center"><strong>Sooner the activity will be published!!</strong></h5>
+                    <h5 class="text-warning text-center"><strong>Sooner the activity will be publish!!</strong></h5>
                   <%}%>
                 </div>
               </div>
-              <hr>
             <%}%>
           </div>
           <!-- User Section ends -->

@@ -1,7 +1,7 @@
 <div class="col-lg pt-2  notVisibleOnCollapse" >
   <div class="container" style="padding-left: 0;padding-right: 0;">
     <div class="card border-light mb-3" style="max-width: 100%;">
-      <h5 class="card-header bolder text-success "><strong>Global Notifications</strong></h5>
+      <h5 class="card-header bolder text-success "><strong>Campus Notifications</strong></h5>
       <div class="card-body" style="max-height: 75vh; overflow-y: scroll;padding: .5rem;">
         <%if(!globalNotifications.length){%>
           <div class="btn btn-block btn-info">Not Available!!</div>
@@ -27,7 +27,11 @@
         <%}%>
       
       </div>
+      
     </div>
+    <a href="/global-notifications">
+      <div class="btn btn-outline-secondary btn-block btn-sm">See All Campus Notifications <i class="fas fa-arrow-right"></i></div>
+    </a>
    <hr>
    
   </div>

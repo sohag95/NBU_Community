@@ -43,7 +43,7 @@
       </span> | <%=votingDetails.sourceName%> | New Leader Selection </h5>
     <hr>
     <%if(checkData.votingStatus=="completed"){%> 
-      <div class="path "   >
+      <div class="designed-container "   >
         <%if(votingDetails.isResultDeclared){%>
         <h5><strong class="bolder text-warning"><h5>Winning Candidate :</h5></strong></h5>
         <hr style="margin-bottom: .85rem;margin-top: 0rem;">
@@ -87,7 +87,7 @@
       </div>
       <hr>
     <%}else{%>
-      <div class="path">
+      <div class="designed-container">
         <div class="student-room-container">
           <%if(checkData.votingStatus=="nomination"){%>
             <h4 class="text-center text-warning"><strong>Leader Nomination Is Going On!</strong></h4>
@@ -137,6 +137,12 @@
                 </form>
               <%}else{%>
                 <div class="btn btn-sm btn-block btn-success">Nominated !!</div>
+              <%}%>
+            <%}else{%>
+              <%if(votingDetails.leaders.mainLead.regNumber==user.regNumber){%>
+                <div class="btn btn-sm btn-block btn-danger">You are present leader!!</div>
+              <%}else{%>
+                <div class="btn btn-sm btn-block btn-success">Nomination going on!!</div>
               <%}%>
             <%}%>
             <hr style="margin-bottom: 0px;margin-top: 10px;">
@@ -206,6 +212,7 @@
             <h6 class="pt-2 text-warning"><strong>Result declared on - <%= votingDetails.votingDates.resultDate.getDate() %> <%=votingDetails.votingDates.resultDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.resultDate.getFullYear() %> at <%=votingDetails.votingDates.resultDate.getHours()%>:<%=votingDetails.votingDates.resultDate.getMinutes()%></strong></h6>
           <%}else{%>
             <!-- this section will handle nomination status -->
+            <strong  class="d-block text-primary">Voting Pole Created Date : <span class="text-secondary"><%= votingDetails.votingDates.createdDate.getDate() %> <%=votingDetails.votingDates.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.createdDate.getFullYear() %> at <%=votingDetails.votingDates.createdDate.getHours()%>:<%=votingDetails.votingDates.createdDate.getMinutes()%></span></strong>
             <strong  class="d-block text-primary">Nomination Last Date : <span class="text-secondary"><%= votingDetails.votingDates.nominationLastDate.getDate() %> <%=votingDetails.votingDates.nominationLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.nominationLastDate.getFullYear() %> at <%=votingDetails.votingDates.nominationLastDate.getHours()%>:<%=votingDetails.votingDates.nominationLastDate.getMinutes()%></span></strong>
             <strong  class="d-block text-primary">Voting Last Date : <span class="text-secondary"><%= votingDetails.votingDates.votingLastDate.getDate() %> <%=votingDetails.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.votingLastDate.getFullYear() %> at <%=votingDetails.votingDates.votingLastDate.getHours()%>:<%=votingDetails.votingDates.votingLastDate.getMinutes()%></span></strong>
           <%}%>
@@ -215,7 +222,7 @@
     </div>
     <hr>
     <%if((votingDetails.leaders.mainLead.regNumber==user.regNumber || !votingDetails.leaders.assistantLead.regNumber==user.regNumber) && !votingDetails.isWonLeaderAccept){%>
-      <div class="path">
+      <div class="designed-container">
         <strong style="color:#fff;"><h5> Leader Section :</h5></strong>
           <hr style="margin-bottom: .85rem;margin-top: 0rem;">
           <%if(votingDetails.leaders.mainLead.regNumber==user.regNumber){%>

@@ -278,7 +278,7 @@ exports.editActivityDetails=async function(req,res){
       shortDetails:req.body.shortDetails,
       activityDate:req.body.activityDate
     }
-    if(req.activityDetails.isTopicByVote && req.activityDetails.topic){
+    if(req.activityDetails.topic){//topic can't be changed if once set
       editData.topic=req.activityDetails.topic
     }
     let editor={
@@ -355,7 +355,8 @@ exports.activityReceivedByPostController=function(req,res){
     sourceId:req.activityDetails.activitySourceId,
     source:req.activityDetails.activityType
   }
- Activity.receiveActivityByPostController(req.params.id,note,neededData).then(()=>{
+  let allParticipants=req.activityDetails.participants
+ Activity.receiveActivityByPostController(req.params.id,note,neededData,allParticipants).then(()=>{
   req.activityDetails=undefined
   req.flash("success", "Activity successfully received!!")
   res.redirect(`/activity/${req.params.id}/details`)

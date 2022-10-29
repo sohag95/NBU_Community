@@ -71,7 +71,7 @@ SourceNotifications.activityCreated=function(activityId,sourceId,source,isTopicB
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)
       resolve()
     }catch{
       console.log("Error on - activityCreated")
@@ -90,7 +90,7 @@ SourceNotifications.activityDeleted=function(sourceId,source){
       gotoLink:null,
       createdDate:new Date()
     }
-    SourceNotifications.sentNotificationToSourceId(sourceId,notification)
+    await SourceNotifications.sentNotificationToSourceId(sourceId,notification)
     resolve()
     }catch{
       console.log("Error on - activityDeleted")
@@ -110,7 +110,7 @@ SourceNotifications.activityFieldsUpdated=function(activityId,sourceId,source){
       gotoLink:gotoLink,
       createdDate:new Date()
     }
-    SourceNotifications.sentNotificationToSourceId(sourceId,notification)
+    await SourceNotifications.sentNotificationToSourceId(sourceId,notification)
       resolve()
     }catch{
       console.log("Error on - activityDeleted")
@@ -120,17 +120,17 @@ SourceNotifications.activityFieldsUpdated=function(activityId,sourceId,source){
 }
 
 //done
-SourceNotifications.topicResultPublished=function(activityId,sourceId,source){
+SourceNotifications.topicResultPublished=function(poleId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/topic-voting/"+poleId+"/details"
       let notification={
         message:"New activities topic result published!!",
         gotoText:"See the result",
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
       resolve()
     }catch{
       console.log("Error on - topicResultPublished")
@@ -150,7 +150,7 @@ SourceNotifications.ActivitySubmitted=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
       resolve()
     }catch{
       console.log("Error on - ActivitySubmitted")
@@ -169,7 +169,7 @@ SourceNotifications.activityReceived=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
       resolve()
     }catch{
       console.log("Error on - activityReceived")
@@ -188,7 +188,7 @@ SourceNotifications.editorAssigned=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
       resolve()
     }catch{
       console.log("Error on - editorAssigned")
@@ -207,7 +207,7 @@ SourceNotifications.activityEdited=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
       resolve()
     }catch{
       console.log("Error on - activityEdited")
@@ -227,7 +227,7 @@ SourceNotifications.activityPublished=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)    
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)    
       resolve()
     }catch{
       console.log("Error on - activityPublished")
@@ -247,7 +247,7 @@ SourceNotifications.activityLiked=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)    
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)    
       resolve()
     }catch{
       console.log("Error on - activityLiked")
@@ -267,7 +267,7 @@ SourceNotifications.commentOnActivity=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)      
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)      
       resolve()
     }catch{
       console.log("Error on - commentOnActivity")
@@ -287,7 +287,7 @@ SourceNotifications.dislikedActivity=function(activityId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
       resolve()
     }catch{
       console.log("Error on - dislikedActivity")
@@ -307,7 +307,7 @@ SourceNotifications.leaderVotingGoingOn=function(poleId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)        
       resolve()
     }catch{
       console.log("Error on -leaderVotingGoingOn ")
@@ -327,7 +327,7 @@ SourceNotifications.leaderResultPublished=function(poleId,sourceId,source){
         gotoLink:gotoLink,
         createdDate:new Date()
       }
-      SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
       resolve()
     }catch{
       console.log("Error on -leaderResultPublished ")

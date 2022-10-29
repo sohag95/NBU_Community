@@ -14,8 +14,11 @@
     <hr>
     <h5 class="bolder text-primary text-center">Topic Voting Details (<span class="text-capitalize"><%=votingDetails.from%> Activity</span>)</h5>
     <hr>
-    <div class="path text-center text-warning"   >
+    <div class="designed-container text-center text-warning"   >
       <h5 ><strong>Won topic - <%=votingDetails.topicOptions[votingDetails.result[0].topicIndex]%></strong></h5>
+      <a class="btn btn-sm btn-inline btn-secondary" href="/activity/<%=votingDetails.activityId%>/details">
+          Go to the activity <i class="fas fa-arrow-right"></i>
+      </a>
     </div>
     <hr>
     <div class="row">
@@ -44,11 +47,12 @@
     </div>
     <hr>
     <%if(checkData.isVoter){%>
-      <div class="path"   >
+      <div class="designed-container"   >
         <h5 class="text-warning text-center"><strong>You Voted for - <%=votingDetails.topicOptions[checkData.votingIndex]%></strong></h5>
       </div>
+      <hr>
     <%}%>
-    <hr>
+  
     <div class="item-container mb-2">
       <h5><strong>Voting Details</strong></h5>
       <hr style="margin-bottom: .25rem;margin-top: 0rem;">

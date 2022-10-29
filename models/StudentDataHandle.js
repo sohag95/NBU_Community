@@ -18,7 +18,7 @@ StudentDataHandle.addActivityIdOnLeadersAccount=function(regNumbers,activityId){
           "activities.leadActivities":activityId
           }
         },{ multi: true })
-        await AddCreditPoints.creditToActivityLeaders(regNumbers)
+        await AddCreditPoints.creditToActivityLeaders(regNumbers,activityId)
       resolve()
     }catch{
       console.log(" error on addActivityIdOnLeadersAccount")
@@ -38,7 +38,7 @@ StudentDataHandle.addActivityIdOnAllParticipantsAccount= function(participantsRe
           "activities.participatedActivities":activityId
           }
         },{ multi: true })
-        await AddCreditPoints.creditToAllActivityParticipants(participantsReg)
+        await AddCreditPoints.creditToAllActivityParticipants(participantsReg,activityId)
     resolve()
     }catch{
       console.log(" error on addActivityIdOnAllParticipantsAccount")
@@ -102,9 +102,9 @@ StudentDataHandle.addVotingPoleIdOnVoterAccount= function(regNumber,poleId,from)
   try{
     let dataContainerField=null
     if(from=="leaderVote"){
-      dataContainerField="voteGivenPole.leaderVote"
+      dataContainerField="voteGivenPoles.leaderVote"
     }else{
-      dataContainerField="voteGivenPole.topicVote"
+      dataContainerField="voteGivenPoles.topicVote"
     }
     await studentDataCollection.updateOne(
       {regNumber:regNumber},

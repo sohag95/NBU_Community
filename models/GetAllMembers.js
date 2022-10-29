@@ -84,7 +84,7 @@ GetAllMembers.getAllMembersFromGroup= function(groupId,type){
 GetAllMembers.getAllSourceMembers= function(sourceId,sourceType,type){
   return new Promise(async(resolve, reject) => {
     try{
-      //type=details/undefined
+      //type=details/onlyRegNumbers
       //here type=details will give users-userName+regNumber otherwise only regNumber
       let allSourceMembers=[]
       if(sourceType=="batch"){

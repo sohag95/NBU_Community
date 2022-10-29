@@ -362,7 +362,6 @@ exports.getStudentVotingPolesPage=async function(req,res){
       votingData.winningPoles=await LeaderVoting.getLeaderVotingPoleByArrayOfPoleIds(winningPoleIds)
       votingData.nominationTakenPoles=await LeaderVoting.getLeaderVotingPoleByArrayOfPoleIds(otherData.nominationTakenPoles)  
     }
-    console.log("Voting pole date:",votingData.winningPoles[0].votingDates)
     res.render("student-voting-poles-page",{
       headerData:req.headerData,
       votingData:votingData

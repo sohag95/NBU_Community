@@ -88,7 +88,7 @@ AddCreditPoints.creditToWinningLeaderByVote=function(regNumber,leaderType){
   })
 }
 
-AddCreditPoints.creditToAllActivityParticipants=function(regNumbers){
+AddCreditPoints.creditToAllActivityParticipants=function(regNumbers,activityId){
   return new Promise(async (resolve, reject) => {
     try{
       let points=10
@@ -98,7 +98,7 @@ AddCreditPoints.creditToAllActivityParticipants=function(regNumbers){
           $inc:{
             creditPoints:points
         }},{ multi: true })
-      await Notification.creditToAllActivityParticipants(regNumbers,points)
+      await Notification.creditToAllActivityParticipants(regNumbers,points,activityId)
       resolve()
     }catch{
       console.log("error on creditToAllActivityParticipants")
@@ -107,17 +107,17 @@ AddCreditPoints.creditToAllActivityParticipants=function(regNumbers){
   })
 }
 
-AddCreditPoints.creditToActivityLeaders=function(regNumbers){
+AddCreditPoints.creditToActivityLeaders=function(regNumbers,activityId){
   return new Promise(async (resolve, reject) => {
     try{
-      let points=15
+      let points=5
       await studentsCollection.updateMany(
         {regNumber:{$in:regNumbers}},
         {
           $inc:{
             creditPoints:points
         }},{ multi: true })
-      await Notification.creditToAllActivityParticipants(regNumbers,points)
+      await Notification.creditToActivityLeaders(regNumbers,points,activityId)
       resolve()
     }catch{
       console.log("error on creditToActivityLeaders")

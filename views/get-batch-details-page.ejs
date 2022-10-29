@@ -54,7 +54,7 @@
     </div>
 
     <div class=" mt-2 mb-2" >
-      <div class=" path text-secondary" style=" padding: 1.4rem">
+      <div class=" designed-container text-secondary" >
         <!-- activity board starts here -->
         <%let gotoText=null%>
         <%let gotoLink=null%>  
@@ -137,8 +137,8 @@
           </div>
           <!-- Activity board ends here -->
           <!-- source notification part starts here -->
-          <div class="col-lg-6">
-            <strong style="color:#fff;"><h5>Notification Board : <%= sourceNotifications.length==5 ? "(last-5)":""%></h5></strong>
+          <div class="col-lg-6 add-padding-on-collups">
+            <strong class="" style="color:#fff;"><h5>Notification Board : <%= sourceNotifications.length==5 ? "(last-5)":""%></h5></strong>
             <hr style="margin-bottom: .85rem;margin-top: 0rem;">
             <div class="member-container d-block" style="height:8rem ;overflow-y: scroll;">
               <%if(!sourceNotifications.length){%>
