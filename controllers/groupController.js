@@ -26,16 +26,7 @@ exports.ifPresentGroupLeader = function (req, res, next) {
 
 exports.getGroupDetailsPage =async function (req, res) {
   try{
-
-     // get sourceNotifications here
-     let sourceNotifications=await SourceNotifications.getNotifications(req.groupDetails.groupId)
-     let totalNotifications=sourceNotifications.length
-     if(totalNotifications>5){
-       sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
-       sourceNotifications=sourceNotifications.reverse()
-     }
-     
-     //------------------------------
+    //------------------------------
     let groupDetails=req.groupDetails
     let previousActivityData=null
     let checkData={
@@ -46,8 +37,32 @@ exports.getGroupDetailsPage =async function (req, res) {
       isPresentLeader:false,
       isPreviousLeader:false,
       isLeaderMoreThen50Days:false,
+      newSourceNotifications:false,
       isXstudent:false
     }
+     // get sourceNotifications here
+     let sourceNotifications=await SourceNotifications.getNotifications(req.groupDetails.groupId)
+     let totalNotifications=sourceNotifications.length
+     if(totalNotifications){
+        let lastNotificationDate=sourceNotifications[totalNotifications-1].createdDate
+        let theDate=new Date(lastNotificationDate)
+        let passingDaysToShowSignal=20
+        let result1 = theDate.setDate(theDate.getDate() + passingDaysToShowSignal);
+        let lastDate=new Date(result1)
+        if(lastDate>new Date()){
+          checkData.newSourceNotifications=true
+        }
+     }
+      if(groupDetails.isVoteGoingOn || groupDetails.presentActivity){
+        checkData.newSourceNotifications=true
+      }
+
+     if(totalNotifications>5){
+       sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
+       sourceNotifications=sourceNotifications.reverse()
+     }
+     
+     
 
     if(checkData.isUserLoggedIn){
       isXstudent=req.session.user.otherData.isXstudent
@@ -66,6 +81,12 @@ exports.getGroupDetailsPage =async function (req, res) {
       groupDetails.presentDepartments.forEach((department)=>{
         if(department.departmentCode==req.regNumber.slice(4,9)){
           checkData.isGroupDepartmentMember=true
+          //update group signal on session data
+          if(checkData.newSourceNotifications){
+            req.session.user.otherData.showGroupSignal=true
+          }else{
+            req.session.user.otherData.showGroupSignal=false
+          }
         }
       })
 

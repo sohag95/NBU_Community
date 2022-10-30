@@ -27,14 +27,6 @@ exports.ifPresentDepartmentLeader = function (req, res, next) {
 
 exports.getDepartmentDetailsPage =async function (req, res) {
   try{
-    // get sourceNotifications here
-    let sourceNotifications=await SourceNotifications.getNotifications(req.departmentDetails.departmentCode)
-    let totalNotifications=sourceNotifications.length
-    if(totalNotifications>5){
-      sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
-      sourceNotifications=sourceNotifications.reverse()
-    }
-    
     //------------------------------
     let departmentDetails=req.departmentDetails
     let previousActivityData=null
@@ -46,8 +38,31 @@ exports.getDepartmentDetailsPage =async function (req, res) {
       isPresentLeader:false,
       isPreviousLeader:false,
       isLeaderMoreThen30Days:false,
+      newSourceNotifications:false,
       isXstudent:null
     }
+    // get sourceNotifications here
+    let sourceNotifications=await SourceNotifications.getNotifications(req.departmentDetails.departmentCode)
+    let totalNotifications=sourceNotifications.length
+    if(totalNotifications){
+      let lastNotificationDate=sourceNotifications[totalNotifications-1].createdDate
+      let theDate=new Date(lastNotificationDate)
+      let passingDaysToShowSignal=10
+      let result1 = theDate.setDate(theDate.getDate() + passingDaysToShowSignal);
+      let lastDate=new Date(result1)
+        if(lastDate>new Date()){
+           checkData.newSourceNotifications=true
+        }
+    }
+    if(departmentDetails.isVoteGoingOn || departmentDetails.presentActivity){
+      checkData.newSourceNotifications=true
+    }
+    if(totalNotifications>5){
+      sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
+      sourceNotifications=sourceNotifications.reverse()
+    }
+    
+    
 
     if(checkData.isUserLoggedIn){
       
@@ -70,6 +85,12 @@ exports.getDepartmentDetailsPage =async function (req, res) {
           //req.otherData.isBatchLeader=true/false have to store on req.otherData on session
           //department member are those who are already batch leaders.
           checkData.isDepartmentBatchMember=true
+        }
+        //update department signal on session data
+        if(checkData.newSourceNotifications){
+          req.session.user.otherData.showDepartmentSignal=true
+        }else{
+          req.session.user.otherData.showDepartmentSignal=false
         }
       }
 

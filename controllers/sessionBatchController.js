@@ -63,14 +63,6 @@ exports.ifPresentBatchLeader = function (req, res, next) {
 
 exports.getSessionBatchDetailsPage =async function (req, res) {
   try{
-    // get sourceNotifications here
-    let sourceNotifications=await SourceNotifications.getNotifications(req.batchDetails.batchId)
-    let totalNotifications=sourceNotifications.length
-    if(totalNotifications>5){
-      sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
-    }
-    sourceNotifications=sourceNotifications.reverse()
-    //------------------------------
     let batchDetails=req.batchDetails
     let previousActivityData=null
     let checkData={
@@ -80,12 +72,38 @@ exports.getSessionBatchDetailsPage =async function (req, res) {
       isPresentLeader:false,
       isPreviousLeader:false,
       isLeaderMoreThen15Days:false,
+      newSourceNotifications:false,
       isXstudent:null
     }
+
+          
+    // get sourceNotifications here
+    let sourceNotifications=await SourceNotifications.getNotifications(req.batchDetails.batchId)
+    let totalNotifications=sourceNotifications.length
+    if(totalNotifications){
+      let lastNotificationDate=sourceNotifications[totalNotifications-1].createdDate
+      let theDate=new Date(lastNotificationDate)
+      let passingDaysToShowSignal=5
+      let result1 = theDate.setDate(theDate.getDate() + passingDaysToShowSignal);
+      let lastDate=new Date(result1)
+        if(lastDate>new Date()){
+           checkData.newSourceNotifications=true
+        }
+    }
+    if(batchDetails.isVoteGoingOn || batchDetails.presentActivity){
+      checkData.newSourceNotifications=true
+    }
+    if(totalNotifications>5){
+      sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
+    }
+    sourceNotifications=sourceNotifications.reverse()
+    
+    //------------------------------
+    
     
     if(checkData.isUserLoggedIn){
       checkData.isXstudent=req.session.user.otherData.isXstudent
-      
+    
       batchDetails.allLeaders.forEach((leader)=>{
         if(leader.regNumber==req.regNumber){
           checkData.isBatchLeader=true
@@ -95,6 +113,12 @@ exports.getSessionBatchDetailsPage =async function (req, res) {
       if(req.regNumber.slice(0,9)==batchDetails.batchId){
         if(req.otherData.isVerified){
           checkData.isBatchMember=true
+        }
+        //update batch signal on session data
+        if(checkData.newSourceNotifications){
+          req.session.user.otherData.showBatchSignal=true
+        }else{
+          req.session.user.otherData.showBatchSignal=false
         }
       }
 

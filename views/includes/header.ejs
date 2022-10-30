@@ -276,12 +276,20 @@
               <div class="text-center navigate-icon" id="batch-icon">
                 <a href="/batch/<%=user.regNumber.slice(0,9)%>/details">
                   <span><i class="fas fa-marker fa-lg"></i></span>
+                  <%if(user.otherData.showBatchSignal){%>
+                    <span  class="badge source-notification-signal badge-success ">
+                    </span>
+                  <%}%>
                   <span class="d-block menu-text" >Batch</span>
                 </a>
               </div>
               <div class="text-center navigate-icon" id="department-icon">
                 <a href="/department/<%=user.regNumber.slice(4,9)%>/details">
                   <span><i class="fas fa-graduation-cap fa-lg"></i></span>
+                  <%if(user.otherData.showDepartmentSignal){%>
+                    <span  class="badge source-notification-signal badge-success ">
+                    </span>
+                  <%}%>
                   <span class="d-block menu-text" >Department</span>
                   </a>
               </div>
@@ -289,6 +297,10 @@
               <div class="text-center navigate-icon" id="group-icon">
                 <a href="/group/<%=user.otherData.groupId%>/details">
                   <span><i class="fas fa-users fa-lg"></i></span>
+                  <%if(user.otherData.showGroupSignal){%>
+                    <span  class="badge source-notification-signal badge-success ">
+                    </span>
+                  <%}%>
                   <span class="d-block menu-text" >Group</span>
                 </a>
               </div>

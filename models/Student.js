@@ -332,7 +332,10 @@ Student.prototype.studentLogIn = function () {
             this.data.otherData={
               isVerified:false,
               groupId:attemptedUser.groupId,
-              verifiedBy:attemptedUser.verifiedBy
+              verifiedBy:attemptedUser.verifiedBy,
+              showBatchSignal:true,
+              showDepartmentSignal:true,
+              showGroupSignal:true
             }
           }else{
             this.data.otherData={
@@ -340,7 +343,10 @@ Student.prototype.studentLogIn = function () {
               groupId:attemptedUser.groupId,
               departmentName:attemptedUser.departmentName,
               isXstudent:attemptedUser.isXstudent,
-              isHomeTutor:attemptedUser.isHomeTutor
+              isHomeTutor:attemptedUser.isHomeTutor,
+              showBatchSignal:true,
+              showDepartmentSignal:true,
+              showGroupSignal:true
             }
           }
           // if(!attemptedUser.email){

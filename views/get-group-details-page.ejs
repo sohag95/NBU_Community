@@ -68,7 +68,13 @@
         <%let gotoLink=null%>  
         <div style="display: flex;    flex-wrap: wrap;">
           <div class="col-lg-6">
-            <strong style="color:#fff;"><h5>Activity Board :</h5></strong>
+            <strong style="color:#fff;"><h5>Activity Board :
+              <%if(groupDetails.isVoteGoingOn || groupDetails.presentActivity){%>
+                <span class="badge badge-pill badge-warning">Activity On</span>
+              <%}else{%>
+                <span class="badge badge-pill badge-secondary">No Activity</span>
+              <%}%>
+            </h5></strong>
             <hr style="margin-bottom: .85rem;margin-top: 0rem;">
             <div class="member-container d-block" style="height:8rem ;max-height:8rem ;overflow-y: scroll;">
               <!-- activity details contsiner starts | Voting board + Activity Board-->
@@ -144,7 +150,15 @@
           <!-- Activity board ends here -->
           <!-- source notification part starts here -->
           <div class="col-lg-6 add-padding-on-collups">
-            <strong style="color:#fff;"><h5>Notification Board : <%= sourceNotifications.length==5 ? "(last-5)":""%></h5></strong>
+            <strong style="color:#fff;"><h5>Notification Board : 
+              <%if(sourceNotifications.length){%>
+                <%if(checkData.newSourceNotifications){%>
+                  <span class="badge badge-pill badge-warning">New</span>
+                <%}else{%>
+                  <span class="badge badge-pill badge-secondary">Old</span>
+                <%}%>
+              <%}%>
+            </h5></strong>
             <hr style="margin-bottom: .85rem;margin-top: 0rem;">
             <div class="member-container d-block" style="height:8rem ;overflow-y: scroll;">
               <%if(!sourceNotifications.length){%>
