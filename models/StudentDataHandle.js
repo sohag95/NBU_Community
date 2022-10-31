@@ -67,7 +67,7 @@ StudentDataHandle.addWinningPoleIdOnWinnerAccount= function(regNumber,leadType,p
           [dataContainerField]:poleId
         }
       })
-    await AddCreditPoints.creditToWinningLeaderByVote(regNumber,leadType)
+    await AddCreditPoints.creditToWinningLeaderByVote(regNumber,leadType,poleId)
   resolve()
   }catch{
     console.log(" error on addWinningPoleIdOnWinnerAccount")

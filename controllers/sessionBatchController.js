@@ -127,7 +127,7 @@ exports.getSessionBatchDetailsPage =async function (req, res) {
           checkData.isPresentLeader=true
           let createdDate=batchDetails.presentLeader.createdDate
           let activeDate = new Date(createdDate);
-          let numberOfDaysToAdd = 15;
+          let numberOfDaysToAdd = 30;
           let result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
           let lastDate=new Date(result1)
           if(lastDate<new Date()){

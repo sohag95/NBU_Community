@@ -357,9 +357,12 @@ exports.getStudentVotingPolesPage=async function(req,res){
         nominationTakenPoles:[],
         voteGivenPoles:otherData.voteGivenPoles
     }
+    console.log("Other Data:",otherData)
     let winningPoleIds=otherData.winningVotingPoles.batchLeader.concat(otherData.winningVotingPoles.departmentLeader,otherData.winningVotingPoles.groupLeader)
     if(winningPoleIds.length){
       votingData.winningPoles=await LeaderVoting.getLeaderVotingPoleByArrayOfPoleIds(winningPoleIds)
+    }
+    if(otherData.nominationTakenPoles.length){
       votingData.nominationTakenPoles=await LeaderVoting.getLeaderVotingPoleByArrayOfPoleIds(otherData.nominationTakenPoles)  
     }
     res.render("student-voting-poles-page",{

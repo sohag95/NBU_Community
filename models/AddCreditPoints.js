@@ -62,16 +62,16 @@ AddCreditPoints.creditAfterLeaderVoteToVoter=function(regNumber){
   })
 }
 
-AddCreditPoints.creditToWinningLeaderByVote=function(regNumber,leaderType){
+AddCreditPoints.creditToWinningLeaderByVote=function(regNumber,leaderType,poleId){
   return new Promise(async (resolve, reject) => {
     try{
       let points
       if(leaderType=="batch"){
-        points=10
+        points=5
       }else if(leaderType=="department"){
-        points=15
+        points=10
       }else{
-        points=20
+        points=15
       }
       await studentsCollection.updateOne(
         {regNumber:regNumber},
@@ -79,7 +79,7 @@ AddCreditPoints.creditToWinningLeaderByVote=function(regNumber,leaderType){
           $inc:{
             creditPoints:points
         }})
-        await Notification.creditToWinningLeaderByVote(regNumber,points)
+        await Notification.creditToWinningLeaderByVote(regNumber,leaderType,points,String(poleId))
       resolve()
     }catch{
       console.log("error on creditToWinningLeaderByVote")

@@ -59,9 +59,9 @@ exports.getGroupDetailsPage =async function (req, res) {
 
      if(totalNotifications>5){
        sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
-       sourceNotifications=sourceNotifications.reverse()
      }
-     
+     sourceNotifications=sourceNotifications.reverse()
+     //----------------------------------------------
      
 
     if(checkData.isUserLoggedIn){

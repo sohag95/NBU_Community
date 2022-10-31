@@ -64,7 +64,7 @@ SourceNotifications.activityCreated=function(activityId,sourceId,source,isTopicB
       }else{
         message="New activity has been create created!!Topic selected by leader."
       }
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:message,
         gotoText:"Activity details",
@@ -103,7 +103,7 @@ SourceNotifications.activityDeleted=function(sourceId,source){
 SourceNotifications.activityFieldsUpdated=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
       message:"New activity fields data updated.",
       gotoText:"Activity details",
@@ -123,7 +123,7 @@ SourceNotifications.activityFieldsUpdated=function(activityId,sourceId,source){
 SourceNotifications.topicResultPublished=function(poleId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/topic-voting/"+poleId+"/details"
+      let gotoLink="/topic-voting/"+String(poleId)+"/details"
       let notification={
         message:"New activities topic result published!!",
         gotoText:"See the result",
@@ -143,7 +143,7 @@ SourceNotifications.topicResultPublished=function(poleId,sourceId,source){
 SourceNotifications.ActivitySubmitted=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Activity has submitted to post controller.",
         gotoText:"Check activity status",
@@ -162,7 +162,7 @@ SourceNotifications.ActivitySubmitted=function(activityId,sourceId,source){
 SourceNotifications.activityReceived=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Submitted activity received by post controller!!",
         gotoText:"See activity status",
@@ -181,7 +181,7 @@ SourceNotifications.activityReceived=function(activityId,sourceId,source){
 SourceNotifications.editorAssigned=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Editor has been assigned for submitted activity.",
         gotoText:"See activity status",
@@ -200,7 +200,7 @@ SourceNotifications.editorAssigned=function(activityId,sourceId,source){
 SourceNotifications.activityEdited=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Activity video editing completed.",
         gotoText:"See activity status",
@@ -220,7 +220,7 @@ SourceNotifications.activityEdited=function(activityId,sourceId,source){
 SourceNotifications.activityPublished=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Activity has been published!!",
         gotoText:"See the activity",
@@ -240,7 +240,7 @@ SourceNotifications.activityPublished=function(activityId,sourceId,source){
 SourceNotifications.activityLiked=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Someone liked one of the activities.",
         gotoText:"See the activity",
@@ -260,7 +260,7 @@ SourceNotifications.activityLiked=function(activityId,sourceId,source){
 SourceNotifications.commentOnActivity=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Someone commented on one of the activities.",
         gotoText:"See the activity",
@@ -280,7 +280,7 @@ SourceNotifications.commentOnActivity=function(activityId,sourceId,source){
 SourceNotifications.dislikedActivity=function(activityId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Someone disliked on one of the activities.",
         gotoText:"See the activity",
@@ -300,7 +300,7 @@ SourceNotifications.dislikedActivity=function(activityId,sourceId,source){
 SourceNotifications.leaderVotingGoingOn=function(poleId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/leader-voting/"+poleId+"/details"
+      let gotoLink="/leader-voting/"+String(poleId)+"/details"
       let notification={
         message:"New leader voting pole has created",
         gotoText:"Go to voting page",
@@ -320,10 +320,35 @@ SourceNotifications.leaderVotingGoingOn=function(poleId,sourceId,source){
 SourceNotifications.leaderResultPublished=function(poleId,sourceId,source){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/leader-voting/"+poleId+"/details"
+      let gotoLink="/leader-voting/"+String(poleId)+"/details"
       let notification={
         message:"New leader voting result has published!!",
         gotoText:"See the result",
+        gotoLink:gotoLink,
+        createdDate:new Date()
+      }
+      await SourceNotifications.sentNotificationToSourceId(sourceId,notification)       
+      resolve()
+    }catch{
+      console.log("Error on -leaderResultPublished ")
+      reject()
+    }
+  })
+}
+
+SourceNotifications.newLeaderAcceptedSelfWinning=function(poleId,sourceId,source,leaderName,leaderGender){
+  return new Promise(async (resolve, reject) => {
+    try{
+      let pronoun
+      if(leaderGender=="male"){
+        pronoun="himself"
+      }else{
+        pronoun="herself"
+      }
+      let gotoLink="/leader-voting/"+String(poleId)+"/details"
+      let notification={
+        message:"New leader '"+leaderName+"' has accepted "+pronoun+" as new "+source+" leader.Congratulations to "+leaderName+".",
+        gotoText:"See voting pole",
         gotoLink:gotoLink,
         createdDate:new Date()
       }

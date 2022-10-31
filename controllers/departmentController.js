@@ -59,9 +59,9 @@ exports.getDepartmentDetailsPage =async function (req, res) {
     }
     if(totalNotifications>5){
       sourceNotifications=sourceNotifications.slice(totalNotifications-5,totalNotifications)
-      sourceNotifications=sourceNotifications.reverse()
     }
-    
+    sourceNotifications=sourceNotifications.reverse()
+    //----------------------------------
     
 
     if(checkData.isUserLoggedIn){
@@ -99,7 +99,7 @@ exports.getDepartmentDetailsPage =async function (req, res) {
           checkData.isPresentLeader=true
           let createdDate=departmentDetails.presentLeader.createdDate
           let activeDate = new Date(createdDate);
-          let numberOfDaysToAdd = 30;
+          let numberOfDaysToAdd = 40;
           let result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);
           let lastDate=new Date(result1)
           if(lastDate<new Date()){
@@ -109,7 +109,7 @@ exports.getDepartmentDetailsPage =async function (req, res) {
       }
       
       if(departmentDetails.previousLeader){
-        if(batchDetails.previousLeader.regNumber==req.regNumber){
+        if(departmentDetails.previousLeader.regNumber==req.regNumber){
           checkData.isPreviousLeader=true
         }
       }

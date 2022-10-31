@@ -45,12 +45,12 @@
     <%if(checkData.votingStatus=="completed"){%> 
       <div class="designed-container "   >
         <%if(votingDetails.isResultDeclared){%>
-        <h5><strong class="bolder text-warning"><h5>Winning Candidate :</h5></strong></h5>
+        <h5><strong class="bolder text-warning">Winning Candidate : <span class="text-danger">[In case of tie ,first nomination taker will be selected as winning leader.]</span></strong></h5>
         <hr style="margin-bottom: .85rem;margin-top: 0rem;">
         <div class="d-flex justify-content-center">
           <div class="col-12 col-lg-6" >
             <div class="member-container">
-              <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+              <img class="member-avatar"  src="/image/profile/medium/profile-<%=votingDetails.wonLeader.regNumber%>" alt="">
               <div class="name-container">
                 <strong class="d-block ml-2" style="width: 90%;"><a href="/student/<%=votingDetails.wonLeader.regNumber%>/profile"><%=votingDetails.wonLeader.userName%></a></strong>
                 <strong class="d-block text-success float-right">-&nbsp;<%=votingDetails.result[0].parcentage%>%&nbsp;Vote</strong>
@@ -69,11 +69,12 @@
               <%}else{%>
                 <h5 class="text-warning text-center"><strong>Won leader has not accepted himself/herself as a leader yet.</strong></h5>
               <%}%>
+              
             <%}else{%>
               <%if(votingDetails.wonLeader.regNumber==user.regNumber){%>
                 <h5 class="text-warning text-center"><strong class="d-block">Congratulations!!! </strong><strong class="d-block"> You are the winner of this election pole.</strong></h5>
               <%}else{%>
-                <h5 class="text-warning text-center"><strong><%=votingDetails.wonLeader.userName%> ,accepted himself/herself as a leader on <%=votingDetails.votingDates.acceptanceDate%> </strong></h5>
+                <h5 class="text-warning text-center"><strong><%=votingDetails.wonLeader.userName%> ,accepted himself/herself as a leader on <%= votingDetails.votingDates.acceptanceDate.getDate() %> <%=votingDetails.votingDates.acceptanceDate.toLocaleString('default', { month: 'long' }) %> , <%= votingDetails.votingDates.acceptanceDate.getFullYear() %> at <%=votingDetails.votingDates.acceptanceDate.getHours()%>:<%=votingDetails.votingDates.acceptanceDate.getMinutes()%> </strong></h5>
               <%}%>
             <%}%>
            
@@ -221,7 +222,8 @@
       </div>
     </div>
     <hr>
-    <%if((votingDetails.leaders.mainLead.regNumber==user.regNumber || !votingDetails.leaders.assistantLead.regNumber==user.regNumber) && !votingDetails.isWonLeaderAccept){%>
+   
+    <%if((votingDetails.leaders.mainLead.regNumber==user.regNumber) && !votingDetails.isWonLeaderAccept){%>
       <div class="designed-container">
         <strong style="color:#fff;"><h5> Leader Section :</h5></strong>
           <hr style="margin-bottom: .85rem;margin-top: 0rem;">
@@ -248,7 +250,7 @@
       <hr style="margin-bottom: .25rem;margin-top: 0rem;">
       <p><strong>Type : </strong>Leder Selection </p>
       <p><strong>From : </strong><span class="text-capitalize"><%=votingDetails.from%></span></p>
-      <p><strong>Department Name : </strong><%=votingDetails.sourceName%></p>
+      <p><strong><%=votingDetails.from=="group"?"Group Name":"Department Name"%> : </strong><%=votingDetails.sourceName%></p>
       <p><strong>Created Date : </strong><%= votingDetails.votingDates.createdDate.getDate() %> <%=votingDetails.votingDates.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.createdDate.getFullYear() %> at <%=votingDetails.votingDates.createdDate.getHours()%>:<%=votingDetails.votingDates.createdDate.getMinutes()%></p>
       <p><strong>Nomination Last Date : </strong><%= votingDetails.votingDates.nominationLastDate.getDate() %> <%=votingDetails.votingDates.nominationLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.nominationLastDate.getFullYear() %> at <%=votingDetails.votingDates.nominationLastDate.getHours()%>:<%=votingDetails.votingDates.nominationLastDate.getMinutes()%></p>
       <p><strong>Voting Last Date : </strong><%= votingDetails.votingDates.votingLastDate.getDate() %> <%=votingDetails.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.votingLastDate.getFullYear() %> at <%=votingDetails.votingDates.votingLastDate.getHours()%>:<%=votingDetails.votingDates.votingLastDate.getMinutes()%></p>
@@ -265,7 +267,7 @@
         <div class="col-lg-6">
           <p><strong>Main Lead :</strong></p>
           <div class="member-container">
-            <img class="member-avatar" src="/images/sohag.jpg" alt="">
+            <img class="member-avatar"  src="/image/profile/medium/profile-<%=votingDetails.leaders.mainLead.regNumber%>" alt="">
             <div class="name-container">
               <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=votingDetails.leaders.mainLead.regNumber%>/profile"><%=votingDetails.leaders.mainLead.userName%></a></strong>
               <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
@@ -276,7 +278,7 @@
           <div class="col-lg-6">
             <p><strong>Assistant Lead :</strong></p>
             <div class="member-container">
-              <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+               <img class="member-avatar"  src="/image/profile/medium/profile-<%=votingDetails.leaders.assistantLead.regNumber%>" alt="">
               <div class="name-container">
                 <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=votingDetails.leaders.assistantLead.regNumber%>/profile"><%=votingDetails.leaders.assistantLead.userName%></a></strong>
                 <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
@@ -291,7 +293,7 @@
             <h5 class="text-warning"><strong>After complition of activity voting pole created automatically.</strong></h5>
           <%}else{%>
             <div class="member-container">
-              <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+               <img class="member-avatar"  src="/image/profile/medium/profile-<%=votingDetails.createdBy.regNumber%>" alt="">
               <div class="name-container">
                 <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=votingDetails.createdBy.regNumber%>/profile"><%=votingDetails.createdBy.userName%></a></strong>
                 <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
@@ -306,7 +308,7 @@
               <h5 class="text-warning"><strong>Result declared automatically.</strong></h5>
             <%}else{%>
               <div class="member-container">
-                <img class="member-avatar"  src="/images/sohag.jpg" alt="">
+                 <img class="member-avatar"  src="/image/profile/medium/profile-<%=votingDetails.resultDeclaration.declaredBy.regNumber%>" alt="">
                 <div class="name-container">
                   <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=votingDetails.resultDeclaration.declaredBy.regNumber%>/profile"><%=votingDetails.resultDeclaration.declaredBy.userName%></a></strong>
                   <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>

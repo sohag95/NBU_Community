@@ -43,7 +43,7 @@ GlobalNotifications.activityCreated=function(activityId,sourceId,sourceName,sour
       }else{
         message="New "+source+" activity has been created.Created by - "+sourceName+" group."
       }
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
         let notification={
         message:message,
         gotoText:"Go to activity details",
@@ -64,7 +64,7 @@ GlobalNotifications.activityPublished=function(activityId,source){
   return new Promise(async (resolve, reject) => {
     try{
       let message="One "+source+" activity has been published.See the activity and give your opinion."
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
         let notification={
         message:message,
         gotoText:"Activity details",
@@ -84,15 +84,15 @@ GlobalNotifications.activityPublished=function(activityId,source){
 GlobalNotifications.newLeaderVotingResultPublished=function(poleId,poleData){
   return new Promise(async (resolve, reject) => {
     try{
-      let message
+      let message=""
       if(poleData.source=="batch"){
         message="New "+poleData.source+" leader selection result has published!!.New selected leader for Deparmtent - "+poleData.sourceName+" | Batch - (20"+poleData.sourceId.slice(0,2)+"-20"+poleData.source.slice(2,4)+") is : "+poleData.wonLeader.userName+"."
-      }else if(source=="department"){
-        message="New "+poleData.source+" leader selection result has published!!.New selected leader for deparmtent of '"+poleData.sourceName+"' is : "+poleData.wonLeader.userName+"."
+      }else if(poleData.source=="department"){
+        message="New "+poleData.source+" leader selection result has published!!.New selected leader for deparmtent of - "+poleData.sourceName+" is : "+poleData.wonLeader.userName+"."
       }else{
-        message="New "+poleData.source+" leader selection result has published!!.New selected leader for group '"+poleData.sourceName+"' is : "+poleData.wonLeader.userName+"."
+        message="New "+poleData.source+" leader selection result has published!!.New selected leader for group - "+poleData.sourceName+" is : "+poleData.wonLeader.userName+"."
       }
-      let gotoLink="/leader-voting/"+poleId+"/details"
+      let gotoLink="/leader-voting/"+String(poleId)+"/details"
       let notification={
         message:message,
         gotoText:"See the voting result",
@@ -102,7 +102,7 @@ GlobalNotifications.newLeaderVotingResultPublished=function(poleId,poleData){
       await GlobalNotifications.sentNotification(notification)
       resolve()
     }catch{
-      console.log("Error on newLeaderVotingResultPublished")
+      console.log("Error on globalNotification.newLeaderVotingResultPublished")
       reject()
     }
   })

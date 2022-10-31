@@ -2,6 +2,7 @@ const Department = require("./Department")
 const GetAllMembers = require("./GetAllMembers")
 const GlobalNotifications = require("./GlobalNotifications")
 const Group = require("./Group")
+const Notification = require("./Notification")
 const OtherOperations = require("./OtherOperations")
 const SessionBatch = require("./SessionBatch")
 const SourceNotifications = require("./SourceNotifications")
@@ -119,7 +120,7 @@ LeaderVoting.prototype.createLeaderVotingPole=function(createdBy){
           console.log("here i am! id:",createdPole.insertedId)
           await this.updateLeaderVotingPoleDataOnSource(createdPole.insertedId)
           console.log("votingPoleData :",this.votingPoleData)
-          //sent source notification
+          //sent source notification 
           await SourceNotifications.leaderVotingGoingOn(createdPole.insertedId,this.votingPoleData.sourceId,this.votingPoleData.from)
           resolve(createdPole.insertedId)
         }else{
@@ -168,10 +169,10 @@ LeaderVoting.giveLeaderVote=function(id,votingData){
   })
 }
 
-LeaderVoting.updateResultOnLeaderVotingPole=function(id,resultData,resultDeclarationData,data){
+LeaderVoting.updateResultOnLeaderVotingPole=function(id,resultData,resultDeclarationData,poleData){
   return new Promise(async (resolve, reject) => { 
     try{
-      let wonLeader=data.wonLeader
+      let wonLeader=poleData.wonLeader
       await votingCollection.updateMany({_id: id},{
         $set:{
           "result":resultData,
@@ -181,17 +182,16 @@ LeaderVoting.updateResultOnLeaderVotingPole=function(id,resultData,resultDeclara
           "resultDeclaration":resultDeclarationData,
         }
       })
+      //add winning pole id on winner candidate's account
+      await StudentDataHandle.addWinningPoleIdOnWinnerAccount(poleData.wonLeader.regNumber,poleData.source,id)
+      //--sent global Notification
+      await GlobalNotifications.newLeaderVotingResultPublished(id,poleData)
+      //--sent source notification
+      await SourceNotifications.leaderResultPublished(id,poleData.sourceId,poleData.source)
       //--sent notification as voting result published
       //get all members regNumber array to sent notification
-      let allMembers=await GetAllMembers.getAllSourceMembers(data.sourceId,data.source)
-      await Notification.newLeaderSelectionResultPublishedToAllSourceMembers(allMembers,id,data.source)
-      //add winning pole id on winner candidate's account
-      await StudentDataHandle.addWinningPoleIdOnWinnerAccount(data.wonLeader.regNumber,data.source,id)
-      //--sent global Notification
-      await GlobalNotifications.newLeaderVotingResultPublished(id,data)
-      //--sent source notification
-      await SourceNotifications.leaderResultPublished(id,data.sourceId,data.source)
-      console.log("Successfully ran this")
+      let allMembers=await GetAllMembers.getAllSourceMembers(poleData.sourceId,poleData.source)
+      await Notification.newLeaderSelectionResultPublishedToAllSourceMembers(allMembers,id,poleData.source)
       resolve()
     }catch{
       console.log("Error updateResultOnVotingPole")
@@ -226,7 +226,7 @@ LeaderVoting.updateSourceLeaderVotingDataField=function(data){
 LeaderVoting.declareLeaderResultByLeader=function(votingDetails,resultData,resultDeclarationData){
   return new Promise(async (resolve, reject) => { 
     try{
-      let data={
+      let poleData={
         source:votingDetails.from,
         sourceId:votingDetails.sourceId,
         sourceName:votingDetails.sourceName,
@@ -235,14 +235,13 @@ LeaderVoting.declareLeaderResultByLeader=function(votingDetails,resultData,resul
           userName:votingDetails.nominationTakers[resultData[0].leaderIndex].userName
         }
       }
-      
-      console.log("Data :",data)
       //update voting deatils in voting pole
-      await LeaderVoting.updateResultOnLeaderVotingPole(votingDetails._id,resultData,resultDeclarationData,data)
+      await LeaderVoting.updateResultOnLeaderVotingPole(votingDetails._id,resultData,resultDeclarationData,poleData)
       //update leaderVotingData field value on source
-      await LeaderVoting.updateSourceLeaderVotingDataField(data)
+      await LeaderVoting.updateSourceLeaderVotingDataField(poleData)
       resolve()
     }catch{
+      console.log("error on declareLeaderResultByLeader")
       reject()
     }
   })
@@ -313,7 +312,7 @@ LeaderVoting.updateVotingSourceDataDuringAcceptance=function(votingDetails,newLe
 }
 
 
-LeaderVoting.acceptSelfAsLeader=function(votingDetails,newLeaderData,departmentName){
+LeaderVoting.acceptSelfAsLeader=function(votingDetails,newLeaderData,departmentName,leaderGender){
   return new Promise(async (resolve, reject) => { 
     try{
       if(newLeaderData.gole=="" || typeof newLeaderData.gole!="string"){
@@ -327,6 +326,10 @@ LeaderVoting.acceptSelfAsLeader=function(votingDetails,newLeaderData,departmentN
           }
         })
         await LeaderVoting.updateVotingSourceDataDuringAcceptance(votingDetails,newLeaderData,departmentName)
+        //notification to source as new leader accepted as new leader
+        ///HAVE TO START WORK FROM HERE
+        await SourceNotifications.newLeaderAcceptedSelfWinning(String(votingDetails._id),votingDetails.sourceId,votingDetails.from,votingDetails.wonLeader.userName,leaderGender)
+      
         resolve()
       }
     }catch{

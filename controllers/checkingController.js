@@ -254,10 +254,10 @@ exports.ifMoreThenFixedDaysOfLeaderSelection=function(req,res,next){
     let activeDate = new Date(createdDate);
     let numberOfDaysToAdd
     if(req.params.from=="batch"){
-      numberOfDaysToAdd = 15;
-    }else if(req.params.from=="batch"){
       numberOfDaysToAdd = 30;
-    }else{
+    }else if(req.params.from=="department"){
+      numberOfDaysToAdd = 40;
+    }else if(req.params.from=="group"){
       numberOfDaysToAdd = 50;
     }
     let result1 = activeDate.setDate(activeDate.getDate() + numberOfDaysToAdd);

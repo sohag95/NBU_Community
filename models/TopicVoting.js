@@ -8,6 +8,7 @@ const AddCreditPoints = require("./AddCreditPoints")
 const GetAllMembers = require("./GetAllMembers")
 const SourceNotifications = require("./SourceNotifications")
 const StudentDataHandle = require("./StudentDataHandle")
+const Notification = require("./Notification")
 const votingCollection = require("../db").db().collection("VotingPoles")
 const activityCollection = require("../db").db().collection("Activities")
 
@@ -208,11 +209,11 @@ TopicVoting.declareTopicResult=function(votingDetails,resultData,declaredBy,acti
             "activityDates.votingResultDate":new Date()
           }
         })
-      //get all members regNumber array to sent NOTIFICATION
-      let allMembers=await GetAllMembers.getAllSourceMembers(this.activityData.activitySourceId,this.activityData.activityType)
-      await Notification.activityTopicSelectionResultPublishedToAllSourceMembers(allMembers,activityId,data.source,data.wonTopic)
       //sent source notification
-      await SourceNotifications.topicResultPublished(String(votingDetails._id),this.activityData.activitySourceId)
+      await SourceNotifications.topicResultPublished(String(votingDetails._id),data.sourceId)
+      //get all members regNumber array to sent NOTIFICATION
+      let allMembers=await GetAllMembers.getAllSourceMembers(data.sourceId,data.source)
+      await Notification.activityTopicSelectionResultPublishedToAllSourceMembers(allMembers,activityId,data.source,data.wonTopic)
       resolve()
     }catch{
       reject()

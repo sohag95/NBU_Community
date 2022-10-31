@@ -126,7 +126,7 @@ Notification.activityCreatedToAllSourceMembers=function(regNumbers,activityId,ac
         message="New "+activityType+" activity has been created.Perticipate the activity to having fun and learn together."
         gotoText="Go to activity details"
       }
-        let gotoLink="/activity/"+activityId+"/details"
+        let gotoLink="/activity/"+String(activityId)+"/details"
         let notification={
         message:message,
         gotoText:gotoText,
@@ -163,7 +163,7 @@ Notification.batchStateChangedToAllBatchMembers=function(regNumbers,state){
 Notification.activityTopicSelectionResultPublishedToAllSourceMembers=function(regNumbers,activityId,activityType,wonTopic){
   return new Promise(async (resolve, reject) => {
     try{
-        let gotoLink="/activity/"+activityId+"/details"
+        let gotoLink="/activity/"+String(activityId)+"/details"
         let notification={
         message:"New "+activityType+" activity topic result has published.Won topic is : "+wonTopic+".Now perticipate the activity to having fun and learn together.",
         gotoText:"Go to activity",
@@ -184,7 +184,7 @@ Notification.activityTopicSelectionResultPublishedToAllSourceMembers=function(re
 Notification.activityPublishedToAllSourceMembers=function(regNumbers,activityId,activityType){
   return new Promise(async (resolve, reject) => {
     try{
-        let gotoLink="/activity/"+activityId+"/details"
+        let gotoLink="/activity/"+String(activityId)+"/details"
         let notification={
         message:"Conducted "+activityType+" activity has been published.See the activity.",
         gotoText:"View activity",
@@ -206,10 +206,10 @@ Notification.newLeaderSelectionStartedToAllSourceMembers=function(regNumbers,pol
       //batch-to all batch members
       //department-to all department members
       //group-to all group members
-        let gotoLink="/leader-voting/"+poleId+"/details"
+        let gotoLink="/leader-voting/"+String(poleId)+"/details"
         let notification={
         message:"New "+leaderType+" leader selection pole has been created.Nomination taking is going on.See if you are eligible or not!!",
-        gotoText:"See voting pole",
+        gotoText:"See the voting pole",
         gotoLink:gotoLink,
         createdDate:new Date()
       }
@@ -225,16 +225,19 @@ Notification.newLeaderSelectionStartedToAllSourceMembers=function(regNumbers,pol
 Notification.newLeaderSelectionResultPublishedToAllSourceMembers=function(regNumbers,poleId,leaderType){
   return new Promise(async (resolve, reject) => {
     try{
-        let gotoLink="/leader-voting/"+poleId+"/details"
+      console.log("regNumbers:",regNumbers)
+        let gotoLink="/leader-voting/"+String(poleId)+"/details"
         let notification={
         message:"New "+leaderType+" leader selection result has published!!",
         gotoText:"Check the result",
         gotoLink:gotoLink,
         createdDate:new Date()
       }
+      console.log("Notification:",notification)
       await Notification.sentNotificationToMultipleUsers(regNumbers,notification)
       resolve()
     }catch{
+      console.log("Error from newLeaderSelectionResultPublishedToAllSourceMembers")
       reject()
     }
   })
@@ -280,14 +283,15 @@ Notification.creditToAllActivityParticipants=function(regNumbers,creditPoints,ac
 }
 
 
-Notification.creditToWinningLeaderByVote=function(regNumber,leaderType,creditPoints){
+Notification.creditToWinningLeaderByVote=function(regNumber,leaderType,creditPoints,poleId){
   return new Promise(async (resolve, reject) => {
     try{
-
+      let gotoText="Go to voting pole"
+      let gotoLink="/leader-voting/"+String(poleId)+"/details"
       let notification={
-        message:"Congratulations!! Credit points : "+creditPoints+" added. As you are selected as a new "+leaderType+" leader.",
-        gotoText:null,
-        gotoLink:null,
+        message:"Congratulations!! Credit points : "+creditPoints+" added. As you are selected as a new "+leaderType+" leader.Now accept yourself as a leader to start your leadership on "+leaderType+".",
+        gotoText:gotoText,
+        gotoLink:gotoLink,
         createdDate:new Date()
       }
       await Notification.sentNotificationToOneUser(regNumber,notification)
@@ -319,7 +323,7 @@ Notification.creditAfterLeaderVoteToVoter=function(regNumber,creditPoints){
 }
 
 
-Notification.creditAfterGattingNominationToNominator=function(regNumber,leaderType,creditPoints){
+Notification.creditAfterGattingNominationToNominator=function(regNumber,creditPoints){
   return new Promise(async (resolve, reject) => {
     try{
       let notification={
@@ -529,7 +533,7 @@ Notification.reportedByStudentsToSocietyController=function(reportingType,report
   return new Promise(async (resolve, reject) => {
     try{
       //reportingTypes-account,leader,activity,fakeParticipants,
-      let gotoLink="/report/"+reportId+"/details"
+      let gotoLink="/report/"+String(reportId)+"/details"
       let notification={
         message:"Got a new report !! Reporting Type - "+reportingType,
         gotoText:"See reporting details",
@@ -550,7 +554,7 @@ Notification.reportedByStudentsToSocietyController=function(reportingType,report
 Notification.newActivitySubmittedToPostController=function(activityId){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"New activity submitted.Handle the activity status.",
         gotoText:"Activity Details",
@@ -570,7 +574,7 @@ Notification.newActivitySubmittedToPostController=function(activityId){
 Notification.activityAssignedEditorAcceptedToPostController=function(activityId){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Activity video editor accepts video editing request.",
         gotoText:"Activity Details",
@@ -589,7 +593,7 @@ Notification.activityAssignedEditorAcceptedToPostController=function(activityId)
 Notification.activityVideoEditedToPostController=function(activityId){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Activity video editing completed.Now activity is ready to be published!!",
         gotoText:"Activity Details",
@@ -611,7 +615,7 @@ Notification.activityVideoEditedToPostController=function(activityId){
 Notification.activityVideoAssignedToEditor=function(regNumber,activityId){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Activity video editing has assigned to you. Accept it!!",
         gotoText:"Activity Details",
@@ -630,7 +634,7 @@ Notification.activityVideoAssignedToEditor=function(regNumber,activityId){
 Notification.activityPublishedToEditor=function(regNumber,activityId){
   return new Promise(async (resolve, reject) => {
     try{
-      let gotoLink="/activity/"+activityId+"/details"
+      let gotoLink="/activity/"+String(activityId)+"/details"
       let notification={
         message:"Activity video edited by you has been published.Thank You!!",
         gotoText:"Activity Details",

@@ -81,6 +81,7 @@
               <%if(groupDetails.isVoteGoingOn){%>
               <!--Voting related informations starts--> 
                 <%gotoLink="/leader-voting/"+groupDetails.leaderVotingData.votingPoleId+"/details"%>
+                <%gotoText="Go to voting pole"%> 
                 <h5 class="bolder text-warning text-center"><strong>Leader Voting is Going On</strong></h5>
                 <hr style="margin-bottom: .2rem;margin-top: 0rem;">
                 <%if(groupDetails.leaderVotingData.votingDates.resultDate){%>
@@ -197,8 +198,8 @@
             <div class="member-container mt-2">
                 <div>
                   <h5 class="bolder text-primary"><strong>New Leader Selection voting pole creation:</strong></h5>
-                  <h6 class="bolder text-warning"><strong>Present leader activation date : </strong><%= groupDetails.presentLeader.createdDate.getDate() %> <%=groupDetails.presentLeader.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= groupDetails.presentLeader.createdDate.getFullYear() %> at <%=groupDetails.presentLeader.createdDate.getHours()%>:<%=groupDetails.presentLeader.createdDate.getMinutes()%></h6>
-                  <h6 class="bolder text-danger">[This section will only work/shown after 50 days of present leader selection.Main leader can create voting pole in case he/she is not interested to lead activity]</h6>
+                  <h6 class="bolder text-warning"><strong>Your activation date : </strong><%= groupDetails.presentLeader.createdDate.getDate() %> <%=groupDetails.presentLeader.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= groupDetails.presentLeader.createdDate.getFullYear() %> at <%=groupDetails.presentLeader.createdDate.getHours()%>:<%=groupDetails.presentLeader.createdDate.getMinutes()%></h6>
+                  <h6 class="bolder text-danger">[You become main leader on this group before more then 50 days,still you have not initiate any activity.If you are not interested to lead any more,you can resign by creating a new leader selection voting pole.]</h6>
                   <div class="container">
                     <div class="" style="width: 100%;">
                       <form action="/create/group/<%=groupDetails.groupId%>/leader-voting-pole" method="post">
@@ -230,7 +231,7 @@
                       </div>
                       <div class="ml-2">
                         <span class="d-block"><strong >Name : </strong><%=groupDetails.presentLeader.userName%></span>
-                        <span class="d-block"><strong >Department : </strong><%=groupDetails.presentLeader.departmentName%></span>
+                        <span class="d-block"><strong >Dept : </strong><%=groupDetails.presentLeader.departmentName%></span>
                         <span class="d-block"><strong >Phone : </strong><%=groupDetails.presentLeader.phone%></span>
                       </div>
                     </div>
@@ -254,7 +255,7 @@
                       </div>
                       <div class="ml-2">
                         <span class="d-block"><strong >Name : </strong><%=groupDetails.previousLeader.userName%></span>
-                        <span class="d-block"><strong >Department : </strong><%=groupDetails.presentLeader.department%></span>
+                        <span class="d-block"><strong >Dept : </strong><%=groupDetails.previousLeader.departmentName%></span>
                         <span class="d-block"><strong >Phone : </strong><%=groupDetails.previousLeader.phone%></span>
                       </div>
                     </div>
@@ -284,7 +285,7 @@
                   </div>
                   <div class="ml-2">
                     <span class="d-block"><strong >Name : </strong><%=leader.userName%></span>
-                    <span class="d-block"><strong >Department : </strong><%=leader.departmentName%></span>
+                    <span class="d-block"><strong >Dept : </strong><%=leader.departmentName%></span>
                   </div>
                 </div>
               <%})%>

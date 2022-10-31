@@ -85,6 +85,7 @@
                 <div class="member-container d-block" style="height:8rem ;max-height:8rem ;overflow-y: scroll;">
                   <!-- activity details contsiner starts | Voting board + Activity Board-->
                   <%if(departmentDetails.isVoteGoingOn){%>
+                    <%gotoText="Go to voting pole"%>
                   <!--Voting related informations starts--> 
                     <%gotoLink="/leader-voting/"+departmentDetails.leaderVotingData.votingPoleId+"/details"%>
                     <h5 class="bolder text-warning text-center"><strong>Leader Voting is Going On</strong></h5>
@@ -203,8 +204,8 @@
                 <div class="member-container mt-2">
                     <div>
                       <h5 class="bolder text-primary"><strong>New Leader Selection voting pole creation:</strong></h5>
-                      <h6 class="bolder text-warning"><strong>Present leader activation date : </strong><%= departmentDetails.presentLeader.createdDate.getDate() %> <%=departmentDetails.presentLeader.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= departmentDetails.presentLeader.createdDate.getFullYear() %> at <%=departmentDetails.presentLeader.createdDate.getHours()%>:<%=departmentDetails.presentLeader.createdDate.getMinutes()%></h6>
-                      <h6 class="bolder text-danger">[This section will only work/shown after 30 days of present leader selection.Main leader can create voting pole in case he/she is not interested to lead activity]</h6>
+                      <h6 class="bolder text-warning"><strong>Your activation date : </strong><%= departmentDetails.presentLeader.createdDate.getDate() %> <%=departmentDetails.presentLeader.createdDate.toLocaleString('default', { month: 'short' }) %> , <%= departmentDetails.presentLeader.createdDate.getFullYear() %> at <%=departmentDetails.presentLeader.createdDate.getHours()%>:<%=departmentDetails.presentLeader.createdDate.getMinutes()%></h6>
+                      <h6 class="bolder text-danger">[You become main leader on this department before more then 40 days,still you have not initiate any activity.If you are not interested to lead any more,you can resign by creating a new leader selection voting pole.]</h6>
                       <div class="container">
                         <div class="" style="width: 100%;">
                           <form action="/create/department/<%=departmentDetails.departmentCode%>/leader-voting-pole" method="post">

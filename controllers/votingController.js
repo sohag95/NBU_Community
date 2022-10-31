@@ -122,7 +122,7 @@ exports.topicVotingDetailsPage = function (req, res) {
   votingDetails.result=votingDetails.result.map((data)=>{
     let newInfo={
       topicIndex:data.topicIndex,
-      parcentage:(data.votes*100)/totalVote
+      parcentage:((data.votes*100)/totalVote).toFixed(2)
     }
     console.log("new Info :",newInfo)
     return newInfo
@@ -165,68 +165,87 @@ exports.createLeaderVotingPole = function (req, res) {
 }
 
 exports.getLeaderVotingStatusAndCheckData =async function (req, res, next) {
-   req.checkData={
-    isUserLoggedIn:req.isUserLoggedIn,//value got from isUserLoggedIn function
-    isVoter:false,
-    votingStatus:"",//nomination,voting,completed
-  }
-  req.validMembers=[]
-  if(req.checkData.isUserLoggedIn){
-    req.checkData.isVoter=OtherOperations.isSourceMemberOrVoter(req.votingDetails.from,req.votingDetails.sourceId,req.regNumber)
-  }
-  if(req.votingDetails.votingDates.createdDate<new Date() && new Date()<req.votingDetails.votingDates.nominationLastDate){
-    req.checkData.votingStatus="nomination"
-    if(req.checkData.isVoter){
-      let sourceDetails
-      if(req.votingDetails.from=="batch"){
-        sourceDetails=await SessionBatch.findSessionBatchDetailsByBatchId(req.votingDetails.sourceId)
-      }else if(req.votingDetails.from=="batch"){
-        sourceDetails=await Department.getDepartmentDataByDepartmentCode(req.votingDetails.sourceId)
-      }else{
-        sourceDetails=await Group.findGroupByGroupId(req.votingDetails.sourceId)
-      }
-      req.votingDetails.nominateableMembers=sourceDetails.allMembers.map((member)=>{
-        if(req.votingDetails.leaders.mainLead.regNumber!=member.regNumber){//if present leader then can't get nomination
-          return member.regNumber
+  try{
+    req.checkData={
+      isUserLoggedIn:req.isUserLoggedIn,//value got from isUserLoggedIn function
+      isVoter:false,
+      votingStatus:"",//nomination,voting,completed
+    }
+    req.validMembers=[]
+    if(req.checkData.isUserLoggedIn){
+      req.checkData.isVoter=OtherOperations.isSourceMemberOrVoter(req.votingDetails.from,req.votingDetails.sourceId,req.regNumber)
+    }
+    if(req.votingDetails.votingDates.createdDate<new Date() && new Date()<req.votingDetails.votingDates.nominationLastDate){
+      req.checkData.votingStatus="nomination"
+      if(req.checkData.isVoter){
+        let sourceDetails
+        if(req.votingDetails.from=="batch"){
+          sourceDetails=await SessionBatch.findSessionBatchDetailsByBatchId(req.votingDetails.sourceId)
+        }else if(req.votingDetails.from=="department"){
+          sourceDetails=await Department.getDepartmentDataByDepartmentCode(req.votingDetails.sourceId)
+        }else if(req.votingDetails.from=="group"){
+          sourceDetails=await Group.findGroupByGroupId(req.votingDetails.sourceId)
         }
-      })
-    }
-  }else if(req.votingDetails.votingDates.nominationLastDate<new Date() && new Date()<req.votingDetails.votingDates.votingLastDate){
-    req.checkData.votingStatus="voting"
-    if(req.votingDetails.isResultDeclared){
+        if(req.votingDetails.from=="batch"){
+          req.votingDetails.nominateableMembers=sourceDetails.allMembers.map((member)=>{
+            if(req.votingDetails.leaders.mainLead.regNumber!=member.regNumber){//if present leader then can't get nomination
+              return member.regNumber
+            }
+          })
+        }else{
+          //HERE I ALSO HAVE TO CHECK WHETHER PRESENT MEMBER FROM SENIOUR BATCH OR NOT | Seniour batch student should not get nomination.
+          req.votingDetails.nominateableMembers=sourceDetails.allPresentMembers.map((member)=>{
+            if(req.votingDetails.leaders.mainLead.regNumber!=member.regNumber){//if present leader then can't get nomination
+              return member.regNumber
+            }
+          })
+        }
+        
+      }
+    }else if(req.votingDetails.votingDates.nominationLastDate<new Date() && new Date()<req.votingDetails.votingDates.votingLastDate){
+      req.checkData.votingStatus="voting"
+      if(req.votingDetails.isResultDeclared){
+        req.checkData.votingStatus="completed"
+      }
+    }else{
       req.checkData.votingStatus="completed"
+      if(!req.votingDetails.isResultDeclared){
+        await LeaderVoting.deaclreLeaderVotingPoleResultAutomatically(req.votingDetails)
+      }
     }
-  }else{
-    req.checkData.votingStatus="completed"
-    if(!req.votingDetails.isResultDeclared){
-      await LeaderVoting.deaclreLeaderVotingPoleResultAutomatically(req.votingDetails)
-    }
+    console.log("Voting Details nominateableMembers:",req.votingDetails)
+    next()
+  }catch{
+    res.render("404")
   }
-  console.log("Voting Details nominateableMembers:",req.votingDetails)
-  next()
 }
 
 exports.getLeaderVotingPage =async function (req, res) {
-  let votingDetails=req.votingDetails 
-  let checkData=req.checkData
-  if(votingDetails.result.length){
-    //voting parcentage calculation for each topic
-  let totalVote=votingDetails.voters.length
-  votingDetails.result=votingDetails.result.map((data)=>{
-    let newInfo={
-      leaderIndex:data.leaderIndex,
-      parcentage:(data.votes*100)/totalVote
+  try{
+    let votingDetails=req.votingDetails 
+    let checkData=req.checkData
+    if(votingDetails.result.length){
+      //voting parcentage calculation for each topic
+    let totalVote=votingDetails.voters.length
+    votingDetails.result=votingDetails.result.map((data)=>{
+      let newInfo={
+        leaderIndex:data.leaderIndex,
+        parcentage: ((data.votes*100)/totalVote).toFixed(2)
+      }
+      return newInfo
+    })
     }
-    return newInfo
-  })
+    // console.log("Voting Details :",votingDetails)
+    console.log("CheckData :",req.checkData)
+    console.log("new result :",votingDetails.result)
+    res.render("leader-voting-details-page",{
+      votingDetails:votingDetails,
+      checkData:checkData
+    })
+  }catch{
+    res.render("404")
   }
-  // console.log("Voting Details :",votingDetails)
-  console.log("CheckData :",req.checkData)
-  console.log("new result :",votingDetails.result)
-  res.render("leader-voting-details-page",{
-    votingDetails:votingDetails,
-    checkData:checkData
-  })
+  
 }
 
 exports.addNameOnNomination = function (req, res) {
@@ -363,7 +382,7 @@ exports.acceptSelfAsLeader =async function (req, res) {
     let departmentName=studentData.departmentName
     
     let from=req.votingDetails.from
-    LeaderVoting.acceptSelfAsLeader(req.votingDetails,newLeaderData,departmentName).then(()=>{
+    LeaderVoting.acceptSelfAsLeader(req.votingDetails,newLeaderData,departmentName,studentData.gender).then(()=>{
       req.votingDetails=undefined
       req.flash("success", `Congrets!! Now you are the new present leader of the ${from}.`)
       req.session.save( () =>{

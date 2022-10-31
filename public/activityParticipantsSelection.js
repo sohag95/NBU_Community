@@ -8,15 +8,24 @@
 //   {regNumber:"2022COMSC0007",userName:"Apurba Ghosh"}
 // ]
 
+                
+
 let allAvailableMembers=allMembers
 
 function allAvailableMembersTemplate(member) {
-  return `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-  <span class="item-text d-block"><strong>Name : </strong>${member.userName}</span>
-  <span class="item-text d-block"><strong>Registration No : </strong>${member.regNumber}</span>
-  <div>
-  <button  value="${member.userName}" id="${member.regNumber}" class="addAsParticipant btn btn-primary btn-sm">Add As Participant</button>
-  </div>
+  return `<li class="list-group-item list-group-item-action d-flex align-items-center">
+    <div class="mr-auto d-flex"> 
+      <div class="mr-2">
+        <img class="member-avatar"  src="/image/profile/medium/profile-${member.regNumber}" alt="">
+      </div>
+      <div>
+        <span class="item-text d-block"><strong>Name : </strong>${member.userName}</span>
+        <span class="item-text d-block"><strong>Registration No : </strong>${member.regNumber}</span>
+      </div>
+    </div>
+    <div>
+      <button  value="${member.userName}" id="${member.regNumber}" class="addAsParticipant btn btn-primary btn-sm">Add As Participant</button>
+    </div>
   </li>`
 }
 
@@ -30,11 +39,18 @@ let participants=[]
 
 function addOnParticipantsTemplate(member) {
   return `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-  <span class="item-text d-block"><strong>Name : </strong>${member.userName}</span>
-  <span class="item-text d-block"><strong>Registration No : </strong>${member.regNumber}</span>
-  <div>
-  <button value="${member.userName}" id="${member.regNumber}" class="removeParticipant btn btn-danger btn-sm">Remove</button>
-  </div>
+    <div class="mr-auto d-flex"> 
+      <div class="mr-2">
+        <img class="member-avatar"  src="/image/profile/medium/profile-${member.regNumber}" alt="">
+      </div>
+      <div>
+        <span class="item-text d-block"><strong>Name : </strong>${member.userName}</span>
+        <span class="item-text d-block"><strong>Registration No : </strong>${member.regNumber}</span>
+      </div>
+    </div>
+    <div>
+      <button value="${member.userName}" id="${member.regNumber}" class="removeParticipant btn btn-danger btn-sm">Remove</button>
+    </div>
   </li>`
 }
 
