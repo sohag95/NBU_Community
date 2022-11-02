@@ -216,13 +216,16 @@ exports.deleteActivity=function(req,res){
 
 exports.getActivityDetailsPage=function(req,res){
   let activityDetails=req.activityDetails
+  activityDetails.totalComments=activityDetails.comments.length
+  activityDetails.totalLikes=activityDetails.likes.length
+  activityDetails.totalParticipants=activityDetails.participants.length
   let votingDetails
   let checkData={
     isUserLoggedIn:req.isUserLoggedIn,
     isActivityLeader:false,
     isActivityMember:false,
     isPostController:false,
-    isXstudent:req.session.user.otherData.isXstudent
+    isXstudent:null
   }
   votingDetails=req.votingDetails
   //freeing space
@@ -232,6 +235,9 @@ exports.getActivityDetailsPage=function(req,res){
   req.activityDetails=undefined
   //leader check
   if(checkData.isUserLoggedIn){
+
+    checkData.isXstudent=req.session.user.otherData.isXstudent
+
     if(activityDetails.leaders.mainLead.regNumber==req.regNumber){
       checkData.isActivityLeader=true
     }
@@ -249,7 +255,12 @@ exports.getActivityDetailsPage=function(req,res){
     if(activityMember){
       checkData.isActivityMember=true
     }
+  }else{
+    activityDetails.comments=null
+    activityDetails.likes=null
+    activityDetails.participants=null
   }
+  
   // let today=new Date()
   // let lastDate=votingDetails.votingDates.votingLastDate
   // console.log("today:",today)

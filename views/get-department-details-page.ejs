@@ -292,7 +292,9 @@
                       </div>
                       <div class="ml-2">
                         <span class="d-block"><strong >Name : </strong><%=departmentDetails.presentLeader.userName%></span>
-                        <span class="d-block"><strong >Phone : </strong><%=departmentDetails.presentLeader.phone%></span>
+                        <%if(checkData.isUserLoggedIn){%>
+                          <span class="d-block"><strong >Phone : </strong><%=departmentDetails.presentLeader.phone%></span>
+                        <%}%>
                       </div>
                     </div>
                     <%if(departmentDetails.presentLeader.votingPoleId!="auto"){%>
@@ -315,7 +317,9 @@
                       </div>
                       <div class="ml-2">
                         <span class="d-block"><strong >Name : </strong><%=departmentDetails.previousLeader.userName%></span>
-                        <span class="d-block"><strong >Phone : </strong><%=departmentDetails.previousLeader.phone%></span>
+                        <%if(checkData.isUserLoggedIn){%>
+                          <span class="d-block"><strong >Phone : </strong><%=departmentDetails.previousLeader.phone%></span>
+                        <%}%>
                       </div>
                     </div>
                     <%if(departmentDetails.previousLeader.votingPoleId!="auto"){%>
@@ -377,47 +381,56 @@
     
         <hr>
           <div class="item-container">
-            <strong><h5 class="bolder">All Present Members (<%=departmentDetails.allPresentMembers.length%>)</h5></strong>
-            <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-            <%if(!departmentDetails.allPresentMembers.length){%>
-              <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
-            <%}else{%>  
-              <%if(departmentDetails.allPresentMembers.length==1){%>
-                <div class="col">
-                  <div class="member-container">
-                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.allPresentMembers[0].regNumber%>" alt="">
-                    <div class="name-container">
-                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=departmentDetails.allPresentMembers[0].regNumber%>/profile"><%=departmentDetails.allPresentMembers[0].userName%></a></strong>
-                      <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
-                    </div>
-                  </div>
-                </div>
-              <%}else{%>
-                <%let middle=parseInt(departmentDetails.allPresentMembers.length/2)%>
-                <div style="display: flex;    flex-wrap: wrap;">
-                  <div class="col-md-6 left-member-container" >
-                    <%for(let i=0;i<middle;i++){%>
-                      <div class="member-container">
-                        <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.allPresentMembers[i].regNumber%>" alt="">
-                        <div class="name-container">
-                          <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=departmentDetails.allPresentMembers[i].regNumber%>/profile"><%=departmentDetails.allPresentMembers[i].userName%></a></strong>
-                          <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
-                        </div>
-                      </div>
-                    <%}%>
-                  </div>
-                  <div class="col-md-6 right-member-container" >
-                    <%for(let j=middle;j<departmentDetails.allPresentMembers.length;j++){%>
+            <%if(!checkData.isUserLoggedIn){%>
+              <strong><h5 class="bolder">All Present Members </h5></strong>
+              <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+              <div class="bolder text-center text-info"><strong >[Only logged in users can see present members]</strong></div>
+              <div  style="height: 50vh;width: 100%;">
+                <img class="locked-profile-img" src="/images/locked-profile-banner.webp" alt="">
+              </div>
+            <%}else{%>
+              <strong><h5 class="bolder">All Present Members (<%=departmentDetails.allPresentMembers.length%>)</h5></strong>
+              <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+              <%if(!departmentDetails.allPresentMembers.length){%>
+                <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
+              <%}else{%>  
+                <%if(departmentDetails.allPresentMembers.length==1){%>
+                  <div class="col">
                     <div class="member-container">
-                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.allPresentMembers[j].regNumber%>" alt="">
+                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.allPresentMembers[0].regNumber%>" alt="">
                       <div class="name-container">
-                        <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=departmentDetails.allPresentMembers[j].regNumber%>/profile"><%=departmentDetails.allPresentMembers[j].userName%></a></strong>
+                        <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=departmentDetails.allPresentMembers[0].regNumber%>/profile"><%=departmentDetails.allPresentMembers[0].userName%></a></strong>
                         <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
                       </div>
                     </div>
-                    <%}%>
                   </div>
-                </div>
+                <%}else{%>
+                  <%let middle=parseInt(departmentDetails.allPresentMembers.length/2)%>
+                  <div style="display: flex;    flex-wrap: wrap;">
+                    <div class="col-md-6 left-member-container" >
+                      <%for(let i=0;i<middle;i++){%>
+                        <div class="member-container">
+                          <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.allPresentMembers[i].regNumber%>" alt="">
+                          <div class="name-container">
+                            <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=departmentDetails.allPresentMembers[i].regNumber%>/profile"><%=departmentDetails.allPresentMembers[i].userName%></a></strong>
+                            <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                          </div>
+                        </div>
+                      <%}%>
+                    </div>
+                    <div class="col-md-6 right-member-container" >
+                      <%for(let j=middle;j<departmentDetails.allPresentMembers.length;j++){%>
+                      <div class="member-container">
+                        <img class="member-avatar"  src="/image/profile/medium/profile-<%=departmentDetails.allPresentMembers[j].regNumber%>" alt="">
+                        <div class="name-container">
+                          <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=departmentDetails.allPresentMembers[j].regNumber%>/profile"><%=departmentDetails.allPresentMembers[j].userName%></a></strong>
+                          <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                        </div>
+                      </div>
+                      <%}%>
+                    </div>
+                  </div>
+                <%}%>
               <%}%>
             <%}%>
           </div> 

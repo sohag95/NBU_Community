@@ -150,19 +150,19 @@
     <hr>
     <div class="item-container path">
       <%if(checkData.isCampusGroupAdmin){%>
-        <strong><h5>New Membersip Requests (<%=campusGroupDetails.memberRequests.length%>)</h5></strong>
+        <h5><strong>New Membersip Requests (<%=campusGroupDetails.memberRequests.length%>)</strong></h5>
         <hr style="margin-bottom: .85rem;margin-top: 0rem;">
         <%if(!campusGroupDetails.memberRequests.length){%>
           <div class="btn btn-block btn-info btn-lg">No membership request received!!</div>  
         <%}else{%>
           <%campusGroupDetails.memberRequests.forEach((member)=>{%>
-            <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #fff;">
+            <div class="mt-2" style="display: flex;border-bottom: 1px solid gray;border-radius: 5px;background-color: #f0f2f5;">
               <div class="text-center" style="position: relative;">
-                <img class="search-batch-image"  src="/images/sohag.jpg" alt="">
+                <img class="search-batch-image"  src="/image/profile/medium/profile-<%=member.regNumber%>" alt="">
               </div>
               <div class="ml-2" style="color: #3c3b37; width: 100%;">
                 <span class="d-block" style="color: #3c3b37;font-weight: 700;"><strong>Name : </strong> <a href="/student/<%=member.regNumber%>/profile"><%=member.userName%></a> | <%=member.departmentName%> | Batch : (20<%=member.regNumber.slice(0,2)%>-20<%=member.regNumber.slice(2,4)%>)</span>
-                <i class="d-block">Requested On : <%=member.requestedDate%></i>
+                <i class="d-block">Requested On : <%= member.requestedDate.getDate() %> <%=member.requestedDate.toLocaleString('default', { month: 'short' }) %> , <%= member.requestedDate.getFullYear() %> at <%=member.requestedDate.getHours()%>:<%=member.requestedDate.getMinutes()%></i>
                 <hr style="margin-bottom: .25rem;margin-top: 0rem;">
                 <h6 class="bolder"><strong>Personal Aim : </strong>
                 <%=member.aim%>
@@ -248,7 +248,7 @@
             <div class="ml-2" style="color: #3c3b37;font-weight: 400; width: 100%;">
               <div class="d-flex">
                 <div style="width: 100%;">
-                  <span class="d-block" style="color: #3c3b37;font-weight: 700;"><strong>Name : </strong> <%=member.userName%> | <strong><%=member.departmentName%> | Batch - (20<%=member.regNumber.slice(0,2)%>-20<%=member.regNumber.slice(2,4)%>)</strong> </span>
+                  <span class="d-block" style="color: #3c3b37;font-weight: 700;"><strong>Name : </strong><a href="/student/<%=member.regNumber%>/profile" style="text-decoration: none;"><%=member.userName%></a>  | <strong><%=member.departmentName%> | Batch - (20<%=member.regNumber.slice(0,2)%>-20<%=member.regNumber.slice(2,4)%>)</strong> </span>
                   <%if(member.addedBy=="creator"){%>
                     <i>(Group Creator)</i>
                   <%}else{%>

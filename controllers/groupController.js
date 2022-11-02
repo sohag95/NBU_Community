@@ -110,6 +110,8 @@ exports.getGroupDetailsPage =async function (req, res) {
         }
       }
     
+    }else{
+      groupDetails.allPresentMembers=null
     }
     if(groupDetails.previousActivity){
       let activityDetails=await Activity.getActivityDetailsById(groupDetails.previousActivity)

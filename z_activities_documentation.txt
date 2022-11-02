@@ -40,3 +40,5 @@ Sixth Part:
     <source srcset="image/profile/medium/sohsag" media="(min-width:760px)">
     <img class="home-profile-image" src="image/profile/medium/checkMid" alt="">
 </picture>
+
+LOC:22647

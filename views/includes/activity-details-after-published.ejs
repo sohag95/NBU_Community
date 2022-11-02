@@ -1,9 +1,12 @@
 <%let liked=false%>
-<% activityDetails.likes.forEach(function(regNumber) { %>
-  <%if(regNumber==user.regNumber){%>
-    <% liked=true %>
-  <%}%>
-<%})%>
+<%if(user){%>
+  <% activityDetails.likes.forEach(function(regNumber) { %>
+    <%if(regNumber==user.regNumber){%>
+      <% liked=true %>
+    <%}%>
+  <%})%>
+<%}%>
+
 <div style="display: flex;flex-wrap: wrap;">
   <div class="col-lg notVisibleOnCollapse" >
   </div>
@@ -61,38 +64,53 @@
 
             <div style="display: flex;">
               <div class="text-left <%= liked ? 'text-primary' : '' %>" style="width: 50%;">
-                <i class="far fa-thumbs-up"></i><span> <%= activityDetails.likes.length %> <%= activityDetails.likes.length>1 ? 'Likes' : 'Like' %></span>
+                <i class="far fa-thumbs-up"></i><span> <%= activityDetails.totalLikes %> <%= activityDetails.totalLikes>1 ? 'Likes' : 'Like' %></span>
               </div>
               <div class="text-right" style="width: 50%;">
-                <span><%= activityDetails.comments.length %> <%= activityDetails.comments.length>1  ? 'Comments' : 'Comment'%></span> 
+                <span><%= activityDetails.totalComments %> <%= activityDetails.totalComments>1  ? 'Comments' : 'Comment'%></span> 
               </div>
             </div>
                 <div style="display: flex;margin-bottom: 5px; border-top: 1px solid rgb(126, 124, 124);border-bottom: 1px solid rgb(126, 124, 124);">
                   <div class="text-center" style="width: 50%;">
-                    <%  if(liked){%> 
-                      <form class="inlineContainer" action="/activity/<%=activityDetails._id%>/dislike" method="POST">
-                        <button class="btn  btn-block text-primary" style="border: 0px;background: #fff;" type="submit">
-                            <i class="far fa-thumbs-up"></i> Liked
-                        </button>
-                      </form>
-                    <%}else{%> 
-                      <form class="inlineContainer" action="/activity/<%=activityDetails._id%>/like" method="POST">
+                    <%if(user){%>
+                      <%  if(liked){%> 
+                        <form class="inlineContainer" action="/activity/<%=activityDetails._id%>/dislike" method="POST">
+                          <button class="btn  btn-block text-primary" style="border: 0px;background: #fff;" type="submit">
+                              <i class="far fa-thumbs-up"></i> Liked
+                          </button>
+                        </form>
+                      <%}else{%> 
+                        <form class="inlineContainer" action="/activity/<%=activityDetails._id%>/like" method="POST">
+                          <button class="btn  btn-block " style="border: 0px;background: #fff;" type="submit">
+                              <i class="far fa-thumbs-up"></i> Like 
+                          </button>
+                        </form>
+                      <%}%>
+                    <%}else{%>
+                      <div class="inlineContainer">
                         <button class="btn  btn-block " style="border: 0px;background: #fff;" type="submit">
-                            <i class="far fa-thumbs-up"></i> Like 
+                          <i class="far fa-thumbs-up"></i> Like 
                         </button>
-                      </form>
-                    <%}%>
+                      </div>
+                    <%}%> 
                   </div>
                   <div class="text-center" style="width: 50%;">
+                    <%if(user){%>
                     <button class="btn  btn-block" style="border: 0px;background: #fff;" type="button" data-toggle="collapse" data-target="#collapse<%= activityDetails._id %>" aria-expanded="false" aria-controls="collapseExample">
-                      <i class="far fa-comment-alt"></i> <%= activityDetails.comments.length>1  ? 'Comments' : 'Comment'%>
+                      <i class="far fa-comment-alt"></i> <%= activityDetails.totalComments>1  ? 'Comments' : 'Comment'%>
                     </button>
+                    <%}else{%>
+                      <button class="btn  btn-block" style="border: 0px;background: #fff;" type="button" data-toggle="collapse" data-target="#collapseWithoutLoggedIn" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="far fa-comment-alt"></i> <%= activityDetails.totalComments>1  ? 'Comments' : 'Comment'%>
+                      </button>
+                    <%}%>
                   </div>
                 </div>
+                <%if(user){%>
                 <div class="collapse" id="collapse<%= activityDetails._id %>">
                   <div class="card card-body">
                     <p class="inlineContainer">  
-                      <%if( activityDetails.comments.length==0){%>
+                      <%if( activityDetails.totalComments==0){%>
                         <div class="text-muted small list-group-item">
                           <p class="btmMarginZero bolderFont">No one comment on this post till now , be the first one.</p>
                         </div>
@@ -136,8 +154,16 @@
                     </p>
                   </div>
                 </div>
+                <%}else{%>
+                  <div class="collapse" id="collapseWithoutLoggedIn">
+                    <div class="card card-body">
+                      <strong class="d-block text-warning text-center">[Only logged in user can see comments!!]</strong>
+                    </div>
+                  </div>
+                <%}%>
 
             <!-- comment section -->
+            <%if(user){%>
               <div style="display: flex;">
                 <div class="text-center">
                   <img class="avatar-small" style="top:1px ;margin-left: 0rem;margin-right: 2px;" src="/image/profile/small/profile-<%=user.regNumber%>" alt="">
@@ -149,6 +175,8 @@
                   </form>
                 </div>
               </div>
+            <%}%>
+            
             </div>
         </div>
         <hr>
@@ -184,37 +212,41 @@
           
         </div>
         <div class="item-container">
-          <h6><strong>All  Participants (<%=activityDetails.participants.length%>)</strong></h6>
+          <h6><strong>All  Participants (<%=activityDetails.totalParticipants%>)</strong></h6>
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
+          <%if(user){%>
             <%activityDetails.participants.forEach((participant,index)=>{%>
-              <div class="student-room-container" style="display: flex;align-items: center;">
-                <div class="mr-auto">
-                  <a href="/student/<%=participant.regNumber%>/profile">
-                    <img class="avatar-small"  src="/image/profile/small/profile-<%=participant.regNumber%>" alt="">
-                    <strong class="ml-1"><%=participant.userName%></strong>
-                  </a>
-                </div>
-                <div >    
-                  <strong type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><i class="fas fa-ellipsis-h"></i></strong>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <%if(checkData.isUserLoggedIn && checkData.isActivityMember){%>
-                      <form action="/sent-report" method="post">
-                        <input type="hidden" name="type" value="activity">
-                        <input type="hidden" name="subType" value="notParticipant">
-                        <input type="hidden" name="participantIndex" value="<%=index%>">
-                        <input type="hidden" name="regNumber" value="<%=participant.regNumber%>">
-                        <input type="hidden" name="userName" value="<%=participant.userName%>">
-                        
-                        <input type="hidden" name="reportingId" value="<%=activityDetails._id%>">
-                        <button class="btn btn-sm btn-info  btn-block">Not Participant?Report!</button>
-                      </form>
-                    <%}else{%>
-                      <strong class="bolder">For logged in users!</strong>
-                    <%}%>
+                <div class="student-room-container" style="display: flex;align-items: center;">
+                  <div class="mr-auto">
+                    <a href="/student/<%=participant.regNumber%>/profile">
+                      <img class="avatar-small"  src="/image/profile/small/profile-<%=participant.regNumber%>" alt="">
+                      <strong class="ml-1"><%=participant.userName%></strong>
+                    </a>
+                  </div>
+                  <div >    
+                    <strong type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><i class="fas fa-ellipsis-h"></i></strong>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <%if(checkData.isUserLoggedIn && checkData.isActivityMember){%>
+                        <form action="/sent-report" method="post">
+                          <input type="hidden" name="type" value="activity">
+                          <input type="hidden" name="subType" value="notParticipant">
+                          <input type="hidden" name="participantIndex" value="<%=index%>">
+                          <input type="hidden" name="regNumber" value="<%=participant.regNumber%>">
+                          <input type="hidden" name="userName" value="<%=participant.userName%>">
+                          
+                          <input type="hidden" name="reportingId" value="<%=activityDetails._id%>">
+                          <button class="btn btn-sm btn-info  btn-block">Not Participant?Report!</button>
+                        </form>
+                      <%}else{%>
+                        <strong class="bolder">For logged in users!</strong>
+                      <%}%>
+                    </div>
                   </div>
                 </div>
-              </div>
-            <%})%>    
+              <%})%>  
+          <%}else{%>
+             <p class="text-info bolder text-center"><strong>Only logged in user can see!!</strong></p>
+          <%}%>  
         </div>
       </div>
       </div>

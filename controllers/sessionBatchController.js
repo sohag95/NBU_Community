@@ -142,7 +142,10 @@ exports.getSessionBatchDetailsPage =async function (req, res) {
         }
       }
     
+    }else{
+      batchDetails.allMembers=null
     }
+
     if(batchDetails.previousActivity){
       let activityDetails=await Activity.getActivityDetailsById(batchDetails.previousActivity)
       previousActivityData={

@@ -114,7 +114,11 @@ exports.getDepartmentDetailsPage =async function (req, res) {
         }
       }
     
+    }else{
+      departmentDetails.allPresentMembers=null
     }
+
+
     if(departmentDetails.previousActivity){
       let activityDetails=await Activity.getActivityDetailsById(departmentDetails.previousActivity)
       previousActivityData={

@@ -232,7 +232,9 @@
                       <div class="ml-2">
                         <span class="d-block"><strong >Name : </strong><%=groupDetails.presentLeader.userName%></span>
                         <span class="d-block"><strong >Dept : </strong><%=groupDetails.presentLeader.departmentName%></span>
-                        <span class="d-block"><strong >Phone : </strong><%=groupDetails.presentLeader.phone%></span>
+                        <%if(checkData.isUserLoggedIn){%>
+                          <span class="d-block"><strong >Phone : </strong><%=groupDetails.presentLeader.phone%></span>
+                        <%}%>
                       </div>
                     </div>
                     <%if(groupDetails.presentLeader.votingPoleId!="auto"){%>
@@ -256,7 +258,9 @@
                       <div class="ml-2">
                         <span class="d-block"><strong >Name : </strong><%=groupDetails.previousLeader.userName%></span>
                         <span class="d-block"><strong >Dept : </strong><%=groupDetails.previousLeader.departmentName%></span>
-                        <span class="d-block"><strong >Phone : </strong><%=groupDetails.previousLeader.phone%></span>
+                        <%if(checkData.isUserLoggedIn){%>
+                          <span class="d-block"><strong >Phone : </strong><%=groupDetails.previousLeader.phone%></span>
+                        <%}%>
                       </div>
                     </div>
                     <%if(groupDetails.previousLeader.votingPoleId!="auto"){%>
@@ -318,47 +322,56 @@
 
     <hr>
         <div class="item-container">
-          <strong><h5 class="bolder">All Present Members (<%=groupDetails.allPresentMembers.length%>)</h5></strong>
+          <%if(!checkData.isUserLoggedIn){%>
+            <strong><h5 class="bolder">All Present Members </h5></strong>
             <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-            <%if(!groupDetails.allPresentMembers.length){%>
-              <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
-            <%}else{%>  
-              <%if(groupDetails.allPresentMembers.length==1){%>
-                <div class="col">
-                  <div class="member-container">
-                    <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allPresentMembers[0].regNumber%>" alt="">
-                    <div class="name-container">
-                      <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allPresentMembers[0].regNumber%>/profile"><%=groupDetails.allPresentMembers[0].userName%></a> | <span class="text-secondary"> Dept : <%=groupDetails.allPresentMembers[0].departmentName%></span></strong>
-                      <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
-                    </div>
-                  </div>
-                </div>
-              <%}else{%>
-                <%let middle=parseInt(groupDetails.allPresentMembers.length/2)%>
-                <div style="display: flex;    flex-wrap: wrap;">
-                  <div class="col-md-6 left-member-container" >
-                    <%for(let i=0;i<middle;i++){%>
-                      <div class="member-container">
-                        <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allPresentMembers[i].regNumber%>" alt="">
-                        <div class="name-container">
-                          <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allPresentMembers[i].regNumber%>/profile"><%=groupDetails.allPresentMembers[i].userName%></a> | <span class="text-secondary">Dept : <%=groupDetails.allPresentMembers[i].departmentName%></span></strong>
-                          <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
-                        </div>
-                      </div>
-                    <%}%>
-                  </div>
-                  <div class="col-md-6 right-member-container" >
-                    <%for(let j=middle;j<groupDetails.allPresentMembers.length;j++){%>
+            <div class="bolder text-center text-info"><strong >[Only logged in users can see present members]</strong></div>
+            <div  style="height: 50vh;width: 100%;">
+              <img class="locked-profile-img" src="/images/locked-profile-banner.webp" alt="">
+            </div>
+          <%}else{%>
+            <strong><h5 class="bolder">All Present Members (<%=groupDetails.allPresentMembers.length%>)</h5></strong>
+              <hr style="margin-bottom: .85rem;margin-top: 0rem;">
+              <%if(!groupDetails.allPresentMembers.length){%>
+                <div class="btn btn-lg btn-block btn-info">There is no member available!!</div>
+              <%}else{%>  
+                <%if(groupDetails.allPresentMembers.length==1){%>
+                  <div class="col">
                     <div class="member-container">
-                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allPresentMembers[j].regNumber%>" alt="">
+                      <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allPresentMembers[0].regNumber%>" alt="">
                       <div class="name-container">
-                        <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allPresentMembers[j].regNumber%>/profile"><%=groupDetails.allPresentMembers[j].userName%></a> | <span class="text-secondary">Dept : <%=groupDetails.allPresentMembers[j].departmentName%></span></strong>
+                        <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allPresentMembers[0].regNumber%>/profile"><%=groupDetails.allPresentMembers[0].userName%></a> | <span class="text-secondary"> Dept : <%=groupDetails.allPresentMembers[0].departmentName%></span></strong>
                         <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
                       </div>
                     </div>
-                    <%}%>
                   </div>
-                </div>
+                <%}else{%>
+                  <%let middle=parseInt(groupDetails.allPresentMembers.length/2)%>
+                  <div style="display: flex;    flex-wrap: wrap;">
+                    <div class="col-md-6 left-member-container" >
+                      <%for(let i=0;i<middle;i++){%>
+                        <div class="member-container">
+                          <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allPresentMembers[i].regNumber%>" alt="">
+                          <div class="name-container">
+                            <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allPresentMembers[i].regNumber%>/profile"><%=groupDetails.allPresentMembers[i].userName%></a> | <span class="text-secondary">Dept : <%=groupDetails.allPresentMembers[i].departmentName%></span></strong>
+                            <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                          </div>
+                        </div>
+                      <%}%>
+                    </div>
+                    <div class="col-md-6 right-member-container" >
+                      <%for(let j=middle;j<groupDetails.allPresentMembers.length;j++){%>
+                      <div class="member-container">
+                        <img class="member-avatar"  src="/image/profile/medium/profile-<%=groupDetails.allPresentMembers[j].regNumber%>" alt="">
+                        <div class="name-container">
+                          <strong class="d-block ml-2" style="width: 100%;"><a href="/student/<%=groupDetails.allPresentMembers[j].regNumber%>/profile"><%=groupDetails.allPresentMembers[j].userName%></a> | <span class="text-secondary">Dept : <%=groupDetails.allPresentMembers[j].departmentName%></span></strong>
+                          <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+                        </div>
+                      </div>
+                      <%}%>
+                    </div>
+                  </div>
+                <%}%>
               <%}%>
             <%}%>
         </div> 
