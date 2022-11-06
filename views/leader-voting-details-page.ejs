@@ -2,26 +2,6 @@
 <%- include('includes/header') %> 
 <%- include('includes/flash') %>
 
-<%let isVoted=false%>
-<%let enrolled=false%>
-<%let votingIndex=null%>
-<%if(checkData.isVoter){%>
-  <%votingDetails.nominationTakers.forEach((std,index)=>{%>
-    <%if(std.regNumber==user.regNumber){%>
-      <%enrolled=true%>
-    <%}%>
-  <%})%>
-<%}%>
-
-
-  <%if(checkData.isVoter){%>
-    <%votingDetails.voters.forEach((voter)=>{%>
-      <%if(voter.regNumber==user.regNumber){%>
-        <%isVoted=true%>
-        <%votingIndex=voter.votingIndex%>
-      <%}%>
-    <%})%>
-  <%}%>
 
 
 <div style="display: flex;flex-wrap: wrap;">
@@ -57,7 +37,7 @@
               </div>
             </div>
             <%if(!votingDetails.isWonLeaderAccept){%>
-              <%if(votingDetails.wonLeader.regNumber==user.regNumber){%>
+              <%if(checkData.isWonLeader){%>
                 <h5 class="text-warning text-center"><strong class="d-block">Congratulations!!! </strong><strong class="d-block"> You have won the election.</strong></h5>
                   <form action="/leader-voting/<%=votingDetails._id%>/accept-as-leader" method="post">
                     <div class="form-group">
@@ -71,7 +51,7 @@
               <%}%>
               
             <%}else{%>
-              <%if(votingDetails.wonLeader.regNumber==user.regNumber){%>
+              <%if(checkData.isWonLeader){%>
                 <h5 class="text-warning text-center"><strong class="d-block">Congratulations!!! </strong><strong class="d-block"> You are the winner of this election pole.</strong></h5>
               <%}else{%>
                 <h5 class="text-warning text-center"><strong><%=votingDetails.wonLeader.userName%> ,accepted himself/herself as a leader on <%= votingDetails.votingDates.acceptanceDate.getDate() %> <%=votingDetails.votingDates.acceptanceDate.toLocaleString('default', { month: 'long' }) %> , <%= votingDetails.votingDates.acceptanceDate.getFullYear() %> at <%=votingDetails.votingDates.acceptanceDate.getHours()%>:<%=votingDetails.votingDates.acceptanceDate.getMinutes()%> </strong></h5>
@@ -92,11 +72,11 @@
         <div class="student-room-container">
           <%if(checkData.votingStatus=="nomination"){%>
             <h4 class="text-center text-warning"><strong>Leader Nomination Is Going On!</strong></h4>
-            <%if(votingDetails.leaders.mainLead.regNumber==user.regNumber){%>
+            <%if(checkData.isMainLeader){%>
               <h5 class="text-center text-warning"><strong>As you are the present main leader,you can't nominate yourself on this voting panel.</strong></h5>
             <%}%>
-            <%if(votingDetails.nominateableMembers.includes(user.regNumber)){%>
-              <%if(!enrolled){%>
+            <%if(checkData.isNominateableMember){%>
+              <%if(!checkData.isNominationTaken){%>
                 <h5 class="text-center text-info"><strong>Include your name on nomination panel to get selected as a leader.</strong></h5>
               <%}else{%>
                 <h6 class="text-center text-info">You have nominated yourself!!</h6>
@@ -108,11 +88,11 @@
             <!-- checkData.votingStatus=="voting" -->
             <h4 class="text-center text-warning"><strong>Leader Voting Is Going On!</strong></h4>
             <%if(checkData.isVoter){%>
-              <%if(!isVoted){%>
+              <%if(!checkData.isVoterVoted){%>
                 <h5 class="bolder text-warning text-center"><strong>Give your vote on voting panel.</strong>  </h5>
               <%}else{%>
                 <h5 class="bolder text-warning text-center"><strong>You have given your vote!!</strong>  </h5>
-                <h6 class="text-warning text-center"><strong>You voted for :<i> <%=votingDetails.nominationTakers[votingIndex].userName%></i></strong></h6>
+                <h6 class="text-warning text-center"><strong>You voted for :<i> <%=votingDetails.nominationTakers[checkData.votingIndex].userName%></i></strong></h6>
               <%}%>
             <%}%>
             <i class="d-block text-center"><strong>Last Date of Voting : <%= votingDetails.votingDates.votingLastDate.getDate() %> <%=votingDetails.votingDates.votingLastDate.toLocaleString('default', { month: 'short' }) %> , <%= votingDetails.votingDates.votingLastDate.getFullYear() %> at <%=votingDetails.votingDates.votingLastDate.getHours()%>:<%=votingDetails.votingDates.votingLastDate.getMinutes()%></strong> </i>    
@@ -131,8 +111,8 @@
           <%}%>
           <hr style="margin-bottom: .25rem;margin-top: 0rem;">
           <%if(checkData.votingStatus=="nomination"){%>
-            <%if(votingDetails.nominateableMembers.includes(user.regNumber)){%>
-              <%if(!enrolled){%>
+            <%if(checkData.isNominateableMember){%>
+              <%if(!checkData.isNominationTaken){%>
                 <form action="/leader-voting/<%=votingDetails._id%>/nomination" method="post">
                   <button class="btn btn-sm btn-warning btn-block"><strong>Click to Nominate Yourself</strong> </button>
                 </form>
@@ -140,7 +120,7 @@
                 <div class="btn btn-sm btn-block btn-success">Nominated !!</div>
               <%}%>
             <%}else{%>
-              <%if(votingDetails.leaders.mainLead.regNumber==user.regNumber){%>
+              <%if(checkData.isMainLeader){%>
                 <div class="btn btn-sm btn-block btn-danger">You are present leader!!</div>
               <%}else{%>
                 <div class="btn btn-sm btn-block btn-success">Nomination going on!!</div>
@@ -173,10 +153,10 @@
             <div class="student-room-container">
               <h6 class="bolder text-success"><strong>Total vote received : <%=votingDetails.voters.length%></strong></h6>
               <hr>
-              <%if(checkData.isVoter){%>
-                <%if(!isVoted){%>
+              <%if(user && checkData.isVoter){%>
+                <%if(!checkData.isVoterVoted){%>
                   <h5 class="bolder text-warning">Give your vote : 
-                    <%if(enrolled){%>
+                    <%if(checkData.isNominationTaken){%>
                       <i>(You can't vote for yourself)</i>
                     <%}%>
                   </h5>
@@ -196,7 +176,7 @@
                   </form>
                   <hr>
                 <%}else{%>
-                  <h5 class="btn btn-block btn-success btn-sm">Thank you for your vote.You voted for <i class="text-warning"><%=votingDetails.nominationTakers[votingIndex].userName%></i>.</h5>
+                  <h5 class="btn btn-block btn-success btn-sm">Thank you for your vote.You voted for <i class="text-warning"><%=votingDetails.nominationTakers[checkData.votingIndex].userName%></i>.</h5>
                   <h4><strong class="d-block text-warning text-center">WAIT FOR THE RESULT!!</strong></h4>
                 <%}%>
               <%}else{%>
@@ -223,11 +203,11 @@
     </div>
     <hr>
    
-    <%if((votingDetails.leaders.mainLead.regNumber==user.regNumber) && !votingDetails.isWonLeaderAccept){%>
+    <%if((checkData.isMainLeader) && !votingDetails.isWonLeaderAccept){%>
       <div class="designed-container">
         <strong style="color:#fff;"><h5> Leader Section :</h5></strong>
           <hr style="margin-bottom: .85rem;margin-top: 0rem;">
-          <%if(votingDetails.leaders.mainLead.regNumber==user.regNumber){%>
+          <%if(checkData.isMainLeader){%>
             <h6><strong>You are the main leader for this voting pole.After this voting result you will be declared as an assistant leader.You will have same power as Main Leader.</strong></h6>
             <hr>
           <%}%>
@@ -241,6 +221,13 @@
               <button class="btn btn-danger btn-block btn-sm">Declare result</button>
             </form>
           <%}%>
+      </div>
+      <hr>
+    <%}%>
+
+    <%if(checkData.isVoterVoted && checkData.votingStatus=="completed"){%>
+      <div class="designed-container">
+        <h5 class="text-warning text-center"><strong>You voted for :<i style="color: #fff;"> <%=votingDetails.nominationTakers[checkData.votingIndex].userName%></i></strong></h5>
       </div>
       <hr>
     <%}%>

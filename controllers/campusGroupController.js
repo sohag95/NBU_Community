@@ -156,6 +156,7 @@ exports.campusGroupDetails=async function(req,res){
   let checkData={
     isUserLoggedIn:req.isUserLoggedIn,
     isCampusGroupAdmin:false,
+    isCampusGroupCreator:false,
     isCampusGroupMember:false,
     memberIndexNumber:null,
     isSentRequest:false,
@@ -168,6 +169,9 @@ exports.campusGroupDetails=async function(req,res){
       }
       checkData.allAdmins.push(admin.regNumber)
     })
+    if(req.campusGroupDetails.createdBy.regNumber==req.regNumber){
+      checkData.isCampusGroupCreator=true
+    }
     req.campusGroupDetails.allMembers.forEach((member,index)=>{
       if(member.regNumber==req.regNumber){
         checkData.isCampusGroupMember=true

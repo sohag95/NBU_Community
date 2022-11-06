@@ -224,17 +224,57 @@ exports.getLeaderVotingPage =async function (req, res) {
   try{
     let votingDetails=req.votingDetails 
     let checkData=req.checkData
+    checkData.isWonLeader=false
+    checkData.isMainLeader=false
+    checkData.isNominateableMember=false
+    checkData.isNominationTaken=false
+    checkData.isVoterVoted=false
+    checkData.votingIndex=null
+
+    if(checkData.isUserLoggedIn){
+      if(votingDetails.isResultDeclared && !votingDetails.isWonLeaderAccepted){
+        if(votingDetails.wonLeader.regNumber==req.regNumber){
+          checkData.isWonLeader=true
+        } 
+      }
+      if(votingDetails.leaders.mainLead.regNumber==req.regNumber){
+        checkData.isMainLeader=true
+      }
+      if(checkData.votingStatus=="nomination"){
+        if(votingDetails.nominateableMembers.includes(req.regNumber)){
+          checkData.isNominateableMember=true
+        }
+      }
+      if(checkData.isVoter){
+        votingDetails.nominationTakers.forEach((nominee)=>{
+          if(nominee.regNumber==req.regNumber){
+            checkData.isNominationTaken=true
+          }
+        })
+
+        votingDetails.voters.forEach((voter)=>{
+          if(voter.regNumber==req.regNumber){
+            checkData.isVoterVoted=true
+            checkData.votingIndex=voter.votingIndex
+          }
+        })
+      }
+
+    }
+
     if(votingDetails.result.length){
       //voting parcentage calculation for each topic
-    let totalVote=votingDetails.voters.length
-    votingDetails.result=votingDetails.result.map((data)=>{
-      let newInfo={
-        leaderIndex:data.leaderIndex,
-        parcentage: ((data.votes*100)/totalVote).toFixed(2)
-      }
-      return newInfo
-    })
+      let totalVote=votingDetails.voters.length
+      votingDetails.result=votingDetails.result.map((data)=>{
+        let newInfo={
+          leaderIndex:data.leaderIndex,
+          parcentage: ((data.votes*100)/totalVote).toFixed(2)
+        }
+        return newInfo
+      })
     }
+    
+    
     // console.log("Voting Details :",votingDetails)
     console.log("CheckData :",req.checkData)
     console.log("new result :",votingDetails.result)

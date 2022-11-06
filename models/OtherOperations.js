@@ -253,6 +253,9 @@ OtherOperations.getParticipantsRegNumbers=function(activityParticipants){
   return participantsRegNumbers
 }
 
+
+//data should get dynamically
+//all departments name have to add on stream based arrays
 OtherOperations.getTutorStream=function(departmentName){
   let scienceGroup=["Computer Science","Computer Application","Physics","Chemistry","Mathematics"]
   let artsGroup=["History","English","Bengali","Geography"]

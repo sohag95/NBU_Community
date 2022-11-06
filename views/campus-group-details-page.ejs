@@ -9,7 +9,7 @@
       <div style="width: 100%;position: relative;">
         <div>
           <img class="department-batch-group-cover-image" src="/image/campusGroup-banner/large/<%=campusGroupDetails._id%>" />
-          <%if(checkData.allAdmins.includes(user.regNumber)){%>
+          <%if(checkData.isCampusGroupAdmin){%>
           <div style="position: absolute;right: 10px;top: 10px;">
             <h3 type="button" class="text-info" data-toggle="modal" data-target="#bannerPicUploadCenter"><i class="fas fa-camera-retro"></i></h3>
             <!-- Modal -->
@@ -55,7 +55,7 @@
                 <%}else{%>
                   <span class="text-warning">(Not Full)</span>
                 <%}%>   
-                <%if(checkData.allAdmins.includes(user.regNumber)){%>
+                <%if(checkData.isCampusGroupAdmin){%>
                   <span type="button" class=" text-secondary" data-toggle="modal" data-target="#expectedMembers"><strong class="d-block"><i class="fas fa-edit"></i></strong></span>
                   <!-- Modal -->
                   <div class="modal fade" id="expectedMembers" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -92,7 +92,7 @@
       </div>  
     </div>
     <hr>
-    <%if(campusGroupDetails.createdBy.regNumber==user.regNumber && campusGroupDetails.allMembers.length==1){%>
+    <%if(checkData.isCampusGroupCreator && campusGroupDetails.allMembers.length==1){%>
       <div class="colored-container text-center">
         <h5 class="text-warning"><strong>As a creator you can delete the group.You can delete the group when you are only the member of the group!!</strong> </h5>
         <hr>
@@ -258,22 +258,23 @@
                 <p style="margin-right: 8px;" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <strong><i class="fas fa-ellipsis-h"></i></strong>
                 </p>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <%if(campusGroupDetails.createdBy.regNumber==user.regNumber){%>
-                    <%if(!checkData.allAdmins.includes(member.regNumber)){%>
-                      <form action="/campus-group/<%=campusGroupDetails._id%>/add-admin" class="m-2" method="post">
-                        <input type="hidden" name="regNumber" value="<%=member.regNumber%>">
-                        <button class="btn btn-warning btn-block">Make as Admin</button>
+                <%if(user){%>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <%if(checkData.isCampusGroupCreator){%>
+                      <%if(!checkData.allAdmins.includes(member.regNumber)){%>
+                        <form action="/campus-group/<%=campusGroupDetails._id%>/add-admin" class="m-2" method="post">
+                          <input type="hidden" name="regNumber" value="<%=member.regNumber%>">
+                          <button class="btn btn-warning btn-block">Make as Admin</button>
+                        </form>
+                      <%}%>
+                    <%}%>
+                    <%if(member.regNumber==user.regNumber && !checkData.isCampusGroupCreator){%>
+                      <form action="/campus-group/<%=campusGroupDetails._id%>/leave-group" class="m-2" method="post">
+                        <button class="btn btn-danger btn-block">Leave Group</button>
                       </form>
                     <%}%>
-                  <%}%>
-                  <%if(member.regNumber==user.regNumber && !(campusGroupDetails.createdBy.regNumber==user.regNumber)){%>
-                    <form action="/campus-group/<%=campusGroupDetails._id%>/leave-group" class="m-2" method="post">
-                      <button class="btn btn-danger btn-block">Leave Group</button>
-                    </form>
-                  <%}%>
-                  
-                </div>
+                  </div>
+                <%}%>
               </div>
               
               
